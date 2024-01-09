@@ -20,12 +20,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -39,11 +41,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.fate_grand_automata.R
 import io.github.fate_grand_automata.prefs.core.BattleConfigCore
+import io.github.fate_grand_automata.scripts.enums.BattleConfigListSortEnum
 import io.github.fate_grand_automata.ui.*
 import io.github.fate_grand_automata.ui.battle_config_item.Material
 import io.github.fate_grand_automata.ui.dialog.FgaDialog
+import io.github.fate_grand_automata.ui.dialog.singleChoiceList
 import io.github.fate_grand_automata.ui.prefs.remember
 import io.github.fate_grand_automata.util.stringRes
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun BattleConfigListScreen(
@@ -54,6 +62,8 @@ fun BattleConfigListScreen(
 ) {
     val selectionMode by vm.selectionMode.collectAsState()
     val selectedConfigs by vm.selectedConfigs.collectAsState()
+
+    val configListSort by vm.configListSort.collectAsState(BattleConfigListSortEnum.DEFAULT_SORTED)
 
     BackHandler(
         enabled = selectionMode,
@@ -88,6 +98,10 @@ fun BattleConfigListScreen(
 
     BattleConfigListContent(
         configs = configs,
+        configListSort = configListSort,
+        onConfigListSortChange = {
+            vm.setConfigListSort(it)
+        },
         selectionMode = selectionMode,
         selectedConfigs = selectedConfigs,
         windowSizeClass = windowSizeClass,
@@ -135,6 +149,8 @@ private sealed class BattleConfigListAction {
 private fun BattleConfigListContent(
     windowSizeClass: WindowSizeClass,
     configs: List<BattleConfigCore>,
+    configListSort: BattleConfigListSortEnum,
+    onConfigListSortChange: (BattleConfigListSortEnum) -> Unit,
     selectionMode: Boolean,
     selectedConfigs: Set<String>,
     action: (BattleConfigListAction) -> Unit
@@ -145,6 +161,28 @@ private fun BattleConfigListContent(
 
     val fabHeightInDp = with(LocalDensity.current) { fabHeight.toDp() }
 
+    val filterListDialog = FgaDialog()
+
+    filterListDialog.build {
+        title(
+            text = stringResource(id = R.string.p_battle_config_sort_title)
+        )
+
+        singleChoiceList(
+            items = BattleConfigListSortEnum.entries,
+            selected = configListSort,
+            onSelectedChange = { sort ->
+                onConfigListSortChange(sort)
+                filterListDialog.hide()
+            },
+            template = {
+                Text(
+                    text = stringResource(id = it.stringRes).uppercase()
+                )
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -154,7 +192,17 @@ private fun BattleConfigListContent(
                         style = MaterialTheme.typography.titleSmall
                     )
                 },
-                actions ={
+                actions = {
+                    IconButton(
+                        onClick = {
+                            filterListDialog.show()
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.FilterList,
+                            contentDescription = null
+                        )
+                    }
                     if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
                         CreateConfigFab(
                             modifier = Modifier,
@@ -206,7 +254,7 @@ private fun BattleConfigListContent(
                     .animateContentSize(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 HeadingButton(
                     text = stringResource(
                         if (selectionMode)
@@ -405,7 +453,8 @@ private fun BattleConfigItemSelected(
                 .padding(end = 16.dp)
                 .border(
                     1.dp,
-                    if (isSelected) Color.Transparent else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
+                    if (isSelected) Color.Transparent else
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
                     CircleShape
                 )
                 .background(
@@ -429,51 +478,102 @@ private fun BattleConfigItemSelected(
 
 @Composable
 private fun BattleConfigListItem(
-    it: BattleConfigCore,
+    config: BattleConfigCore,
     isSelectionMode: Boolean,
     isSelected: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
-    val name by it.name.remember()
-    val materialsSet by it.materials.remember()
+    val name by config.name.remember()
+    val materialsSet by config.materials.remember()
     val mats = materialsSet.take(3)
+
+    val usageCount by config.usageCount.remember()
+    var lastUsage by config.lastUsage.remember()
+
+    LaunchedEffect(Unit) {
+        if (usageCount == 0) {
+            lastUsage = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+        }
+    }
 
     // Without this, holding a list item would leave it highlighted because
     // of recomposition happening before ripple ending
     val longClickState = rememberUpdatedState(onLongClick)
 
-    Card(
-        shape = RoundedCornerShape(25),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 5.dp else 1.dp),
-        modifier = Modifier
-            .padding(5.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .combinedClickable(
-                    onClick = onClick,
-                    onLongClick = { longClickState.value.invoke() }
+    val usageContent: @Composable (() -> Unit)? = if (usageCount > 0) {
+        @Composable {
+            val lastUsageSystemDateTime = lastUsage
+                .toInstant(TimeZone.UTC)
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Text(
+                    stringResource(
+                        R.string.battle_config_list_usage_count,
+                        usageCount
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                .padding(16.dp, 5.dp)
-        ) {
+                Text(
+                    stringResource(
+                        R.string.battle_config_list_last_usage,
+                        lastUsageSystemDateTime.date.toString(),
+                        lastUsageSystemDateTime.time.hour,
+                        lastUsageSystemDateTime.time.minute,
+                        lastUsageSystemDateTime.time.second,
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    } else null
+
+    ListItem(
+        leadingContent = {
             BattleConfigItemSelected(
                 isSelectionMode = isSelectionMode,
                 isSelected = isSelected
             )
-
+        },
+        headlineContent = {
             Text(
                 name,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
-
+        },
+        trailingContent = {
             mats.forEach {
                 Material(it)
             }
-        }
-    }
+        },
+        modifier = Modifier
+            .padding(5.dp)
+            .clip(
+                RoundedCornerShape(25)
+            )
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = {
+                    longClickState.value.invoke()
+                }
+            )
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                shape = RoundedCornerShape(25)
+            ),
+        supportingContent = usageContent,
+        tonalElevation = if (isSelected) 5.dp else 1.dp,
+        colors = ListItemDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+
+            )
+    )
 }

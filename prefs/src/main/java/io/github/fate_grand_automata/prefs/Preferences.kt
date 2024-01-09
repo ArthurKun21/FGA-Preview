@@ -196,6 +196,8 @@ class PreferencesImpl @Inject constructor(
 
     override var notifyErrorWarning by prefs.notifyErrorWarning
 
+    override var configListSort by prefs.configListSort
+
     override val support = object :
         ISupportPreferencesCommon {
         override val mlbSimilarity by prefs.mlbSimilarity.map { it / 100.0 }

@@ -2,6 +2,8 @@ plugins {
     id("java-library")
     id("kotlin")
     id("com.google.devtools.ksp")
+
+    kotlin("plugin.serialization") version libs.versions.kotlin.verion.get()
 }
 
 dependencies {
@@ -20,6 +22,9 @@ dependencies {
     testImplementation(libs.kotlin.test)
     testImplementation(libs.willowtreeapps.assertk)
     testImplementation(libs.mockk)
+
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization)
 }
 
 java {

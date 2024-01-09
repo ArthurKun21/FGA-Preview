@@ -1,5 +1,6 @@
 package io.github.fate_grand_automata.scripts.prefs
 
+import io.github.fate_grand_automata.scripts.enums.BattleConfigListSortEnum
 import io.github.fate_grand_automata.scripts.enums.GameServer
 import io.github.fate_grand_automata.scripts.enums.RefillResourceEnum
 
@@ -33,4 +34,6 @@ interface IPerServerConfigPrefs {
 
     var autoAcceptFriendRequest: Boolean
     var isFriendListFull: Boolean
+
+    var configListSort: BattleConfigListSortEnum
 }

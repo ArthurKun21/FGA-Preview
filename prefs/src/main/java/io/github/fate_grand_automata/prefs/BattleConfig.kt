@@ -50,6 +50,10 @@ internal class BattleConfig(
 
     override val storyIntroSkip by prefs.storyIntroSkip
 
+    override var lastUsage by prefs.lastUsage
+
+    override var usageCount by prefs.usageCount
+
     override fun export(): Map<String, *> = prefs.export()
 
     override fun import(map: Map<String, *>) =

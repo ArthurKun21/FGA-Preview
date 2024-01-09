@@ -1,5 +1,6 @@
 package io.github.fate_grand_automata.scripts.prefs
 
+import io.github.fate_grand_automata.scripts.enums.BattleConfigListSortEnum
 import io.github.fate_grand_automata.scripts.enums.GameServer
 import io.github.fate_grand_automata.scripts.enums.ScriptModeEnum
 import io.github.lib_automata.Location
@@ -75,6 +76,8 @@ interface IPreferences {
     val ignorePlayButtonDetectionWarning: Boolean
 
     var notifyErrorWarning: String
+
+    var configListSort: BattleConfigListSortEnum
 }
 
 val IPreferences.wantsMediaProjectionToken get() = !useRootForScreenshots

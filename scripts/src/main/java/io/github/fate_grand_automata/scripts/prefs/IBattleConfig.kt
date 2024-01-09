@@ -7,6 +7,7 @@ import io.github.fate_grand_automata.scripts.enums.ShuffleCardsEnum
 import io.github.fate_grand_automata.scripts.models.CardPriorityPerWave
 import io.github.fate_grand_automata.scripts.models.ServantPriorityPerWave
 import io.github.fate_grand_automata.scripts.models.ServantSpamConfig
+import kotlinx.datetime.LocalDateTime
 
 interface IBattleConfig {
     val id: String
@@ -32,6 +33,9 @@ interface IBattleConfig {
     val raidTurnDelaySeconds : Int
 
     val storyIntroSkip : Boolean
+
+    var lastUsage: LocalDateTime
+    var usageCount: Int
 
     fun export(): Map<String, *>
 

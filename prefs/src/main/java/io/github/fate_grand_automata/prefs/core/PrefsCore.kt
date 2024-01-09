@@ -3,6 +3,7 @@ package io.github.fate_grand_automata.prefs.core
 import android.content.Context
 import com.fredporciuncula.flow.preferences.Serializer
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.github.fate_grand_automata.scripts.enums.BattleConfigListSortEnum
 import io.github.fate_grand_automata.scripts.enums.GameServer
 import io.github.fate_grand_automata.scripts.enums.ScriptModeEnum
 import io.github.lib_automata.Location
@@ -183,5 +184,7 @@ class PrefsCore @Inject constructor(
     val ignorePlayButtonDetectionWarning = maker.bool("ignore_play_button_detection_warning")
 
     val notifyErrorWarning = maker.string("notify_error_warning")
+
+    val configListSort = maker.enum("config_list_sort", BattleConfigListSortEnum.DEFAULT_SORTED)
 
 }

@@ -60,4 +60,6 @@ internal class PerServerConfigPrefs(
 
     override var autoAcceptFriendRequest by prefs.autoAcceptFriendRequest
     override var isFriendListFull by prefs.isFriendListFull
+
+    override var configListSort by prefs.configListSort
 }

@@ -3,6 +3,7 @@ package io.github.fate_grand_automata.prefs.core
 import android.content.Context
 import android.content.SharedPreferences
 import com.fredporciuncula.flow.preferences.Serializer
+import io.github.fate_grand_automata.scripts.enums.BattleConfigListSortEnum
 import io.github.fate_grand_automata.scripts.enums.GameServer
 import io.github.fate_grand_automata.scripts.enums.RefillResourceEnum
 
@@ -48,4 +49,6 @@ class PerServerConfigPrefsCore(
 
     val autoAcceptFriendRequest = maker.bool("auto_accept_friend_request")
     val isFriendListFull = maker.bool("is_friend_list_full")
+
+    val configListSort = maker.enum("config_list_sort", BattleConfigListSortEnum.DEFAULT_SORTED)
 }

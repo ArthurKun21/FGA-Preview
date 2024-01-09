@@ -14,6 +14,10 @@ import io.github.fate_grand_automata.scripts.enums.ShuffleCardsEnum
 import io.github.fate_grand_automata.scripts.models.CardPriorityPerWave
 import io.github.fate_grand_automata.scripts.models.ServantPriorityPerWave
 import io.github.fate_grand_automata.scripts.models.ServantSpamConfig
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class BattleConfigCore(
     val id: String,
@@ -191,4 +195,18 @@ class BattleConfigCore(
     val raidTurnDelaySeconds = maker.stringAsInt("raid_delay_seconds", 2)
 
     val storyIntroSkip = maker.bool("story_intro_skip")
+
+    val usageCount = maker.stringAsInt("usage_count")
+
+    val lastUsage = maker.serialized(
+        "last_usage",
+        serializer = object : Serializer<LocalDateTime>{
+            override fun deserialize(serialized: String) =
+                serialized.toLocalDateTime()
+
+            override fun serialize(value: LocalDateTime) =
+                value.toString()
+        },
+        default = Clock.System.now().toLocalDateTime(timeZone = TimeZone.UTC)
+    )
 }
