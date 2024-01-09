@@ -141,12 +141,10 @@ jobs:
         run: zip -r fga-preview-${{ env.VERSION_TAG }}.zip fga-preview-${{ env.VERSION_TAG }}.apk
       
       - name: Create tagged Release
-        id: create_release_tag
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: ncipollo/release-action@v1.13.0
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ env.VERSION_TAG }}"
+          generateReleaseNotes: true
+          artifacts: fga-preview-${{ env.VERSION_TAG }}.zip
+          tag: ${{ env.VERSION_TAG }}
+          name: 'FGA Preview ${{ github.run_number }}'
           prerelease: false
-          title: 'FGA Preview ${{ github.run_number }}'
-          files: |
-            fga-preview-${{ env.VERSION_TAG }}.zip
