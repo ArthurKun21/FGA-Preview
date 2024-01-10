@@ -55,6 +55,7 @@ class AutoDetect @Inject constructor(
             listOf(
                 images[Images.ServantAutoSelect] to locations.servant.servantAutoSelectRegion,
                 images[Images.ServantAutoSelectOff] to locations.servant.servantAutoSelectRegion,
+                images[Images.ServantAscensionBanner] to locations.enhancementBannerRegion
             ).existsAny()->
                 ScriptModeEnum.ServantLevel
 
