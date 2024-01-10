@@ -98,8 +98,6 @@ class AutoServantLevel @Inject constructor(
     private var shouldLimit = false
     private var limitCount = 1
 
-    private var ascension = false
-
     private fun loop(): Nothing {
         if (isServantEmpty()) {
             throw ServantUpgradeException(ExitReason.NoServantSelected)
@@ -197,14 +195,9 @@ class AutoServantLevel @Inject constructor(
      */
     private fun handlePerformedAscension() {
         if (isReturnToLevel()) {
-            if (!ascension) {
-                throw ServantUpgradeException(ExitReason.UnableToPerformAscension)
-            }
-            ascension = false
             handleReturnToEnhancementMenu()
             return
         }
-        ascension = true
 
         var confirmationVisible = false
         val retry = 5
