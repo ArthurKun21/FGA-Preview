@@ -20,7 +20,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.FileDownload
+import androidx.compose.material.icons.filled.FileUpload
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -48,7 +50,6 @@ import io.github.fate_grand_automata.ui.dialog.FgaDialog
 import io.github.fate_grand_automata.ui.dialog.singleChoiceList
 import io.github.fate_grand_automata.ui.prefs.remember
 import io.github.fate_grand_automata.util.stringRes
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
@@ -63,7 +64,7 @@ fun BattleConfigListScreen(
     val selectionMode by vm.selectionMode.collectAsState()
     val selectedConfigs by vm.selectedConfigs.collectAsState()
 
-    val configListSort by vm.configListSort.collectAsState(BattleConfigListSortEnum.DEFAULT_SORTED)
+    val configListSort by vm.configListSort.collectAsState(BattleConfigListSortEnum.DEFAULT_SORT)
 
     BackHandler(
         enabled = selectionMode,
@@ -161,9 +162,9 @@ private fun BattleConfigListContent(
 
     val fabHeightInDp = with(LocalDensity.current) { fabHeight.toDp() }
 
-    val filterListDialog = FgaDialog()
+    val sortListDialog = FgaDialog()
 
-    filterListDialog.build {
+    sortListDialog.build {
         title(
             text = stringResource(id = R.string.p_battle_config_sort_title)
         )
@@ -173,46 +174,23 @@ private fun BattleConfigListContent(
             selected = configListSort,
             onSelectedChange = { sort ->
                 onConfigListSortChange(sort)
-                filterListDialog.hide()
+                sortListDialog.hide()
             },
-            template = {
+            template = { sort ->
                 Text(
-                    text = stringResource(id = it.stringRes).uppercase()
+                    text = stringResource(id = sort.stringRes)
                 )
             }
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.p_battle_config).uppercase(),
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            filterListDialog.show()
-                        }
-                    ) {
-                        Icon(
-                            Icons.Default.FilterList,
-                            contentDescription = null
-                        )
-                    }
-                    if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
-                        CreateConfigFab(
-                            modifier = Modifier,
-                            isLandscape = isLandscape,
-                            selectionMode = selectionMode,
-                            action = action
-                        )
-                    }
-                },
-                navigationIcon = {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        if (isLandscape) {
+            NavigationRail(
+                header = {
                     IconButton(
                         onClick = {
                             action(BattleConfigListAction.NavigateBack)
@@ -223,122 +201,239 @@ private fun BattleConfigListContent(
                             contentDescription = null
                         )
                     }
+                    CreateConfigFab(
+                        modifier = Modifier,
+                        isLandscape = isLandscape,
+                        selectionMode = selectionMode,
+                        action = action
+                    )
+                },
+                content = {
+                    NavigationRailItem(
+                        selected = false,
+                        onClick = {
+                            action(BattleConfigListAction.Export)
+                        },
+                        icon = {
+                            Icon(imageVector = Icons.Filled.FileUpload, contentDescription = "Export")
+                        },
+                        label = {
+                            Text(
+                                text = stringResource(
+                                    if (selectionMode)
+                                        R.string.battle_config_item_export
+                                    else R.string.battle_config_list_export_all
+                                )
+                            )
+                        }
+                    )
+                    NavigationRailItem(
+                        selected = false,
+                        onClick = {
+                            if (selectionMode) {
+                                action(BattleConfigListAction.Delete)
+                            } else {
+                                action(BattleConfigListAction.Import)
+                            }
+                        },
+                        icon = {
+                            AnimatedContent(
+                                targetState = selectionMode,
+                                label = "selection Mode"
+                            ) { selMode ->
+                                if (selMode) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = "Delete",
+                                        tint = MaterialTheme.colorScheme.error
+                                    )
+                                } else {
+                                    Icon(imageVector = Icons.Filled.FileDownload, contentDescription = "Export")
+                                }
+                            }
+                        },
+                        label = {
+                            Text(
+                                text = stringResource(
+                                    if (selectionMode)
+                                        R.string.battle_config_list_delete
+                                    else R.string.battle_config_list_import
+                                )
+                            )
+                        }
+                    )
                 }
             )
-        },
-        floatingActionButton = {
-            if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
-                CreateConfigFab(
-                    modifier = Modifier
-                        .onGloballyPositioned {
-                            fabHeight = it.size.height
-                        },
-                    isLandscape = isLandscape,
-                    selectionMode = selectionMode,
-                    action = action
-                )
-            }
+            VerticalDivider()
         }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            Divider()
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .animateContentSize(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                HeadingButton(
-                    text = stringResource(
-                        if (selectionMode)
-                            R.string.battle_config_item_export
-                        else R.string.battle_config_list_export_all
-                    ),
-                    onClick = { action(BattleConfigListAction.Export) }
-                )
-
-                Crossfade(
-                    selectionMode,
-                    label = "selection Mode"
-                ) { selMode ->
-                    if (selMode) {
-                        HeadingButton(
-                            text = stringResource(R.string.battle_config_list_delete),
-                            onClick = { action(BattleConfigListAction.Delete) },
-                            isDanger = true,
-                            icon = icon(Icons.Default.Delete)
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(R.string.p_battle_config).uppercase(),
+                            style = MaterialTheme.typography.titleSmall
                         )
-                    } else {
-                        HeadingButton(
-                            text = stringResource(R.string.battle_config_list_import),
-                            onClick = { action(BattleConfigListAction.Import) }
-                        )
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                sortListDialog.show()
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.Sort,
+                                contentDescription = null
+                            )
+                        }
+
+                    },
+                    navigationIcon = {
+                        if (!isLandscape) {
+                            IconButton(
+                                onClick = {
+                                    action(BattleConfigListAction.NavigateBack)
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Default.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
                     }
+                )
+            },
+            floatingActionButton = {
+                if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+                    CreateConfigFab(
+                        modifier = Modifier
+                            .onGloballyPositioned {
+                                fabHeight = it.size.height
+                            },
+                        isLandscape = isLandscape,
+                        selectionMode = selectionMode,
+                        action = action
+                    )
+                }
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Divider()
+
+                if (!isLandscape) {
+                    BattleConfigActionButtons(
+                        selectionMode = selectionMode,
+                        action = action
+                    )
+                }
+
+                val servers by derivedStateOf {
+                    configs
+                        .mapNotNull { it.server.get().asGameServer() }
+                        .distinct()
+                }
+
+                if (servers.isEmpty()) {
+                    ConfigList(
+                        configs = configs,
+                        selectionMode = selectionMode,
+                        action = action,
+                        selectedConfigs = selectedConfigs,
+                        windowSizeClass = windowSizeClass,
+                        modifier = Modifier
+                            .weight(1f)
+                    )
+                } else {
+                    Tabbed(
+                        items = listOf<BattleConfigCore.Server>(BattleConfigCore.Server.NotSet) +
+                                servers.map { BattleConfigCore.Server.Set(it) },
+                        heading = {
+                            Text(
+                                when (it) {
+                                    BattleConfigCore.Server.NotSet -> "ALL"
+                                    is BattleConfigCore.Server.Set -> stringResource(it.server.stringRes)
+                                }
+                            )
+                        },
+                        content = { current ->
+                            val filteredConfigs by derivedStateOf {
+                                configs
+                                    .filter {
+                                        val server = it.server.get().asGameServer()
+
+                                        current is BattleConfigCore.Server.NotSet
+                                                || server == current.asGameServer()
+                                    }
+                            }
+
+                            ConfigList(
+                                configs = filteredConfigs,
+                                selectionMode = selectionMode,
+                                action = action,
+                                selectedConfigs = selectedConfigs,
+                                windowSizeClass = windowSizeClass,
+                                fabHeightPadding = fabHeightInDp,
+                            )
+                        },
+                        modifier = Modifier
+                            .weight(1f),
+
+                        )
                 }
             }
 
-            val servers by derivedStateOf {
-                configs
-                    .mapNotNull { it.server.get().asGameServer() }
-                    .distinct()
-            }
-
-            if (servers.isEmpty()) {
-                ConfigList(
-                    configs = configs,
-                    selectionMode = selectionMode,
-                    action = action,
-                    selectedConfigs = selectedConfigs,
-                    windowSizeClass = windowSizeClass,
-                    modifier = Modifier
-                        .weight(1f)
-                )
-            } else {
-                Tabbed(
-                    items = listOf<BattleConfigCore.Server>(BattleConfigCore.Server.NotSet) +
-                            servers.map { BattleConfigCore.Server.Set(it) },
-                    heading = {
-                        Text(
-                            when (it) {
-                                BattleConfigCore.Server.NotSet -> "ALL"
-                                is BattleConfigCore.Server.Set -> stringResource(it.server.stringRes)
-                            }
-                        )
-                    },
-                    content = { current ->
-                        val filteredConfigs by derivedStateOf {
-                            configs
-                                .filter {
-                                    val server = it.server.get().asGameServer()
-
-                                    current is BattleConfigCore.Server.NotSet
-                                            || server == current.asGameServer()
-                                }
-                        }
-
-                        ConfigList(
-                            configs = filteredConfigs,
-                            selectionMode = selectionMode,
-                            action = action,
-                            selectedConfigs = selectedConfigs,
-                            windowSizeClass = windowSizeClass,
-                            fabHeightPadding = fabHeightInDp,
-                        )
-                    },
-                    modifier = Modifier
-                        .weight(1f),
-
-                    )
-            }
         }
 
+    }
+
+
+}
+
+@Composable
+private fun BattleConfigActionButtons(
+    selectionMode: Boolean,
+    action: (BattleConfigListAction) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .animateContentSize(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        HeadingButton(
+            text = stringResource(
+                if (selectionMode)
+                    R.string.battle_config_item_export
+                else R.string.battle_config_list_export_all
+            ),
+            onClick = { action(BattleConfigListAction.Export) }
+        )
+
+        Crossfade(
+            selectionMode,
+            label = "selection Mode"
+        ) { selMode ->
+            if (selMode) {
+                HeadingButton(
+                    text = stringResource(R.string.battle_config_list_delete),
+                    onClick = { action(BattleConfigListAction.Delete) },
+                    isDanger = true,
+                    icon = icon(Icons.Default.Delete)
+                )
+            } else {
+                HeadingButton(
+                    text = stringResource(R.string.battle_config_list_import),
+                    onClick = { action(BattleConfigListAction.Import) }
+                )
+            }
+        }
     }
 }
 
@@ -349,30 +444,38 @@ private fun CreateConfigFab(
     selectionMode: Boolean,
     action: (BattleConfigListAction) -> Unit
 ) {
-    val enterAnimation = if (isLandscape)
-        slideInHorizontally(initialOffsetX = { it / 2 })
-    else slideInVertically(initialOffsetY = { it / 2 })
+    val enterAnimation = slideInVertically(initialOffsetY = { it / 2 })
 
-    val exitAnimation = if (isLandscape)
-        slideOutHorizontally(targetOffsetX = { it * 2 })
-    else slideOutVertically(targetOffsetY = { it * 2 })
+    val exitAnimation = slideOutVertically(targetOffsetY = { it * 2 })
+
 
     AnimatedVisibility(
-        !selectionMode,
+        visible = when(selectionMode){
+            true -> isLandscape
+            false -> true
+        },
         enter = enterAnimation,
         exit = exitAnimation
     ) {
         FloatingActionButton(
-            onClick = { action(BattleConfigListAction.AddNew) },
+            onClick = {
+                if (!selectionMode) {
+                    action(BattleConfigListAction.AddNew)
+                }
+            },
             modifier = modifier
                 .scale(if (isLandscape) 0.7f else 1f),
+            containerColor = when(selectionMode){
+                true -> MaterialTheme.colorScheme.onSurfaceVariant
+                false -> MaterialTheme.colorScheme.primary
+            }
         ) {
             Icon(
                 Icons.Default.Add,
                 contentDescription = "Create new config",
                 modifier = Modifier
                     .size(40.dp)
-                    .padding(7.dp)
+                    .padding(7.dp),
             )
         }
     }
@@ -489,13 +592,7 @@ private fun BattleConfigListItem(
     val mats = materialsSet.take(3)
 
     val usageCount by config.usageCount.remember()
-    var lastUsage by config.lastUsage.remember()
-
-    LaunchedEffect(Unit) {
-        if (usageCount == 0) {
-            lastUsage = Clock.System.now().toLocalDateTime(TimeZone.UTC)
-        }
-    }
+    val lastUsage by config.lastUsage.remember()
 
     // Without this, holding a list item would leave it highlighted because
     // of recomposition happening before ripple ending

@@ -206,7 +206,7 @@ val ScriptModeEnum.scriptName
 
 val BattleConfigListSortEnum.stringRes
     get() = when (this) {
-        BattleConfigListSortEnum.DEFAULT_SORTED -> R.string.p_battle_config_sort_default
+        BattleConfigListSortEnum.DEFAULT_SORT -> R.string.p_battle_config_sort_default
         BattleConfigListSortEnum.SORT_BY_NAME_DESC -> R.string.p_battle_config_sort_by_name_desc
         BattleConfigListSortEnum.SORT_BY_USAGE_COUNT_ASC -> R.string.p_battle_config_sort_by_usage_count_asc
         BattleConfigListSortEnum.SORT_BY_USAGE_COUNT_DESC -> R.string.p_battle_config_sort_by_usage_count_desc

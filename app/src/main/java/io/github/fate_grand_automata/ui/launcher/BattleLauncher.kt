@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
@@ -94,10 +95,18 @@ fun battleLauncher(
 
         )
     }
+    var selectedConfigIndex by remember { mutableIntStateOf(configs.indexOf(prefs.selectedBattleConfig)) }
+
+    val configListState = rememberLazyListState()
+
     LaunchedEffect(configSort){
+
+        val tempSelectedBattleConfig = if (configs.isNotEmpty() && selectedConfigIndex > -1) {
+            configs[selectedConfigIndex]
+        } else null
         configs = configs.sortedWith(
             when (configSort) {
-                BattleConfigListSortEnum.DEFAULT_SORTED -> {
+                BattleConfigListSortEnum.DEFAULT_SORT -> {
                     compareBy(String.CASE_INSENSITIVE_ORDER) { it.name }
                 }
                 BattleConfigListSortEnum.SORT_BY_NAME_DESC -> {
@@ -145,8 +154,14 @@ fun battleLauncher(
                 }
             }
         )
+        tempSelectedBattleConfig?.let { tmp ->
+            selectedConfigIndex = configs.indexOf(tmp)
+            configListState.scrollToItem(selectedConfigIndex)
+        }
+
+
     }
-    var selectedConfigIndex by remember { mutableIntStateOf(configs.indexOf(prefs.selectedBattleConfig)) }
+
 
 
     var refillResources by remember { mutableStateOf(perServerConfigPref.resources.toSet()) }
@@ -237,52 +252,56 @@ fun battleLauncher(
     ) {
         if (configs.isNotEmpty()) {
             // Scrolling the selected config into view
-            val configListState = rememberLazyListState()
             LaunchedEffect(true) {
                 if (selectedConfigIndex != -1) {
                     configListState.scrollToItem(selectedConfigIndex)
                 }
             }
 
-            LazyColumn(
+            Box(
                 modifier = Modifier
                     .weight(1f)
-                    .scrollbar(
-                        state = configListState,
-                        hiddenAlpha = 0.3f,
-                        horizontal = false,
-                        knobColor = MaterialTheme.colorScheme.secondary
-                    ),
-                state = configListState
-            ) {
-                stickyHeader {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surface)
-                            .clickable {
-                                configSortIndex += 1
-                                if (configSortIndex >= configSortList.size) {
-                                    configSortIndex = 0
-                                }
-                                configSort = configSortList[configSortIndex]
-                            },
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            stringResource(configSort.stringRes).uppercase(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.secondary,
+                    .clipToBounds()
+            ){
+                LazyColumn(
+                    modifier = Modifier
+                        .scrollbar(
+                            state = configListState,
+                            hiddenAlpha = 0.3f,
+                            horizontal = false,
+                            knobColor = MaterialTheme.colorScheme.secondary
+                        ),
+                    state = configListState
+                ) {
+                    stickyHeader {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surface)
+                                .clickable {
+                                    configSortIndex += 1
+                                    if (configSortIndex >= configSortList.size) {
+                                        configSortIndex = 0
+                                    }
+                                    configSort = configSortList[configSortIndex]
+                                },
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                stringResource(configSort.stringRes).uppercase(),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.secondary,
+                            )
+                        }
+                    }
+                    itemsIndexed(configs) { index, item ->
+                        BattleConfigItem(
+                            name = item.name,
+                            isSelected = selectedConfigIndex == index,
+                            onSelected = { selectedConfigIndex = index }
                         )
                     }
-                }
-                itemsIndexed(configs) { index, item ->
-                    BattleConfigItem(
-                        name = item.name,
-                        isSelected = selectedConfigIndex == index,
-                        onSelected = { selectedConfigIndex = index }
-                    )
                 }
             }
         } else {

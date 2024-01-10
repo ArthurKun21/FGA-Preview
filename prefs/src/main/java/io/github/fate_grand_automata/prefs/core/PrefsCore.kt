@@ -185,6 +185,6 @@ class PrefsCore @Inject constructor(
 
     val notifyErrorWarning = maker.string("notify_error_warning")
 
-    val configListSort = maker.enum("config_list_sort", BattleConfigListSortEnum.DEFAULT_SORTED)
+    val configListSort = maker.enum("config_list_sort", BattleConfigListSortEnum.DEFAULT_SORT)
 
 }

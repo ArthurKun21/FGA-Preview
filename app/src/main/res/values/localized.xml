@@ -537,7 +537,7 @@ After pressing on the button, switch the app filter from \"Not optimized\" to \"
 
     <string name="release_notes">Release Notes</string>
 
-    <string name="battle_config_list_usage_count">"%d uses."</string>
+    <string name="battle_config_list_usage_count">"%d use/s."</string>
     <string name="battle_config_list_last_usage">"Last Use: %s %02d:%02d:%02d."</string>
 
     <string name="p_battle_config_sort_title">Battle Config List Sort</string>

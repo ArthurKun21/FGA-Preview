@@ -50,5 +50,5 @@ class PerServerConfigPrefsCore(
     val autoAcceptFriendRequest = maker.bool("auto_accept_friend_request")
     val isFriendListFull = maker.bool("is_friend_list_full")
 
-    val configListSort = maker.enum("config_list_sort", BattleConfigListSortEnum.DEFAULT_SORTED)
+    val configListSort = maker.enum("config_list_sort", BattleConfigListSortEnum.DEFAULT_SORT)
 }

@@ -12,6 +12,7 @@ import io.github.fate_grand_automata.R
 import io.github.fate_grand_automata.prefs.core.BattleConfigCore
 import io.github.fate_grand_automata.prefs.core.PrefsCore
 import io.github.fate_grand_automata.scripts.enums.BattleConfigListSortEnum
+import io.github.fate_grand_automata.scripts.enums.GameServer
 import io.github.fate_grand_automata.scripts.prefs.IBattleConfig
 import io.github.fate_grand_automata.scripts.prefs.IPreferences
 import io.github.fate_grand_automata.util.toggle
@@ -41,12 +42,6 @@ class BattleConfigListViewModel @Inject constructor(
         .battleConfigList
         .asFlow()
         .combine(configListSort) { list, sort ->
-            val serverIsNotSet = { battleConfigCore: BattleConfigCore ->
-                battleConfigCore.server.get() == BattleConfigCore.Server.NotSet
-            }
-            val serverAsGameServer = { battleConfigCore: BattleConfigCore ->
-                battleConfigCore.server.get().asGameServer().toString()
-            }
             val nameGetter = { battleConfigCore: BattleConfigCore ->
                 battleConfigCore.name.get()
             }
@@ -54,7 +49,7 @@ class BattleConfigListViewModel @Inject constructor(
                 battleConfigCore.usageCount.get()
             }
             val lastUsageGetter = { battleConfigCore: BattleConfigCore ->
-                if (battleConfigCore.usageCount.get() > 0){
+                if (battleConfigCore.usageCount.get() > 0) {
                     battleConfigCore.lastUsage.get().toInstant(TimeZone.UTC).epochSeconds
                 } else {
                     0L
@@ -63,50 +58,71 @@ class BattleConfigListViewModel @Inject constructor(
             list
                 .map { key -> prefsCore.forBattleConfig(key) }
                 .sortedWith(
-                    when(sort){
-                        BattleConfigListSortEnum.DEFAULT_SORTED -> {
-                            compareByDescending(serverIsNotSet)
-                                .thenByDescending(serverAsGameServer)
-                                .thenBy(String.CASE_INSENSITIVE_ORDER){
-                                    nameGetter(it)
+                    when (sort) {
+                        BattleConfigListSortEnum.DEFAULT_SORT -> {
+                            compareByDescending<BattleConfigCore, Int?>((nullsFirst())) {
+                                it.server.get().asGameServer()?.let { server ->
+                                    GameServer.values.indexOf(server)
                                 }
+                            }.thenBy(String.CASE_INSENSITIVE_ORDER) {
+                                nameGetter(it)
+                            }
                         }
+
                         BattleConfigListSortEnum.SORT_BY_NAME_DESC -> {
-                            compareByDescending(serverIsNotSet)
-                                .thenByDescending(serverAsGameServer)
-                                .thenByDescending(String.CASE_INSENSITIVE_ORDER){
-                                    nameGetter(it)
+                            compareByDescending<BattleConfigCore, Int?>((nullsFirst())) {
+                                it.server.get().asGameServer()?.let { server ->
+                                    GameServer.values.indexOf(server)
                                 }
+                            }.thenByDescending(String.CASE_INSENSITIVE_ORDER) {
+                                nameGetter(it)
+                            }
                         }
+
                         BattleConfigListSortEnum.SORT_BY_USAGE_COUNT_ASC -> {
                             compareBy(usageCountGetter)
-                                .thenByDescending(serverIsNotSet)
-                                .thenByDescending(serverAsGameServer)
-                                .thenBy(String.CASE_INSENSITIVE_ORDER){
+                                .thenBy((nullsFirst())){
+                                    it.server.get().asGameServer()?.let { server ->
+                                        GameServer.values.indexOf(server)
+                                    }
+                                }
+                                .thenBy(String.CASE_INSENSITIVE_ORDER) {
                                     nameGetter(it)
                                 }
                         }
+
                         BattleConfigListSortEnum.SORT_BY_USAGE_COUNT_DESC -> {
                             compareByDescending(usageCountGetter)
-                                .thenByDescending(serverIsNotSet)
-                                .thenByDescending(serverAsGameServer)
-                                .thenBy(String.CASE_INSENSITIVE_ORDER){
+                                .thenBy((nullsFirst())){
+                                    it.server.get().asGameServer()?.let { server ->
+                                        GameServer.values.indexOf(server)
+                                    }
+                                }
+                                .thenBy(String.CASE_INSENSITIVE_ORDER) {
                                     nameGetter(it)
                                 }
                         }
+
                         BattleConfigListSortEnum.SORT_BY_LAST_USAGE_TIME_ASC -> {
                             compareBy(lastUsageGetter)
-                                .thenByDescending(serverIsNotSet)
-                                .thenByDescending(serverAsGameServer)
-                                .thenBy(String.CASE_INSENSITIVE_ORDER){
+                                .thenBy((nullsFirst())){
+                                    it.server.get().asGameServer()?.let { server ->
+                                        GameServer.values.indexOf(server)
+                                    }
+                                }
+                                .thenBy(String.CASE_INSENSITIVE_ORDER) {
                                     nameGetter(it)
                                 }
                         }
+
                         BattleConfigListSortEnum.SORT_BY_LAST_USAGE_TIME_DESC -> {
                             compareByDescending(lastUsageGetter)
-                                .thenByDescending(serverIsNotSet)
-                                .thenByDescending(serverAsGameServer)
-                                .thenBy(String.CASE_INSENSITIVE_ORDER){
+                                .thenBy((nullsFirst())){
+                                    it.server.get().asGameServer()?.let { server ->
+                                        GameServer.values.indexOf(server)
+                                    }
+                                }
+                                .thenBy(String.CASE_INSENSITIVE_ORDER) {
                                     nameGetter(it)
                                 }
                         }
