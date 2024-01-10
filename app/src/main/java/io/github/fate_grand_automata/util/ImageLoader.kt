@@ -123,6 +123,7 @@ class ImageLoader @Inject constructor(
         Images.ServantAscensionRedirectFromMenu -> "servant_ascension_redirect_from_menu.png"
         Images.ServantGrailBanner -> "servant_palingenesis_banner.png"
         Images.ServantAscensionBanner -> "servant_ascension_banner.png"
+        Images.ServantAscensionReturnToLevel -> "servant_ascension_return_to_level.png"
         Images.Execute -> "execute.png"
         Images.AppendSkill -> "append_skill.png"
         Images.AppendLock -> "append_lock.png"

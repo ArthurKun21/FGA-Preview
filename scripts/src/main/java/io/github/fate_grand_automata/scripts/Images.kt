@@ -75,6 +75,7 @@ enum class Images {
     ServantAscensionRedirectFromMenu,
     ServantGrailBanner,
     ServantAscensionBanner,
+    ServantAscensionReturnToLevel,
     Execute,
     AppendSkill,
     AppendLock

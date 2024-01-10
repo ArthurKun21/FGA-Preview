@@ -340,7 +340,6 @@ class ScriptManager @Inject constructor(
                     AutoServantLevel.ExitReason.NoServantSelected ->
                         context.getString(R.string.enhancement_missing_servant)
 
-                    AutoServantLevel.ExitReason.RanOutOfQP -> context.getString(R.string.ran_out_of_qp)
                     is AutoServantLevel.ExitReason.Unexpected -> {
                         e.let {
                             "${context.getString(R.string.unexpected_error)}: ${e.message}"

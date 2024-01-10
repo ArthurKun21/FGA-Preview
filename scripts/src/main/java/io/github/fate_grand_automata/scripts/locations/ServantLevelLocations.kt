@@ -52,4 +52,9 @@ class ServantLevelLocations @Inject constructor(
     val autoSelectMinEmberLowQPLocation = Location(402, 1126).xFromCenter()
 
     val returnToServantMenuFromAscensionLocation = Location(816, 572).xFromCenter()
+
+    val ascensionReturnToLevelRegion = when(isWide){
+        true -> Region(568, 489, 43, 82).xFromCenter()
+        false -> Region(568, 529, 43, 82).xFromCenter()
+    }
 }
