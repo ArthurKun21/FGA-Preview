@@ -12,7 +12,12 @@ REPO = os.getenv("REPO_NAME", "ArthurKun21/fga")
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 if len(GITHUB_TOKEN) > 0:
-    httpx_client = httpx.Client(headers={"Authorization": f"Bearer {GITHUB_TOKEN}"})
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        'Accept': 'application/vnd.github.v3+json',
+    }
+else:
+    headers = None
 
 URL_BASE = f"https://api.github.com/repos/{REPO}"
 
@@ -35,7 +40,7 @@ def save_releases_summary(summary: str):
 
 def get_commit_message(sha: str):
     commit_url = f"{URL_BASE}/git/commits/{sha}"
-    response = httpx.get(commit_url)
+    response = httpx.get(commit_url, headers=headers)
     data = json.loads(response.text)
     message = data["message"]
     return message
@@ -43,7 +48,7 @@ def get_commit_message(sha: str):
 
 def get_latest_commit():
     last_commit = f"{URL_BASE}/commits"
-    response = httpx.get(last_commit)
+    response = httpx.get(last_commit, headers=headers)
     data = json.loads(response.text)
     last_commit_sha = data[0]["sha"]
     message = get_commit_message(last_commit_sha)
@@ -52,22 +57,19 @@ def get_latest_commit():
 
 def url_tag_commit_sha(tag: str):
     URL_TAG = f"{URL_BASE}/git/refs/tags/{tag}"
-    response = httpx.get(URL_TAG)
+    response = httpx.get(URL_TAG, headers=headers)
     data = json.loads(response.text)
     return data["object"]["sha"]
 
 
 def get_last_releases():
     last_releases = f"{URL_BASE}/releases"
-    response = httpx.get(last_releases)
+    response = httpx.get(last_releases, headers=headers)
     body = json.loads(response.text)
 
     commit_info_list = []
 
-    limit_index = 15
     for release in body:
-        if limit_index == 0:
-            break
         tag = release["tag_name"]
 
         tag_sha = url_tag_commit_sha(tag)
@@ -76,8 +78,6 @@ def get_last_releases():
 
         commit_info_list.append(f"{tag}")
         commit_info_list.append(f"{tag_commit_message}")
-
-        limit_index -= 1
     return commit_info_list
 
 
@@ -93,7 +93,7 @@ def development_branch():
 
 def get_pr_title_and_url():
     URL_PR = f"{URL_BASE}/pulls/{PR_NUMBER}"
-    response = httpx.get(URL_PR)
+    response = httpx.get(URL_PR, headers=headers)
     data = json.loads(response.text)
     return data["title"], data["html_url"]
 
@@ -101,7 +101,7 @@ def get_pr_title_and_url():
 def pull_request_branch():
     pr_title, pr_url = get_pr_title_and_url()
     URL_PR_COMMITS = f"{URL_BASE}/pulls/{PR_NUMBER}/commits"
-    response = httpx.get(URL_PR_COMMITS)
+    response = httpx.get(URL_PR_COMMITS, headers=headers)
     pull_request_commits_data = json.loads(response.text)
 
     commit_info_list = []
