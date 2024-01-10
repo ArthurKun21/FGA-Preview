@@ -63,15 +63,21 @@ def get_last_releases():
     body = json.loads(response.text)
 
     commit_info_list = []
+
+    limit_index = 15
     for release in body:
+        if limit_index == 0:
+            break
         tag = release["tag_name"]
 
         tag_sha = url_tag_commit_sha(tag)
 
         tag_commit_message = get_commit_message(tag_sha)
-        
+
         commit_info_list.append(f"{tag}")
         commit_info_list.append(f"{tag_commit_message}")
+
+        limit_index -= 1
     return commit_info_list
 
 
