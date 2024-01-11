@@ -5,6 +5,7 @@ import io.github.fate_grand_automata.scripts.Images
 import io.github.fate_grand_automata.scripts.modules.ConnectionRetry
 import io.github.lib_automata.EntryPoint
 import io.github.lib_automata.ExitManager
+import io.github.lib_automata.Highlighter
 import io.github.lib_automata.ScriptAbortException
 import io.github.lib_automata.dagger.ScriptScope
 import javax.inject.Inject
@@ -153,10 +154,18 @@ class AutoServantLevel @Inject constructor(
      * debug highlighter obstructing the screen and thus the script can't detect the ascension/grail menu.
      */
     private fun checkMaxLevelRedirectOrExit() {
-        val ascensionRedirect = isRedirectAscensionVisible()
-        val grailRedirect = isRedirectGrailVisible()
+        if (prefs.platformPrefs.debugMode) {
+            // wait for debug rectangles to disappear
+            (Highlighter.DEFAULT_DURATION + 0.1.seconds).wait()
+        }
+        var ascensionRedirect = false
+        var grailRedirect = false
+        useSameSnapIn {
+            ascensionRedirect = prefs.servant.shouldRedirectAscension && isRedirectAscensionVisible()
+            grailRedirect = prefs.servant.shouldRedirectGrail && isRedirectGrailVisible()
+        }
         when {
-            prefs.servant.shouldRedirectAscension && ascensionRedirect -> {
+            ascensionRedirect -> {
                 while (true) {
                     locations.servant.servantRedirectCheckRegion.click()
                     val isVisible = waitUntilAscensionVisible()
@@ -169,7 +178,7 @@ class AutoServantLevel @Inject constructor(
                 }
             }
 
-            prefs.servant.shouldRedirectGrail && grailRedirect -> {
+            grailRedirect -> {
                 while (true) {
                     locations.servant.servantRedirectCheckRegion.click()
                     val isVisible = waitUntilGrailVisible()
