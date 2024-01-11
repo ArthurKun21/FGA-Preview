@@ -129,7 +129,7 @@ fun servantLevelLauncher(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
-            ){
+            ) {
                 RowTextCheckBox(
                     modifier = Modifier
                         .weight(1f),
@@ -163,16 +163,25 @@ fun servantLevelLauncher(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
-            ){
-                RowTextCheckBox(
+            ) {
+                Column(
                     modifier = Modifier
                         .weight(1f),
-                    text = stringResource(R.string.servant_perform_ascension_question),
-                    status = shouldPerformAscension,
-                    onStatusChange = {
-                        shouldPerformAscension = it
-                    }
-                )
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    RowTextCheckBox(
+                        text = stringResource(R.string.servant_perform_ascension_question),
+                        status = shouldPerformAscension,
+                        onStatusChange = {
+                            shouldPerformAscension = it
+                        }
+                    )
+                    Text(
+                        stringResource(R.string.servant_perform_ascension_warning),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
                 VerticalDivider()
                 Spacer(modifier = Modifier.weight(1f))
 
