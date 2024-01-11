@@ -3,16 +3,19 @@ package io.github.fate_grand_automata.prefs.core
 import io.github.fate_grand_automata.scripts.enums.CEDisplayChangeAreaEnum
 
 class CraftEssencePrefsCore(maker: PrefMaker) {
+    /**
+     * Checks if the CE enhancement screen is empty.
+     * If it is not empty, then the script will show the Target CE as there is already target CE selected.
+     */
+    val emptyEnhance = maker.bool("ce_empty_enhance")
 
-    val emptyEnhance = maker.bool("emptyEnhance")
+    val skipAutoLockTargetCE = maker.bool("ce_skip_auto_lock_target")
 
-    val skipAutoLockTargetCE = maker.bool("skip_auto_lock_target_ce")
+    val useDragging = maker.bool("ce_use_dragging", default = true)
 
-    val useDragging = maker.bool("use_dragging", default = true)
+    val skipAutomaticDisplayChange = maker.bool("ce_skip_automatic_display_change")
 
-    val skipAutomaticDisplayChange = maker.bool("skip_automatic_display_change")
-
-    val canShowAutomaticDisplayChange=  maker.bool("can_show_automatic_display_change", true)
+    val canShowAutomaticDisplayChange=  maker.bool("ce_can_show_automatic_display_change", true)
 
     val ceDisplayChangeArea = maker.stringSet("ce_display_change_area").map(
         defaultValue = emptySet(),
@@ -32,9 +35,9 @@ class CraftEssencePrefsCore(maker: PrefMaker) {
 
     val ceTargetRarity = maker.int("ce_target_rarity", 1)
 
-    val skipSortDetection = maker.bool("skip_sort_detection")
+    val skipSortDetection = maker.bool("ce_skip_sort_detection")
 
-    val skipCEFilterDetection = maker.bool("skip_ce_filter_detection")
+    val skipCEFilterDetection = maker.bool("ce_skip_ce_filter_detection")
 
     val ceFodderRarity = maker.stringSet("ce_fodder_rarity").map(
         defaultValue = setOf(1, 2),

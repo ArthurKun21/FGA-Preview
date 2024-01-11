@@ -9,16 +9,14 @@ class CEBombLocations @Inject constructor(
     scriptAreaTransforms: IScriptAreaTransforms
 ) : IScriptAreaTransforms by scriptAreaTransforms {
 
-    val getCeEnhanceRegion = when (gameServer) {
-        is GameServer.En -> when (isWide) {
-            false -> Region(-672, 16, 240, 96).xFromRight()
-            true -> Region(-843, 16, 240, 96).xFromRight()
-        }
-        // JP option
-        else -> when (isWide) {
-            false -> Region(675, 16, 221, 104).xFromCenter()
-            true -> Region(-776, 16, 221, 104).xFromRight()
-        }
+    val ceBannerOnRegion = when(isWide){
+        true -> Region(-1007, 24, 225, 126).xFromCenter()
+        false -> Region(-898, 22, 226, 126).xFromCenter()
+    }
+
+    val ceBannerOffRegion = when(isWide){
+        true -> Region(206, 489, 164, 79).xFromCenter()
+        false -> Region(204, 529, 164, 79).xFromCenter()
     }
 
     // click on the center of previous region

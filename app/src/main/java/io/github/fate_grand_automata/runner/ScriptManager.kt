@@ -314,8 +314,6 @@ class ScriptManager @Inject constructor(
             is AutoCEBomb.ExitException -> {
                 val msg = when (e.reason) {
                     AutoCEBomb.ExitReason.NoSuitableTargetCEFound -> context.getString(R.string.ce_bomb_no_suitable_ces)
-                    AutoCEBomb.ExitReason.MaxNumberOfIterations -> context.getString(R.string.ce_bomb_max_iterations)
-                    AutoCEBomb.ExitReason.CEFullyUpgraded -> context.getString(R.string.ce_bomb_ce_fully_upgraded)
                 }
 
                 messages.notify(msg)

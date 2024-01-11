@@ -43,6 +43,17 @@ class AutoSetup @Inject constructor(
         prefs.craftEssence.emptyEnhance = emptyEnhance
     }
 
+    /**
+     * This fetches the play button's region and scale it to the script's scale.
+     *
+     * Then produce locations for the 4 corners of the display change region.
+     * [io.github.fate_grand_automata.scripts.locations.CEBombLocations.displayChangeRegion]
+     *
+     * Then check if the play button is not in any of the 4 corners.
+     *
+     * If it is not, then set the [CEDisplayChangeAreaEnum] to the corresponding corner.
+     * otherwise set it to [CEDisplayChangeAreaEnum.NONE]
+     */
     fun checkIfCanAutomaticDisplayChangeInCE() {
         val scaledPlayButton = prefs.playButtonRegion * (1 / scale.scriptToScreen)
 

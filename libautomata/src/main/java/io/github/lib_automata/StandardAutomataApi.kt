@@ -8,6 +8,7 @@ class StandardAutomataApi @Inject constructor(
     private val highlight: Highlighter,
     private val click: Clicker,
     private val longPress: LongPress,
+    private val longPressAndSwipeOrMultipleClicks: LongPressAndSwipeOrMultipleClicks,
     private val imageMatcher: ImageMatcher,
     private val transform: Transformer,
     private val colorManager: ColorManager,
@@ -62,7 +63,6 @@ class StandardAutomataApi @Inject constructor(
         return regex.find(text)?.groupValues?.getOrNull(1)?.toInt()
     }
 
-
     override fun Region.exists(
         image: Pattern,
         timeout: Duration,
@@ -100,6 +100,11 @@ class StandardAutomataApi @Inject constructor(
                 return ocrService.detectText(it)
             }
     }
+
+    override fun longPressAndSwipe(clicksArray: List<List<Location>>, chunked: Int) {
+        longPressAndSwipeOrMultipleClicks(clicksArray, chunked)
+    }
+
 
 }
 

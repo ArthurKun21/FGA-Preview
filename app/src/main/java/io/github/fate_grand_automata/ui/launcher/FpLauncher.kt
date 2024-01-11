@@ -221,7 +221,7 @@ fun fpLauncher(
                                         )
                                         skipReminder(
                                             show = skipSortDetection,
-                                            text = stringResource(id = R.string.p_ce_bomb_skip_sort_reminder)
+                                            text = stringResource(id = R.string.ce_bomb_skip_sort_reminder)
                                         )
                                         Divider(
                                             modifier = Modifier.padding(vertical = 1.dp, horizontal = 2.dp)
@@ -234,7 +234,7 @@ fun fpLauncher(
                                         )
                                         skipReminder(
                                             show = skipFilterDetection,
-                                            text = stringResource(id = R.string.p_ce_bomb_skip_filter_reminder)
+                                            text = stringResource(id = R.string.ce_bomb_skip_filter_reminder)
                                         )
                                     }
                                     Column(

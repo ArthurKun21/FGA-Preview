@@ -397,8 +397,6 @@
     <string name="p_game_area_custom_right">右（像素）</string>
     <string name="p_game_area_custom_bottom">上（像素）</string>
     <string name="ce_bomb_no_suitable_ces">無法選擇作為強化素材的概念禮裝</string>
-    <string name="ce_bomb_max_iterations">已達到最大執行次數</string>
-    <string name="ce_bomb_ce_fully_upgraded">概念禮裝已達到等級上限，請鎖定或放置於靈基保管室</string>
     <string name="p_welcome">歡迎使用 FGA！</string>
     <string name="p_welcome_description">以下將介紹幾個最重要的初始化設定</string>
     <string name="p_battery_optimization">電池效能最佳化</string>

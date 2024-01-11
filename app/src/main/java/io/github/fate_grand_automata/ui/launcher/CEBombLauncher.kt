@@ -138,7 +138,7 @@ fun ceBombLauncher(
             ) {
                 item {
                     Text(
-                        stringResource(R.string.p_ce_bomb_explanation),
+                        stringResource(R.string.ce_bomb_explanation),
                         style = bodyTextSize(),
                         textAlign = TextAlign.Justify
                     )
@@ -165,7 +165,7 @@ fun ceBombLauncher(
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                text = stringResource(id = R.string.p_ce_bomb_selection_method).uppercase(),
+                                text = stringResource(id = R.string.ce_bomb_selection_method).uppercase(),
                                 style = bodyTextSize(),
                                 modifier = Modifier.fillMaxWidth(),
                                 textDecoration = TextDecoration.Underline
@@ -211,7 +211,7 @@ fun ceBombLauncher(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = stringResource(id = R.string.p_ce_bomb_skip_auto_lock_of_target_ce),
+                                    text = stringResource(id = R.string.ce_bomb_skip_auto_lock_of_target_ce),
                                     modifier = Modifier
                                         .weight(1f),
                                     style = bodyTextSize()
@@ -245,7 +245,7 @@ fun ceBombLauncher(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = stringResource(id = R.string.p_ce_bomb_skip_display_size_setup),
+                                    text = stringResource(id = R.string.ce_bomb_skip_display_size_setup),
                                     modifier = Modifier
                                         .weight(1f),
                                     style = bodyTextSize()
@@ -262,7 +262,7 @@ fun ceBombLauncher(
                     item {
                         skipReminder(
                             show = skipAutomaticDisplayChange,
-                            text = stringResource(id = R.string.p_ce_bomb_skip_display_size_reminder)
+                            text = stringResource(id = R.string.ce_bomb_skip_display_size_reminder)
                         )
                     }
                 } else {
@@ -271,7 +271,7 @@ fun ceBombLauncher(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = stringResource(id = R.string.p_ce_bomb_skip_display_size_warning),
+                                text = stringResource(id = R.string.ce_bomb_skip_display_size_warning),
                                 style = bodyTextSize(),
                                 textAlign = TextAlign.Center
                             )
@@ -293,7 +293,7 @@ fun ceBombLauncher(
                 item {
                     skipReminder(
                         show = skipSortDetection,
-                        text = stringResource(id = R.string.p_ce_bomb_skip_sort_reminder)
+                        text = stringResource(id = R.string.ce_bomb_skip_sort_reminder)
                     )
                 }
                 item {
@@ -311,7 +311,7 @@ fun ceBombLauncher(
                 item {
                     skipReminder(
                         show = skipFilterDetection,
-                        text = stringResource(id = R.string.p_ce_bomb_skip_filter_reminder)
+                        text = stringResource(id = R.string.ce_bomb_skip_filter_reminder)
                     )
                 }
                 if (isEmptyEnhance) {
@@ -362,7 +362,7 @@ fun filterSettings(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(id = R.string.p_ce_bomb_skip_filter_setup),
+                text = stringResource(id = R.string.ce_bomb_skip_filter_setup),
                 modifier = Modifier
                     .weight(1f),
                 style = bodyTextSize()
@@ -391,7 +391,7 @@ fun sortSettings(
             )
     ) {
         Text(
-            text = stringResource(id = R.string.p_ce_bomb_skip_sort_setup),
+            text = stringResource(id = R.string.ce_bomb_skip_sort_setup),
             style = bodyTextSize(),
             modifier = Modifier.weight(1f),
         )
@@ -412,7 +412,7 @@ fun setFodderRarityFilter(
 ) {
     Column {
         Text(
-            text = stringResource(id = R.string.p_ce_bomb_fodder_rarity).uppercase(),
+            text = stringResource(id = R.string.ce_bomb_fodder_rarity).uppercase(),
             modifier = Modifier,
             style = bodyTextSize(),
             color = if (skipFilterDetection) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
@@ -437,7 +437,7 @@ fun setTargetRarityFilter(
 ) {
     Column {
         Text(
-            text = stringResource(id = R.string.p_ce_bomb_target_rarity).uppercase(),
+            text = stringResource(id = R.string.ce_bomb_target_rarity).uppercase(),
             modifier = Modifier,
             style = bodyTextSize(),
             color = if (skipFilterDetection) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
@@ -535,8 +535,8 @@ private fun determineSelectionMethod(
 
             selectedItem(
                 text = stringResource(
-                    id = if (input) R.string.p_ce_bomb_dragging
-                    else R.string.p_ce_bomb_clicking
+                    id = if (input) R.string.ce_bomb_dragging
+                    else R.string.ce_bomb_clicking
                 ).uppercase(),
                 isSelected = isSelected,
                 onClick = {
@@ -577,8 +577,8 @@ private fun longPressAndDragSettings(
             ) {
                 Text(
                     text = when (showDurationSettings) {
-                        true -> stringResource(id = R.string.p_ce_bomb_hide_dragging_settings)
-                        false -> stringResource(id = R.string.p_ce_bomb_show_dragging_settings)
+                        true -> stringResource(id = R.string.ce_bomb_hide_dragging_settings)
+                        false -> stringResource(id = R.string.ce_bomb_show_dragging_settings)
                     },
                     style = labelTextSize(),
                     modifier = Modifier.fillMaxWidth(),
@@ -600,7 +600,7 @@ private fun longPressAndDragSettings(
                     horizontalArrangement = Arrangement.End
                 ) {
                     Text(
-                        text = stringResource(id = R.string.p_ce_bomb_duration).uppercase(),
+                        text = stringResource(id = R.string.ce_bomb_duration).uppercase(),
                         style = labelTextSize(),
                         modifier = Modifier.weight(1f),
                         textDecoration = TextDecoration.Underline
@@ -623,7 +623,7 @@ private fun longPressAndDragSettings(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(id = R.string.p_ce_bomb_long_press),
+                        text = stringResource(id = R.string.ce_bomb_long_press),
                         style = labelTextSize(),
                         modifier = Modifier.weight(1f)
                     )
@@ -639,7 +639,7 @@ private fun longPressAndDragSettings(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(id = R.string.p_ce_bomb_drag),
+                        text = stringResource(id = R.string.ce_bomb_drag),
                         style = labelTextSize(),
                         modifier = Modifier.weight(1f)
                     )

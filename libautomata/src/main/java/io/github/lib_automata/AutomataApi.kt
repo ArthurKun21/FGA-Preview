@@ -1,5 +1,6 @@
 package io.github.lib_automata
 
+
 import kotlin.time.Duration
 
 interface AutomataApi {
@@ -65,4 +66,9 @@ interface AutomataApi {
     fun Region.findNumberInText(
         replace: List<Pair<String, String>> = emptyList()
     ): Int?
+
+    fun longPressAndSwipe(
+        clicksArray: List<List<Location>>,
+        chunked: Int
+    )
 }
