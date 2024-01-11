@@ -461,6 +461,7 @@ After pressing on the button, switch the app filter from \"Not optimized\" to \"
     <string name="servant_perform_ascension_failed">Unable to perform Ascension.</string>
     <string name="servant_level_up_by_n_times">"Level up by %d time(s)"</string>
     <string name="servant_level_max">Max Level Achieved</string>
+    <string name="servant_perform_ascension_warning">Ascension of duplicate servant is not supported.</string>
 
 
 
