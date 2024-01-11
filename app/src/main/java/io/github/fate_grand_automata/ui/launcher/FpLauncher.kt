@@ -45,6 +45,8 @@ fun fpLauncher(
 
     var shouldCreateCEBombAfterSummon by prefsCore.friendGacha.shouldCreateCEBombAfterSummon.remember()
 
+    var shouldRedirectToSell by prefsCore.friendGacha.shouldRedirectToSell.remember()
+
     var skipSortDetection by prefsCore.craftEssence.skipSortDetection.remember()
 
     var skipFilterDetection by prefsCore.craftEssence.skipCEFilterDetection.remember()
@@ -170,6 +172,9 @@ fun fpLauncher(
                         )
                     }
                 }
+                item {
+                    Divider(modifier = Modifier.padding(vertical = 4.dp))
+                }
                 if (shouldCreateCEBombAfterSummon) {
                     item {
                         Column(
@@ -266,6 +271,41 @@ fun fpLauncher(
                     }
                 }
 
+            }
+
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            shouldRedirectToSell = !shouldRedirectToSell
+                        }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f),
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Text(
+                            stringResource(R.string.should_redirect_to_sell_after_summon),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            stringResource(R.string.should_redirect_to_sell_after_summon_warning),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+
+                    Switch(
+                        checked = shouldRedirectToSell,
+                        onCheckedChange = { shouldRedirectToSell = it }
+                    )
+                }
             }
         }
     }

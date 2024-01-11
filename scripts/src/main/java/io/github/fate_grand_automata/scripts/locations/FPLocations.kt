@@ -27,4 +27,16 @@ class FPLocations @Inject constructor(
         // JP option
         else -> Region(-683, 302, 312, 64).xFromCenter()
     }
+
+    val fpSellRegion = when(isWide){
+        true -> Region(651, 1262, 318, 109).xFromCenter()
+        false -> Region(651, 1291, 318, 109).xFromCenter()
+    }
+
+    val sellBannerRegion = when(isWide){
+        true -> Region(194, 829, 135, 115)
+        false -> Region(6, 847, 135, 115)
+    }
+
+    val inventoryFullSellRegion = Region(-647, 923, 114, 54).xFromCenter()
 }

@@ -128,6 +128,7 @@ class ImageLoader @Inject constructor(
         Images.Execute -> "execute.png"
         Images.AppendSkill -> "append_skill.png"
         Images.AppendLock -> "append_lock.png"
+        Images.FPSell -> "fp_sell.png"
     }
 
     override operator fun get(img: Images, gameServer: GameServer?): Pattern = synchronized(regionCachedPatterns) {

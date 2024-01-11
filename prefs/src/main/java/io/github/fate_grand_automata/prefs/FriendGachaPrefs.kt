@@ -10,5 +10,5 @@ internal class FriendGachaPrefs(
     override var shouldLimitFP by prefs.shouldLimitFP
     override var limitFP by prefs.limitFP
     override var shouldCreateCEBombAfterSummon by prefs.shouldCreateCEBombAfterSummon
-
+    override var shouldRedirectToSell by prefs.shouldRedirectToSell
 }

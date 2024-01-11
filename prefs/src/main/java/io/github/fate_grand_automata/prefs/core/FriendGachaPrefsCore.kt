@@ -5,5 +5,7 @@ class FriendGachaPrefsCore(maker: PrefMaker) {
     val shouldLimitFP = maker.bool("should_fp_limit")
     val limitFP = maker.int("fp_limit", 1)
 
-    val shouldCreateCEBombAfterSummon = maker.bool("should_create_ce_bomb_after_summon")
+    val shouldCreateCEBombAfterSummon = maker.bool("fp_should_create_ce_bomb_after_summon")
+
+    val shouldRedirectToSell = maker.bool("fp_redirect_to_sell")
 }

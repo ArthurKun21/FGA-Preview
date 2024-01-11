@@ -6,4 +6,6 @@ interface IFriendGachaPreferences {
     var limitFP: Int
 
     var shouldCreateCEBombAfterSummon: Boolean
+
+    var shouldRedirectToSell: Boolean
 }

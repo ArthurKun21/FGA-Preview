@@ -79,5 +79,6 @@ enum class Images {
     ServantAscensionReturnToLevel,
     Execute,
     AppendSkill,
-    AppendLock
+    AppendLock,
+    FPSell
 }

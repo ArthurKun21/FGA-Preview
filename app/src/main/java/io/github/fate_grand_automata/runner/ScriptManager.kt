@@ -286,6 +286,25 @@ class ScriptManager @Inject constructor(
                     is AutoFriendGacha.ExitReason.Limit -> context.getString(R.string.times_rolled, reason.count)
                     AutoFriendGacha.ExitReason.UnableVerifyIfReachedCEEnhancementMenu ->
                         context.getString(R.string.unable_to_verify_if_reached_the_ce_menu)
+
+                    is AutoFriendGacha.ExitReason.ReachedSellBanner ->
+                        if (reason.count == 0) {
+                            context.getString(R.string.fp_reached_sell_banner)
+                        } else {
+                            context.getString(R.string.fp_reached_sell_banner) + " " +
+                                    context.getString(R.string.times_rolled, reason.count)
+                        }
+
+                    AutoFriendGacha.ExitReason.RunOutOfFP ->
+                        context.getString(R.string.fp_run_out_of_friend_points)
+
+                    is AutoFriendGacha.ExitReason.SellBannerNotVisible ->
+                        if (reason.count == 0) {
+                            context.getString(R.string.fp_reached_sell_banner_failed)
+                        } else {
+                            context.getString(R.string.fp_reached_sell_banner_failed) + " " +
+                                    context.getString(R.string.times_rolled, reason.count)
+                        }
                 }
 
                 messages.notify(msg)
@@ -294,7 +313,7 @@ class ScriptManager @Inject constructor(
 
             is AutoBattle.ExitException -> {
                 preferences.hidePlayButtonForScreenshot = false
-                if (e.reason !is AutoBattle.ExitReason.Paused && e.state.timesRan > 0){
+                if (e.reason !is AutoBattle.ExitReason.Paused && e.state.timesRan > 0) {
                     preferences.selectedBattleConfig.lastUsage =
                         Clock.System.now().toLocalDateTime(timeZone = TimeZone.UTC)
                     preferences.selectedBattleConfig.usageCount += e.state.timesRan
@@ -326,6 +345,7 @@ class ScriptManager @Inject constructor(
                 }
                 showAutoSkillMenu(service, e)
             }
+
             is AutoAppend.ExitException -> {
                 if (e.reason !is AutoAppend.ExitReason.Abort) {
                     messages.notify(scriptExitedString)
@@ -358,17 +378,19 @@ class ScriptManager @Inject constructor(
 
                     AutoServantLevel.ExitReason.RedirectAscension ->
                         context.getString(R.string.servant_redirect_ascension_success)
+
                     AutoServantLevel.ExitReason.RedirectGrail ->
                         context.getString(R.string.servant_redirect_grail_success)
 
                     AutoServantLevel.ExitReason.UnableToPerformAscension ->
                         context.getString(R.string.servant_perform_ascension_failed)
                 }
-                if (!preferences.servant.muteNotifications){
+                if (!preferences.servant.muteNotifications) {
                     messages.notify(msg)
                 }
                 messageBox.show(scriptExitedString, msg)
             }
+
             is AutoNotifyError.ExitException -> {
                 // do nothing
             }
