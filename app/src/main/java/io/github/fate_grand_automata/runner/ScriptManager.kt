@@ -288,10 +288,12 @@ class ScriptManager @Inject constructor(
                         context.getString(R.string.unable_to_verify_if_reached_the_ce_menu)
 
                     is AutoFriendGacha.ExitReason.ReachedSellBanner ->
-                        if (reason.count == 0) {
-                            context.getString(R.string.fp_reached_sell_banner)
-                        } else {
-                            context.getString(R.string.fp_reached_sell_banner) + " " +
+                        when {
+                            reason.inventoryFull -> context.getString(R.string.fp_reached_sell_banner) + " " +
+                                    context.getString(R.string.inventory_full)
+
+                            reason.count == 0 -> context.getString(R.string.fp_reached_sell_banner)
+                            else -> context.getString(R.string.fp_reached_sell_banner) + " " +
                                     context.getString(R.string.times_rolled, reason.count)
                         }
 
@@ -299,10 +301,12 @@ class ScriptManager @Inject constructor(
                         context.getString(R.string.fp_run_out_of_friend_points)
 
                     is AutoFriendGacha.ExitReason.SellBannerNotVisible ->
-                        if (reason.count == 0) {
-                            context.getString(R.string.fp_reached_sell_banner_failed)
-                        } else {
-                            context.getString(R.string.fp_reached_sell_banner_failed) + " " +
+                        when {
+                            reason.inventoryFull -> context.getString(R.string.fp_reached_sell_banner_failed) + " " +
+                                    context.getString(R.string.inventory_full)
+
+                            reason.count == 0 -> context.getString(R.string.fp_reached_sell_banner_failed)
+                            else -> context.getString(R.string.fp_reached_sell_banner_failed) + " " +
                                     context.getString(R.string.times_rolled, reason.count)
                         }
                 }

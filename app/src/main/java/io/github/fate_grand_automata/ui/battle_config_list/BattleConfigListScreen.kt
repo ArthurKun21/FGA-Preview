@@ -608,10 +608,16 @@ private fun BattleConfigListItem(
                 horizontalAlignment = Alignment.Start,
             ) {
                 Text(
-                    stringResource(
-                        R.string.battle_config_list_usage_count,
-                        usageCount
-                    ),
+                    text = when(usageCount <= 1){
+                        true -> stringResource(
+                            R.string.battle_config_list_usage_count_init,
+                            usageCount
+                        )
+                        false -> stringResource(
+                            R.string.battle_config_list_usage_count,
+                            usageCount
+                        )
+                    },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

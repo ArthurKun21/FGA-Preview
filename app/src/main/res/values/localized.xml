@@ -255,7 +255,7 @@ Please turn on accessibility for this app from System settings. If it is already
     <string name="unexpected_error">"Unexpected Error"</string>
     <string name="script_exited">"Script Exited"</string>
     <string name="lottery_currency_depleted">"Ran out of lottery currency"</string>
-    <string name="inventory_full">"Inventory Full"</string>
+    <string name="inventory_full">"Inventory Full."</string>
     <string name="present_box_full">"Present Box Full"</string>
     <string name="present_box_full_and_embers_are_overflowing">"Present Box is full and Embers are overflowing."</string>
     <string name="present_box_full_and_have_pick_at_least_embers">"Present Box is full and Embers are overflowing. Have pick at least %d Gold embers"</string>
@@ -287,7 +287,7 @@ Please turn on accessibility for this app from System settings. If it is already
     <string name="mats_farmed">"Farmed %d material(s)"</string>
     <string name="p_ces">"CEs"</string>
     <string name="ces_dropped">"%d CE(s) dropped"</string>
-    <string name="times_rolled">"Rolled %d time(s)"</string>
+    <string name="times_rolled">"Rolled %d time(s)."</string>
     <string name="unable_to_verify_if_reached_the_ce_menu">"Unable to verify if reached the CE Enhancement Screen, exiting early"</string>
     <string name="mat_proof">"Proof of Hero"</string>
     <string name="mat_bone">"Evil Bone"</string>
@@ -535,8 +535,8 @@ After pressing on the button, switch the app filter from \"Not optimized\" to \"
     <string name="skill_number">"Skill %d"</string>
 
     <string name="release_notes">Release Notes</string>
-
-    <string name="battle_config_list_usage_count">"%d use/s."</string>
+    <string name="battle_config_list_usage_count_init">"%d time."</string>
+    <string name="battle_config_list_usage_count">"%d times."</string>
     <string name="battle_config_list_last_usage">"Last Use: %s %02d:%02d:%02d."</string>
 
     <string name="p_battle_config_sort_title">Battle Config List Sort</string>

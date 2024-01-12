@@ -24,9 +24,9 @@ class AutoFriendGacha @Inject constructor(
 
         data object RunOutOfFP : ExitReason()
 
-        data class SellBannerNotVisible(val count: Int = 0) : ExitReason()
+        data class SellBannerNotVisible(val count: Int = 0, val inventoryFull: Boolean = false) : ExitReason()
 
-        data class ReachedSellBanner(val count: Int = 0) : ExitReason()
+        data class ReachedSellBanner(val count: Int = 0, val inventoryFull: Boolean = false) : ExitReason()
         class Limit(val count: Int) : ExitReason()
     }
 
@@ -114,19 +114,21 @@ class AutoFriendGacha @Inject constructor(
                     throw ExitException(ExitReason.UnableVerifyIfReachedCEEnhancementMenu)
                 }
             }
+
             prefs.friendGacha.shouldRedirectToSell -> {
                 locations.fp.inventoryFullSellRegion.click()
-                waitForSellBanner()
+                waitForSellBanner(inventoryFull = true)
             }
+
             else -> throw ExitException(ExitReason.InventoryFull)
         }
 
     }
 
-    private fun waitForSellBanner(count: Int = 0) {
+    private fun waitForSellBanner(count: Int = 0, inventoryFull: Boolean = false) {
         when (waitUntilSellBannerExist()) {
-            true -> throw ExitException(ExitReason.ReachedSellBanner(count))
-            false -> throw ExitException(ExitReason.SellBannerNotVisible(count))
+            true -> throw ExitException(ExitReason.ReachedSellBanner(count, inventoryFull))
+            false -> throw ExitException(ExitReason.SellBannerNotVisible(count, inventoryFull))
         }
     }
 

@@ -101,7 +101,7 @@ class AutoCEBomb @Inject constructor(
      * @see performCraftEssenceUpgrade
      *
      */
-    private fun checkIfCEisLockedAndClickEnhancementMenuLocation(){
+    private fun checkIfCEisLockedAndClickEnhancementMenuLocation() {
         checkIfCEisLocked()
         locations.ceBomb.ceOpenEnhancementMenuLocation.click()
     }
@@ -116,7 +116,7 @@ class AutoCEBomb @Inject constructor(
      *
      * After checking and settings up the lock if needed, it will return to the CE Enhancement Menu
      */
-    private fun checkIfCEisLocked(){
+    private fun checkIfCEisLocked() {
         if (!initialCEEnhancementRun) return
 
         if (prefs.craftEssence.skipAutoLockTargetCE) return
@@ -125,11 +125,11 @@ class AutoCEBomb @Inject constructor(
 
         2.seconds.wait()
 
-        if (!isSelectedCELocked()){
+        if (!isSelectedCELocked()) {
             locations.ceBomb.selectedCELockedRegion.click()
             0.5.seconds.wait()
         }
-        while (true){
+        while (true) {
             locations.ceBomb.selectedCEBackButtonRegion.click()
 
             initialCEEnhancementRun = false
@@ -236,6 +236,8 @@ class AutoCEBomb @Inject constructor(
      * Ensures that the CE's position is on the top of the list
      */
     private fun fixPosition() {
+        locations.ceBomb.ceScrollbar.click(3)
+
         val startSwipeFixLocation = CELocation(0, 0)
         val endSwipeFixLocation = CELocation(0, 1)
 
@@ -311,7 +313,7 @@ class AutoCEBomb @Inject constructor(
                 displayLocation.click()
                 1.seconds.wait()
                 displayLoop++
-                if (displayLoop >= 10){
+                if (displayLoop >= 10) {
                     break
                 }
             }
@@ -335,21 +337,24 @@ class AutoCEBomb @Inject constructor(
         locations.ceBomb.changeFilterButtonLocation.click()
         2.seconds.wait()
 
-        for (rarity in 5 downTo 1) {
-            val filterStarRegion = locations.ceBomb.filterByRarityRegion(rarity = rarity)
-            val filterLocation = locations.ceBomb.filterByRarityLocation(rarity = rarity)
+        useSameSnapIn {
+            for (rarity in 5 downTo 1) {
+                val filterStarRegion = locations.ceBomb.filterByRarityRegion(rarity = rarity)
+                val filterLocation = locations.ceBomb.filterByRarityLocation(rarity = rarity)
 
-            val filterOff = images[Images.CraftEssenceFodderCEFilterOff] in filterStarRegion
+                val filterOff = images[Images.CraftEssenceFodderCEFilterOff] in filterStarRegion
 
-            if (rarity == prefs.craftEssence.ceTargetRarity && filterOff) {
-                filterLocation.click()
-                0.5.seconds.wait()
-            }
-            if (rarity != prefs.craftEssence.ceTargetRarity && !filterOff) {
-                filterLocation.click()
-                0.5.seconds.wait()
+                if (rarity == prefs.craftEssence.ceTargetRarity && filterOff) {
+                    filterLocation.click()
+                    0.5.seconds.wait()
+                }
+                if (rarity != prefs.craftEssence.ceTargetRarity && !filterOff) {
+                    filterLocation.click()
+                    0.5.seconds.wait()
+                }
             }
         }
+
         if (isFilterClosable()) {
             locations.ceBomb.filterCloseLocation.click()
             1.seconds.wait()
@@ -375,21 +380,24 @@ class AutoCEBomb @Inject constructor(
         locations.ceBomb.changeFilterButtonLocation.click()
         2.seconds.wait()
 
-        for (rarity in 5 downTo 1) {
-            val filterStarRegion = locations.ceBomb.filterByRarityRegion(rarity = rarity)
-            val filterLocation = locations.ceBomb.filterByRarityLocation(rarity = rarity)
+        useSameSnapIn {
+            for (rarity in 5 downTo 1) {
+                val filterStarRegion = locations.ceBomb.filterByRarityRegion(rarity = rarity)
+                val filterLocation = locations.ceBomb.filterByRarityLocation(rarity = rarity)
 
-            val filterOff = images[Images.CraftEssenceFodderCEFilterOff] in filterStarRegion
+                val filterOff = images[Images.CraftEssenceFodderCEFilterOff] in filterStarRegion
 
-            if (rarity in prefs.craftEssence.ceFodderRarity && filterOff) {
-                filterLocation.click()
-                0.5.seconds.wait()
-            }
-            if (rarity !in prefs.craftEssence.ceFodderRarity && !filterOff) {
-                filterLocation.click()
-                0.5.seconds.wait()
+                if (rarity in prefs.craftEssence.ceFodderRarity && filterOff) {
+                    filterLocation.click()
+                    0.5.seconds.wait()
+                }
+                if (rarity !in prefs.craftEssence.ceFodderRarity && !filterOff) {
+                    filterLocation.click()
+                    0.5.seconds.wait()
+                }
             }
         }
+
         if (isFilterClosable()) {
             locations.ceBomb.filterCloseLocation.click()
             1.seconds.wait()
@@ -424,19 +432,21 @@ class AutoCEBomb @Inject constructor(
         locations.ceBomb.sortButtonLocation.click()
         2.seconds.wait()
 
-        if (!isSmartSortOn()) {
-            locations.ceBomb.smartSortRegion.center.click()
-            0.5.seconds.wait()
-        }
+        useSameSnapIn {
+            if (!isSmartSortOn()) {
+                locations.ceBomb.smartSortRegion.center.click()
+                0.5.seconds.wait()
+            }
 
-        if (!isSelectSortOn()) {
-            locations.ceBomb.selectSortRegion.center.click()
-            0.5.seconds.wait()
-        }
+            if (!isSelectSortOn()) {
+                locations.ceBomb.selectSortRegion.center.click()
+                0.5.seconds.wait()
+            }
 
-        if (isSortByLevelOff()) {
-            locations.ceBomb.sortByLevelRegion.center.click()
-            0.5.seconds.wait()
+            if (isSortByLevelOff()) {
+                locations.ceBomb.sortByLevelRegion.center.click()
+                0.5.seconds.wait()
+            }
         }
 
         locations.ceBomb.sortCloseLocation.click()
@@ -552,27 +562,31 @@ class AutoCEBomb @Inject constructor(
      */
     private fun getClickLocationList(): List<List<Location>> {
         val clicksRows = mutableListOf<List<Location>>()
-        var foundCraftEssence = false
-        for (y in fodderCeRows downTo 0) {
-            // skip rows that have no CE in them to save time on checking them again
-            if (y in skipRow) continue
 
-            val clicksColumns = mutableListOf<Location>()
-            for (x in (ceColumns - 1) downTo 0) {
-                // lock exists, skip specific location
-                if (x + (y * 7) in skipColumn) continue
+        useSameSnapIn {
+            var foundCraftEssence = false
+            for (y in fodderCeRows downTo 0) {
+                // skip rows that have no CE in them to save time on checking them again
+                if (y in skipRow) continue
 
-                if (foundCraftEssence || doesCraftEssenceExist(x, y)) {
-                    clicksColumns.add(CELocation(x, y))
-                    foundCraftEssence = true
+                val clicksColumns = mutableListOf<Location>()
+                for (x in (ceColumns - 1) downTo 0) {
+                    // lock exists, skip specific location
+                    if (x + (y * 7) in skipColumn) continue
+
+                    if (foundCraftEssence || doesCraftEssenceExist(x, y)) {
+                        clicksColumns.add(CELocation(x, y))
+                        foundCraftEssence = true
+                    }
+                }
+                if (clicksColumns.isEmpty()) {
+                    skipRow.add(y)
+                } else {
+                    clicksRows.add(clicksColumns.reversed())
                 }
             }
-            if (clicksColumns.isEmpty()) {
-                skipRow.add(y)
-            } else {
-                clicksRows.add(clicksColumns.reversed())
-            }
         }
+
         return clicksRows.reversed()
     }
 
@@ -589,23 +603,27 @@ class AutoCEBomb @Inject constructor(
      */
     private fun getLockLocations() {
         var foundLock = true
-        loop@ for (y in 0 until fodderCeRows) {
-            // skip rows that have no CE in them to save time on checking them again
-            if (y in skipRow) continue
 
-            for (x in 0 until ceColumns) {
-                val index = x + (y * 7)
-                if (index in skipColumn) continue
+        useSameSnapIn {
+            loop@ for (y in 0 until fodderCeRows) {
+                // skip rows that have no CE in them to save time on checking them again
+                if (y in skipRow) continue
 
-                if (!foundLock) break@loop
+                for (x in 0 until ceColumns) {
+                    val index = x + (y * 7)
+                    if (index in skipColumn) continue
 
-                if (doesLockExist(x, y)) {
-                    skipColumn.add(index)
-                } else {
-                    foundLock = false
+                    if (!foundLock) break@loop
+
+                    if (doesLockExist(x, y)) {
+                        skipColumn.add(index)
+                    } else {
+                        foundLock = false
+                    }
                 }
             }
         }
+
 
         // if all are lock, exit
         if (foundLock) throw ExitException(ExitReason.NoSuitableTargetCEFound)

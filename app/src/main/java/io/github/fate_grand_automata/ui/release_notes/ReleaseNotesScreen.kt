@@ -114,7 +114,7 @@ private fun PullRequestReleaseNotes(
         for (i in 3 until summaryList.size) {
             item {
                 Text(
-                    text = summaryList[i].removeNoteTags,
+                    text = " -\t"+ summaryList[i].removeNoteTags,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -149,7 +149,7 @@ private fun PublicReleaseNotes(
                     headlineContent = {
                         Column {
                             Text(
-                                text = tag,
+                                text = tag.uppercase(),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Bold
                             )
