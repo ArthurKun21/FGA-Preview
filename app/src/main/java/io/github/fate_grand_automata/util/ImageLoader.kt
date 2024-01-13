@@ -126,7 +126,7 @@ class ImageLoader @Inject constructor(
         Images.ServantAscensionBanner -> "servant_ascension_banner.png"
         Images.ServantAscensionReturnToLevel -> "servant_ascension_return_to_level.png"
         Images.Execute -> "execute.png"
-        Images.AppendSkill -> "append_skill.png"
+        Images.AppendBanner -> "append_banner.png"
         Images.AppendLock -> "append_lock.png"
         Images.FPSell -> "fp_sell.png"
     }

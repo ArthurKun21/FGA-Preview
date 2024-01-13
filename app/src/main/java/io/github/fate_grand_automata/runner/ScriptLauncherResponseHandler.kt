@@ -69,13 +69,13 @@ class ScriptLauncherResponseHandler @Inject constructor(
                 // Do not remove this, we need this to only be updated once the user has pressed the "Ok" button
                 // otherwise, the config will carry over if the user selected new servant which the config does not
                 // match
-                prefs.append.shouldUnlockAppend1 = resp.shouldUnlockAppend1
-                prefs.append.shouldUnlockAppend2 = resp.shouldUnlockAppend2
-                prefs.append.shouldUnlockAppend3 = resp.shouldUnlockAppend3
+                prefs.append.shouldUnlockAppendOne = resp.shouldUnlockAppend1
+                prefs.append.shouldUnlockAppendTwo = resp.shouldUnlockAppend2
+                prefs.append.shouldUnlockAppendThree = resp.shouldUnlockAppend3
 
-                prefs.append.upgradeAppend1 = resp.upgradeAppend1
-                prefs.append.upgradeAppend2 = resp.upgradeAppend2
-                prefs.append.upgradeAppend3 = resp.upgradeAppend3
+                prefs.append.upgradeAppendOne = resp.upgradeAppend1
+                prefs.append.upgradeAppendTwo = resp.upgradeAppend2
+                prefs.append.upgradeAppendThree = resp.upgradeAppend3
 
                 ScriptModeEnum.Append
             }

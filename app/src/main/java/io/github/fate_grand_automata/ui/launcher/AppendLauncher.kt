@@ -42,9 +42,9 @@ fun appendLauncher(
     modifier: Modifier = Modifier
 ): ScriptLauncherResponseBuilder {
 
-    val isAppend1Locked by prefsCore.append.isAppend1Locked.remember()
-    val isAppend2Locked by prefsCore.append.isAppend2Locked.remember()
-    val isAppend3Locked by prefsCore.append.isAppend3Locked.remember()
+    val appendOneLocked by prefsCore.append.appendOneLocked.remember()
+    val appendTwoLocked by prefsCore.append.appendTwoLocked.remember()
+    val appendThreeLocked by prefsCore.append.appendThreeLocked.remember()
 
     var shouldUnlockAppend1 by remember { mutableStateOf(false) }
     var shouldUnlockAppend2 by remember { mutableStateOf(false) }
@@ -58,24 +58,24 @@ fun appendLauncher(
     var shouldUpgradeAll by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = shouldUpgradeAll, block = {
-        if (isAppend1Locked) {
+        if (appendOneLocked) {
             shouldUnlockAppend1 = shouldUpgradeAll == true
         }
-        if (isAppend2Locked) {
+        if (appendTwoLocked) {
             shouldUnlockAppend2 = shouldUpgradeAll == true
         }
-        if (isAppend3Locked) {
+        if (appendThreeLocked) {
             shouldUnlockAppend3 = shouldUpgradeAll == true
         }
     })
     LaunchedEffect(key1 = upgradeAll, block = {
-        if (!isAppend1Locked || shouldUnlockAppend1) {
+        if (!appendOneLocked || shouldUnlockAppend1) {
             upgradeAppend1 = upgradeAll
         }
-        if (!isAppend2Locked || shouldUnlockAppend2) {
+        if (!appendTwoLocked || shouldUnlockAppend2) {
             upgradeAppend2 = upgradeAll
         }
-        if (!isAppend3Locked || shouldUnlockAppend3) {
+        if (!appendThreeLocked || shouldUnlockAppend3) {
             upgradeAppend3 = upgradeAll
         }
     })
@@ -203,8 +203,8 @@ fun appendLauncher(
             ) {
                 AppendItem(
                     modifier = Modifier.weight(1f),
-                    name = stringResource(id = R.string.append_1),
-                    isLocked = isAppend1Locked,
+                    name = stringResource(id = R.string.append_number, 1),
+                    isLocked = appendOneLocked,
                     shouldUnlock = shouldUnlockAppend1,
                     onShouldUnlockChange = { shouldUnlockAppend1 = it },
                     upgradeLevel = upgradeAppend1,
@@ -212,8 +212,8 @@ fun appendLauncher(
                 )
                 AppendItem(
                     modifier = Modifier.weight(1f),
-                    name = stringResource(id = R.string.append_2),
-                    isLocked = isAppend2Locked,
+                    name = stringResource(id = R.string.append_number, 2),
+                    isLocked = appendTwoLocked,
                     shouldUnlock = shouldUnlockAppend2,
                     onShouldUnlockChange = { shouldUnlockAppend2 = it },
                     upgradeLevel = upgradeAppend2,
@@ -221,8 +221,8 @@ fun appendLauncher(
                 )
                 AppendItem(
                     modifier = Modifier.weight(1f),
-                    name = stringResource(id = R.string.append_3),
-                    isLocked = isAppend3Locked,
+                    name = stringResource(id = R.string.append_number, 3),
+                    isLocked = appendThreeLocked,
                     shouldUnlock = shouldUnlockAppend3,
                     onShouldUnlockChange = { shouldUnlockAppend3 = it },
                     upgradeLevel = upgradeAppend3,

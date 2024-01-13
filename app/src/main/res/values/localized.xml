@@ -472,9 +472,6 @@ After pressing on the button, switch the app filter from \"Not optimized\" to \"
     <string name="p_fp_gacha_hide_ce_bomb_settings">Hide CE Bomb Settings</string>
 
     <string name="append">Append Skill</string>
-    <string name="append_1">Append 1</string>
-    <string name="append_2">Append 2</string>
-    <string name="append_3">Append 3</string>
     <string name="should_unlock_append">Check(\u2713) to unlock</string>
     <string name="append_note">We can\'t detect the level of the append skill, so you need to set it manually how many times you want to upgrade it.</string>
 
@@ -484,6 +481,7 @@ After pressing on the button, switch the app filter from \"Not optimized\" to \"
     <string name="append_unable_to_upgrade_further">Unable to further Upgrade</string>
     <string name="upgraded_number_of_times">Upgraded %d times</string>
     <string name="append_unable_to_upgrade_n_times">Unable to upgrade %d times</string>
+    <string name="append_lag">Possible Network Lag. Unable to proceed.</string>
 
     <string name="mute_notifications">Mute Notifications?</string>
     <string name="append_upgrade_all_question">Upgrade all available append?</string>

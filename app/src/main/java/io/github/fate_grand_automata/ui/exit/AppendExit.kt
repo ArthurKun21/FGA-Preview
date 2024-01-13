@@ -27,24 +27,24 @@ import io.github.fate_grand_automata.util.KnownException
 
 
 @Composable
-fun AppendUpgradeExit(
+fun AppendExit(
     exception: AutoAppend.ExitException,
     prefs: IPreferences,
     onClose: () -> Unit,
     onCopy: () -> Unit
 ) {
     LaunchedEffect(key1 = Unit, block = {
-        prefs.append.isAppend1Locked = false
-        prefs.append.isAppend2Locked = false
-        prefs.append.isAppend3Locked = false
+        prefs.append.appendOneLocked = false
+        prefs.append.appendTwoLocked = false
+        prefs.append.appendThreeLocked = false
 
-        prefs.append.shouldUnlockAppend1 = false
-        prefs.append.shouldUnlockAppend2 = false
-        prefs.append.shouldUnlockAppend3 = false
+        prefs.append.shouldUnlockAppendOne = false
+        prefs.append.shouldUnlockAppendTwo = false
+        prefs.append.shouldUnlockAppendThree = false
 
-        prefs.append.upgradeAppend1 = 0
-        prefs.append.upgradeAppend2 = 0
-        prefs.append.upgradeAppend3 = 0
+        prefs.append.upgradeAppendOne = 0
+        prefs.append.upgradeAppendTwo = 0
+        prefs.append.upgradeAppendThree = 0
 
     })
 
@@ -101,11 +101,7 @@ private fun AppendExitContent(
             .padding(bottom = 16.dp, top = 5.dp)
     )
 
-    val items = listOf(
-        state.append1,
-        state.append2,
-        state.append3
-    )
+    val items = state.appendSummaryList
     Row(
         modifier = Modifier
     ) {
@@ -221,4 +217,5 @@ private fun AutoAppend.EnhancementExitReason.text(): String = when (this) {
     AutoAppend.EnhancementExitReason.UnlockSuccess -> stringResource(id = R.string.append_unlock_success)
     AutoAppend.EnhancementExitReason.UnableToUpgradeFurther ->
         stringResource(id = R.string.append_unable_to_upgrade_further)
+    AutoAppend.EnhancementExitReason.Lag -> stringResource(id = R.string.append_lag)
 }

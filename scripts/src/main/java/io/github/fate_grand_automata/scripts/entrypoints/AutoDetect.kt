@@ -62,7 +62,7 @@ class AutoDetect @Inject constructor(
             ).existsAny() ->
                 ScriptModeEnum.ServantLevel
 
-            images[Images.AppendSkill] in locations.append.getAppendBannerRegion -> {
+            images[Images.AppendBanner] in locations.enhancementBannerRegion -> {
                 autoSetup.checkAppendLocks()
                 ScriptModeEnum.Append
             }

@@ -99,9 +99,9 @@ class AutoSetup @Inject constructor(
 
     fun checkAppendLocks(){
         useSameSnapIn {
-            prefs.append.isAppend1Locked = images[Images.AppendLock] in locations.append.lockLocations(0)
-            prefs.append.isAppend2Locked = images[Images.AppendLock] in locations.append.lockLocations(1)
-            prefs.append.isAppend3Locked = images[Images.AppendLock] in locations.append.lockLocations(2)
+            prefs.append.appendOneLocked = images[Images.AppendLock] in locations.append.lockLocations(0)
+            prefs.append.appendTwoLocked = images[Images.AppendLock] in locations.append.lockLocations(1)
+            prefs.append.appendThreeLocked = images[Images.AppendLock] in locations.append.lockLocations(2)
         }
     }
 

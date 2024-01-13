@@ -28,7 +28,7 @@ import io.github.fate_grand_automata.scripts.entrypoints.SupportImageMaker
 import io.github.fate_grand_automata.scripts.enums.GameServer
 import io.github.fate_grand_automata.scripts.enums.ScriptModeEnum
 import io.github.fate_grand_automata.scripts.prefs.IPreferences
-import io.github.fate_grand_automata.ui.exit.AppendUpgradeExit
+import io.github.fate_grand_automata.ui.exit.AppendExit
 import io.github.fate_grand_automata.ui.exit.BattleExit
 import io.github.fate_grand_automata.ui.exit.SkillExit
 import io.github.fate_grand_automata.ui.launcher.ScriptLauncher
@@ -149,7 +149,7 @@ class ScriptManager @Inject constructor(
             var dialog: DialogInterface? = null
 
             val composeView = FakedComposeView(context) {
-                AppendUpgradeExit(
+                AppendExit(
                     exception = exception,
                     prefs = preferences,
                     onClose = { dialog?.dismiss() },
