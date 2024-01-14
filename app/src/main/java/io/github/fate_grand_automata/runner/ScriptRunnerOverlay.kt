@@ -37,6 +37,8 @@ class ScriptRunnerOverlay @Inject constructor(
 ) {
     private val layout: ComposeView
 
+    private var fakeView: FakedComposeView
+
     private val scriptCtrlBtnLayoutParams = WindowManager.LayoutParams().apply {
         type = overlayType
         format = PixelFormat.TRANSLUCENT
@@ -54,7 +56,7 @@ class ScriptRunnerOverlay @Inject constructor(
     init {
         require(service is ScriptRunnerService)
 
-        layout = FakedComposeView(service) {
+        fakeView = FakedComposeView(service) {
             ScriptRunnerUI(
                 state = uiStateHolder.uiState,
                 prefsCore = prefsCore,
@@ -65,7 +67,8 @@ class ScriptRunnerOverlay @Inject constructor(
                 onDragEnd = { savePlayButtonRegion() },
                 onPosition = { savePlayButtonRegion(initial = true) }
             )
-        }.view
+        }
+        layout = fakeView.view
 
         // By default put the button on bottom-left corner
         val m = display.metrics
@@ -143,7 +146,7 @@ class ScriptRunnerOverlay @Inject constructor(
     fun hide() {
         if (shown && Settings.canDrawOverlays(service)) {
             savePlayButtonLocation()
-
+            fakeView.close()
             windowManager.removeView(layout)
             highlightManager.hide()
 
