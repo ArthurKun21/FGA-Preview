@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.WindowManager
 import androidx.compose.ui.platform.ComposeView
 import dagger.hilt.android.scopes.ServiceScoped
+import io.github.fate_grand_automata.accessibility.TapperService
 import io.github.fate_grand_automata.di.script.ScriptComponentBuilder
 import io.github.fate_grand_automata.prefs.core.PrefsCore
 import io.github.fate_grand_automata.ui.highlight.HighlightManager
@@ -145,6 +146,11 @@ class ScriptRunnerOverlay @Inject constructor(
 
     fun hide() {
         if (shown && Settings.canDrawOverlays(service)) {
+            /**
+             * TODO Fix Memory Leak
+             * Need a way to stop the Tapper Service
+             * @see TapperService
+             */
             savePlayButtonLocation()
             fakeView.close()
             windowManager.removeView(layout)

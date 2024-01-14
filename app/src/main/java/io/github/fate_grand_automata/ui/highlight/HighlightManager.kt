@@ -9,6 +9,11 @@ import io.github.lib_automata.HighlightColor
 import io.github.lib_automata.Region
 import javax.inject.Inject
 
+/**
+ * TODO Fix Memory Leak
+ * Probably the one causing the memory leak for TapperService
+ * @see TapperService
+ */
 @ServiceScoped
 class HighlightManager @Inject constructor() {
     private val tapperService by lazy {
