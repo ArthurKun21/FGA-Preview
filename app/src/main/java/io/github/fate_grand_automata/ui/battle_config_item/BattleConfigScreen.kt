@@ -53,17 +53,13 @@ import io.github.fate_grand_automata.prefs.core.BattleConfigCore
 import io.github.fate_grand_automata.scripts.models.CardPriorityPerWave
 import io.github.fate_grand_automata.scripts.models.CardScore
 import io.github.fate_grand_automata.ui.HeadingButton
-import io.github.fate_grand_automata.ui.OnResume
 import io.github.fate_grand_automata.ui.VerticalDivider
 import io.github.fate_grand_automata.ui.card_priority.getColorRes
 import io.github.fate_grand_automata.ui.dialog.FgaDialog
 import io.github.fate_grand_automata.ui.icon
-import io.github.fate_grand_automata.ui.pref_support.SupportViewModel
 import io.github.fate_grand_automata.ui.prefs.EditTextPreference
 import io.github.fate_grand_automata.ui.prefs.Preference
 import io.github.fate_grand_automata.util.toSp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun BattleConfigScreen(
@@ -95,16 +91,6 @@ fun BattleConfigScreen(
         },
         navigate = navigate
     )
-
-    val scope = rememberCoroutineScope()
-
-    OnResume {
-        scope.launch(Dispatchers.IO) {
-            if (supportVm.shouldExtractSupportImages) {
-                supportVm.performSupportImageExtraction(context)
-            } else supportVm.refresh(context)
-        }
-    }
 }
 
 sealed class BattleConfigDestination {
@@ -312,10 +298,9 @@ private fun BattleConfigContent(
                     val maxSkillText by vm.maxSkillText.collectAsState("")
 
                     SupportGroup(
-                        config = config,
+                        config = config.support,
                         goToPreferred = { navigate(BattleConfigDestination.PreferredSupport) },
-                        maxSkillText = maxSkillText,
-                        friendEntries = friendEntries
+                        maxSkillText = maxSkillText
                     )
                 }
 
