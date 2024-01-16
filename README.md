@@ -13,9 +13,7 @@ Current things being worked on/ideas want to work on:
 
 3. [X] Auto CE Bomb
 
-4. [ ] Auto Append Upgrade
-    1. [X] Re-worked the banner detection
-    2. [ ] Re-worked the logic, having problems when there is a network connectivity issue.
+4. [X] Auto Append Upgrade
 
 5. [X] Auto Lottery-Gift Box loop
 
