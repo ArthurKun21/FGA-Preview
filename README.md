@@ -1,9 +1,13 @@
 # Fate/Grand Automata
 
+| Build                                                                                                                                                       | Stable                                                                                                                                                                 | Preview                                                                                                                                                               |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![CI](https://github.com/ArthurKun21/FGA-Preview/actions/workflows/ci.yml/badge.svg)](https://github.com/ArthurKun21/FGA-Preview/actions/workflows/ci.yml) | [Stable Release](https://github.com/Fate-Grand-Automata/FGA/releases/) | [![Preview Build](https://img.shields.io/github/release/ArthurKun21/FGA-Preview.svg?maxAge=3600&label=download)](https://github.com/ArthurKun21/FGA-Preview/releases) |
+
 Current things being worked on/ideas want to work on:
 
 1. [X] Auto Servant Level
-    1. [ ] TW version WIP, already fixed on Main Repo.
+    - Other Servers are supported at Main Repository.
 
 2. [X] Auto Skill Level
 
