@@ -30,7 +30,7 @@ sealed class SkillMakerEntry(
 
         override fun toString() = when (action) {
             is AutoSkillAction.Atk -> {
-                if (action == AutoSkillAction.Atk.noOp(action.wave, action.turn)) {
+                if (action == AutoSkillAction.Atk.NoOp(action.wave, action.turn)) {
                     "0"
                 } else {
                     val cardsBeforeNP = if (action.numberOfCardsBeforeNP > 0) {
@@ -63,7 +63,7 @@ sealed class SkillMakerEntry(
         turn = turn
     ) {
         protected fun AutoSkillAction.Atk.str() = when (action) {
-            is AutoSkillAction.Atk.noOp -> ""
+            is AutoSkillAction.Atk.NoOp -> ""
             else -> Action(this).toString()
         }
 

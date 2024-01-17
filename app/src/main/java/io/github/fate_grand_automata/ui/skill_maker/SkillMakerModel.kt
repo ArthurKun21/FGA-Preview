@@ -5,6 +5,19 @@ import io.github.fate_grand_automata.scripts.models.AutoSkillAction
 import io.github.fate_grand_automata.scripts.models.AutoSkillCommand
 
 class SkillMakerModel(skillString: String) {
+
+    /**
+     * Reduce the list of [SkillMakerEntry] by combining consecutive [SkillMakerEntry.Action]s
+     * into a single [SkillMakerEntry.Action] with a [SkillMakerEntry.Action.action] of type [AutoSkillAction.Atk].
+     * The [SkillMakerEntry.Action.action] of the resulting [SkillMakerEntry.Action] will be the last [AutoSkillAction.Atk]
+     * in the consecutive [SkillMakerEntry.Action]s.
+     *
+     * @param acc The accumulator list
+     * @param add The list to add
+     * @param separator The separator to add between the accumulator and the list to add
+     *
+     * @return The reduced list
+     */
     private fun reduce(
         acc: List<SkillMakerEntry>,
         add: List<SkillMakerEntry>,
@@ -20,7 +33,7 @@ class SkillMakerModel(skillString: String) {
         val first = add.first()
         val wave = first.wave - 1
         val turn = first.turn - 1
-        return acc + separator(AutoSkillAction.Atk.noOp(wave, turn)) + add
+        return acc + separator(AutoSkillAction.Atk.NoOp(wave, turn)) + add
     }
 
     val skillCommand = AutoSkillCommand.parse(skillString)

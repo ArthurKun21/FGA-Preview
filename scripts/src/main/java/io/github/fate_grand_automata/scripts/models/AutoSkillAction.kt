@@ -18,13 +18,13 @@ sealed class AutoSkillAction(
             val nps = nps + other.nps
             val cardsBeforeNP = numberOfCardsBeforeNP + other.numberOfCardsBeforeNP
             return when {
-                nps.isNotEmpty() -> np(nps, wave, turn)
-                cardsBeforeNP > 0 -> cardsBeforeNP(cardsBeforeNP, wave, turn)
-                else -> noOp(wave, turn)
+                nps.isNotEmpty() -> NP(nps, wave, turn)
+                cardsBeforeNP > 0 -> CardsBeforeNP(cardsBeforeNP, wave, turn)
+                else -> NoOp(wave, turn)
             }
         }
 
-        data class noOp(
+        data class NoOp(
             override val wave: Int,
             override val turn: Int
         ): Atk(
@@ -34,7 +34,7 @@ sealed class AutoSkillAction(
             turn
         )
 
-        data class np(
+        data class NP(
             override val nps: Set<CommandCard.NP>,
             override val wave: Int,
             override val turn: Int
@@ -45,7 +45,7 @@ sealed class AutoSkillAction(
             turn
         )
 
-        data class cardsBeforeNP(
+        data class CardsBeforeNP(
             override val numberOfCardsBeforeNP: Int,
             override val wave: Int,
             override val turn: Int

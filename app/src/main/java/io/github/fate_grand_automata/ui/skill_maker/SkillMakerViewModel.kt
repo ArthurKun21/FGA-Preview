@@ -195,7 +195,7 @@ class SkillMakerViewModel @Inject constructor(
     fun finish(): String {
         _currentIndex.value = model.skillCommand.lastIndex
 
-        while (last.let { l -> l is SkillMakerEntry.Next && l.action is AutoSkillAction.Atk.noOp }) {
+        while (last.let { l -> l is SkillMakerEntry.Next && l.action is AutoSkillAction.Atk.NoOp }) {
             deleteSelected()
         }
 
