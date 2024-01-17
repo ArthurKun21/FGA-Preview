@@ -230,7 +230,7 @@ class SkillMakerViewModel @Inject constructor(
             val lastAction = model.skillCommand[_currentIndex.value]
             if (lastAction is SkillMakerEntry.Action &&
                 lastAction.action is AutoSkillAction.MasterSkill &&
-                lastAction.action.skill == Skill.Master.C
+                lastAction.action.skill == Skill.Master.S3
             ) {
                 deleteSelected()
             }

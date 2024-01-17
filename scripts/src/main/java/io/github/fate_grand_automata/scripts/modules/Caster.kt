@@ -76,8 +76,8 @@ class Caster @Inject constructor(
             // wait extra for Mélusine and then add her 3rd Ascension image
             waitForAnimationToFinish(15.seconds)
             val slot = when (skill) {
-                Skill.Servant.B3 -> FieldSlot.B
-                Skill.Servant.C3 -> FieldSlot.C
+                Skill.Servant.BS3 -> FieldSlot.B
+                Skill.Servant.CS3 -> FieldSlot.C
                 else -> FieldSlot.A
             }
             servantTracker.melusineChangedAscension(slot)
@@ -142,7 +142,7 @@ class Caster @Inject constructor(
         openMasterSkillMenu()
 
         // Click on order change skill
-        locations.battle.master.locate(Skill.Master.C).click()
+        locations.battle.master.locate(Skill.Master.S3).click()
 
         confirmSkillUse()
 

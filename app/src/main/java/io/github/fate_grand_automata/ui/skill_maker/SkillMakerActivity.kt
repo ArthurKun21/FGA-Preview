@@ -84,7 +84,8 @@ fun SkillMakerUI(
 
     Crossfade(
         current,
-        animationSpec = spring()
+        animationSpec = spring(),
+        label = "Navigation Transition"
     ) { nav ->
         when (nav) {
             SkillMakerNav.Atk -> {
@@ -137,17 +138,17 @@ fun SkillMakerUI(
                 SkillMakerTarget(
                     onSkillTarget = { vm.targetSkill(it) },
                     showEmiya = nav.skill in listOf(
-                        Skill.Servant.A3,
-                        Skill.Servant.B3,
-                        Skill.Servant.C3
+                        Skill.Servant.AS3,
+                        Skill.Servant.BS3,
+                        Skill.Servant.CS3
                     ),
                     onEmiya = {
                         navigate(SkillMakerNav.Emiya(nav.skill))
                     },
                     showSpaceIshtar = nav.skill in listOf(
-                        Skill.Servant.A2,
-                        Skill.Servant.B2,
-                        Skill.Servant.C2
+                        Skill.Servant.AS2,
+                        Skill.Servant.BS2,
+                        Skill.Servant.CS2
                     ),
                     onSpaceIshtar = {
                         navigate(SkillMakerNav.SpaceIshtar(nav.skill))
@@ -156,9 +157,9 @@ fun SkillMakerUI(
                         navigate(SkillMakerNav.Kukulkan(nav.skill))
                     },
                     showMelusine = nav.skill in listOf(
-                        Skill.Servant.A3,
-                        Skill.Servant.B3,
-                        Skill.Servant.C3
+                        Skill.Servant.AS3,
+                        Skill.Servant.BS3,
+                        Skill.Servant.CS3
                     ),
                     onMelusine = {
                         vm.targetSkill(ServantTarget.Melusine)
@@ -177,9 +178,9 @@ fun SkillMakerUI(
                     onOption1 = { vm.targetSkill(ServantTarget.Option1) },
                     onOption2 = { vm.targetSkill(ServantTarget.Option2) },
                     goToTarget = nav.skill in listOf(
-                        Skill.Servant.A2,
-                        Skill.Servant.B2,
-                        Skill.Servant.C2
+                        Skill.Servant.AS2,
+                        Skill.Servant.BS2,
+                        Skill.Servant.CS2
                     ),
                     onTarget = { firstTarget -> navigate(SkillMakerNav.KukulkanTarget(nav.skill, firstTarget)) }
                 )

@@ -38,15 +38,15 @@ class BattleScreenLocations @Inject constructor(
     }?.let { x -> Location(x, 880) }?.xFromCenter()
 
     fun locate(skill: Skill.Servant) = when (skill) {
-        Skill.Servant.A1 -> 148
-        Skill.Servant.A2 -> 324
-        Skill.Servant.A3 -> 500
-        Skill.Servant.B1 -> 784
-        Skill.Servant.B2 -> 960
-        Skill.Servant.B3 -> 1136
-        Skill.Servant.C1 -> 1418
-        Skill.Servant.C2 -> 1594
-        Skill.Servant.C3 -> 1770
+        Skill.Servant.AS1 -> 148
+        Skill.Servant.AS2 -> 324
+        Skill.Servant.AS3 -> 500
+        Skill.Servant.BS1 -> 784
+        Skill.Servant.BS2 -> 960
+        Skill.Servant.BS3 -> 1136
+        Skill.Servant.CS1 -> 1418
+        Skill.Servant.CS2 -> 1594
+        Skill.Servant.CS3 -> 1770
     }.let { x -> Location(x + if (isWide) 108 else 0, if (isWide) 1117 else 1158) }
 
     fun locate(enemy: EnemyTarget) = when (enemy) {
