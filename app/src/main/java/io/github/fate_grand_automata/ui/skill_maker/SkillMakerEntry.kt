@@ -43,7 +43,7 @@ sealed class SkillMakerEntry {
     }
 
     sealed class Next(val action: AutoSkillAction.Atk) : SkillMakerEntry() {
-        protected fun AutoSkillAction.Atk.str() = if (action == AutoSkillAction.Atk.noOp()) ""
+        protected fun AutoSkillAction.Atk.str() = if (action is AutoSkillAction.Atk.noOp) ""
         else Action(this).toString()
 
         class Wave(action: AutoSkillAction.Atk) : Next(action) {

@@ -4,63 +4,66 @@ sealed class AutoSkillAction(
     open val wave: Int,
     open val turn: Int
 ) {
-    data class Atk(
-        val nps: Set<CommandCard.NP>,
-        val cardsBeforeNP: Int,
+    sealed class Atk(
+        open val nps: Set<CommandCard.NP>,
+        open val cardsBeforeNP: Int,
         override val wave: Int,
         override val turn: Int
     ) : AutoSkillAction(
         wave,
         turn
     ) {
-        init {
-            require(cardsBeforeNP in 0..2) { "Only 0, 1 or 2 cards can be used before NP" }
+
+        operator fun plus(other: Atk): Atk {
+            val nps = nps + other.nps
+            val cardsBeforeNP = cardsBeforeNP + other.cardsBeforeNP
+            return when {
+                nps.isNotEmpty() -> np(nps, wave, turn)
+                cardsBeforeNP > 0 -> cardsBeforeNPAction(cardsBeforeNP, wave, turn)
+                else -> noOp(wave, turn)
+            }
         }
 
-        operator fun plus(other: Atk) =
-            Atk(
-                nps + other.nps,
-                cardsBeforeNP + other.cardsBeforeNP,
-                other.wave,
-                other.turn
-            )
+        data class noOp(
+            override val wave: Int,
+            override val turn: Int
+        ): Atk(
+            emptySet(),
+            0,
+            wave,
+            turn
+        )
+
+        data class np(
+            override val nps: Set<CommandCard.NP>,
+            override val wave: Int,
+            override val turn: Int
+        ): Atk(
+            nps,
+            0,
+            wave,
+            turn
+        )
+
+        data class cardsBeforeNPAction(
+            override val cardsBeforeNP: Int,
+            override val wave: Int,
+            override val turn: Int
+        ): Atk(
+            emptySet(),
+            cardsBeforeNP,
+            wave,
+            turn
+        ) {
+            init {
+                require(cardsBeforeNP in 0..2) { "Only 0, 1 or 2 cards can be used before NP" }
+            }
+        }
 
         fun toNPUsage() =
             NPUsage(nps, cardsBeforeNP)
 
-        companion object {
-            fun noOp(
-                wave: Int,
-                turn: Int
-            ) = Atk(
-                emptySet(),
-                0,
-                wave,
-                turn
-            )
 
-            fun np(
-                np: CommandCard.NP,
-                wave: Int,
-                turn: Int
-            ) = Atk(
-                setOf(np),
-                0,
-                wave,
-                turn
-            )
-
-            fun cardsBeforeNP(
-                cards: Int,
-                wave: Int,
-                turn: Int
-            ) = Atk(
-                emptySet(),
-                cards,
-                wave,
-                turn
-            )
-        }
     }
 
     class ServantSkill(

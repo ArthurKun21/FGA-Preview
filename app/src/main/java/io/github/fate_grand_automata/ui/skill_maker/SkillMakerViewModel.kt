@@ -137,7 +137,9 @@ class SkillMakerViewModel @Inject constructor(
 
         val targetCmd = SkillMakerEntry.Action(
             AutoSkillAction.TargetEnemy(
-                EnemyTarget.list[target - 1]
+                EnemyTarget.list[target - 1],
+                wave.value,
+                turn.value
             )
         )
 
@@ -181,8 +183,8 @@ class SkillMakerViewModel @Inject constructor(
         add(
             SkillMakerEntry.Action(
                 when (skill) {
-                    is Skill.Servant -> AutoSkillAction.ServantSkill(skill, targets)
-                    is Skill.Master -> AutoSkillAction.MasterSkill(skill, targets.firstOrNull())
+                    is Skill.Servant -> AutoSkillAction.ServantSkill(skill, targets, wave.value, turn.value)
+                    is Skill.Master -> AutoSkillAction.MasterSkill(skill, targets.firstOrNull(), wave.value, turn.value)
                 }
             )
         )
@@ -193,7 +195,7 @@ class SkillMakerViewModel @Inject constructor(
     fun finish(): String {
         _currentIndex.value = model.skillCommand.lastIndex
 
-        while (last.let { l -> l is SkillMakerEntry.Next && l.action == AutoSkillAction.Atk.noOp() }) {
+        while (last.let { l -> l is SkillMakerEntry.Next && l.action is AutoSkillAction.Atk.noOp }) {
             deleteSelected()
         }
 
@@ -240,7 +242,9 @@ class SkillMakerViewModel @Inject constructor(
             SkillMakerEntry.Action(
                 AutoSkillAction.OrderChange(
                     starting,
-                    sub
+                    sub,
+                    wave.value,
+                    turn.value
                 )
             )
         )

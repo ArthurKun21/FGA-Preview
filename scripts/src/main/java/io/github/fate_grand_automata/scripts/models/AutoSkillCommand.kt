@@ -88,7 +88,7 @@ class AutoSkillCommand private constructor(
                         val np = CommandCard.NP.list.first { it.autoSkillCode == c }
 
                         AutoSkillAction.Atk.np(
-                            np,
+                            nps = setOf(np),
                             wave,
                             turn
                         )
@@ -107,7 +107,7 @@ class AutoSkillCommand private constructor(
                     'n' -> {
                         val code = queue.remove()
                         val count = code.toString().toInt()
-                        AutoSkillAction.Atk.cardsBeforeNP(
+                        AutoSkillAction.Atk.cardsBeforeNPAction(
                             count,
                             wave,
                             turn
