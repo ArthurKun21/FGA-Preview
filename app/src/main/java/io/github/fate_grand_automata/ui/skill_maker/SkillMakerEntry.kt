@@ -6,23 +6,25 @@ import io.github.fate_grand_automata.scripts.models.Skill
 
 sealed class SkillMakerEntry {
     class Action(val action: AutoSkillAction) : SkillMakerEntry() {
-        private fun toString(skill: Skill, target: ServantTarget?) =
-            if (target == null)
-                "${skill.autoSkillCode}"
-            else "${skill.autoSkillCode}${target.autoSkillCode}"
+        private fun toString(skill: Skill, target: ServantTarget?) = when (target) {
+            null -> "${skill.autoSkillCode}"
+            else -> "${skill.autoSkillCode}${target.autoSkillCode}"
+        }
 
-        private fun toString(skill: Skill, targets: List<ServantTarget>) =
-            if (targets.isEmpty()) "${skill.autoSkillCode}"
-            else if (targets.size == 1) "${skill.autoSkillCode}${targets[0].autoSkillCode}"
-            else "${skill.autoSkillCode}(${targets.map(ServantTarget::autoSkillCode).joinToString("")})"
+
+        private fun toString(skill: Skill, targets: List<ServantTarget>) = when {
+            targets.isEmpty() -> "${skill.autoSkillCode}"
+            targets.size == 1 -> "${skill.autoSkillCode}${targets[0].autoSkillCode}"
+            else -> "${skill.autoSkillCode}(${targets.map(ServantTarget::autoSkillCode).joinToString("")})"
+        }
 
         override fun toString() = when (action) {
             is AutoSkillAction.Atk -> {
                 if (action == AutoSkillAction.Atk.noOp(action.wave, action.turn)) {
                     "0"
                 } else {
-                    val cardsBeforeNP = if (action.cardsBeforeNP > 0) {
-                        "n${action.cardsBeforeNP}"
+                    val cardsBeforeNP = if (action.numberOfCardsBeforeNP > 0) {
+                        "n${action.numberOfCardsBeforeNP}"
                     } else ""
 
                     cardsBeforeNP + action.nps.joinToString("") {
@@ -43,8 +45,10 @@ sealed class SkillMakerEntry {
     }
 
     sealed class Next(val action: AutoSkillAction.Atk) : SkillMakerEntry() {
-        protected fun AutoSkillAction.Atk.str() = if (action is AutoSkillAction.Atk.noOp) ""
-        else Action(this).toString()
+        protected fun AutoSkillAction.Atk.str() = when (action) {
+            is AutoSkillAction.Atk.noOp -> ""
+            else -> Action(this).toString()
+        }
 
         class Wave(action: AutoSkillAction.Atk) : Next(action) {
             override fun toString() = "${action.str()},#,"

@@ -6,7 +6,7 @@ sealed class AutoSkillAction(
 ) {
     sealed class Atk(
         open val nps: Set<CommandCard.NP>,
-        open val cardsBeforeNP: Int,
+        open val numberOfCardsBeforeNP: Int,
         override val wave: Int,
         override val turn: Int
     ) : AutoSkillAction(
@@ -16,10 +16,10 @@ sealed class AutoSkillAction(
 
         operator fun plus(other: Atk): Atk {
             val nps = nps + other.nps
-            val cardsBeforeNP = cardsBeforeNP + other.cardsBeforeNP
+            val cardsBeforeNP = numberOfCardsBeforeNP + other.numberOfCardsBeforeNP
             return when {
                 nps.isNotEmpty() -> np(nps, wave, turn)
-                cardsBeforeNP > 0 -> cardsBeforeNPAction(cardsBeforeNP, wave, turn)
+                cardsBeforeNP > 0 -> cardsBeforeNP(cardsBeforeNP, wave, turn)
                 else -> noOp(wave, turn)
             }
         }
@@ -45,23 +45,23 @@ sealed class AutoSkillAction(
             turn
         )
 
-        data class cardsBeforeNPAction(
-            override val cardsBeforeNP: Int,
+        data class cardsBeforeNP(
+            override val numberOfCardsBeforeNP: Int,
             override val wave: Int,
             override val turn: Int
         ): Atk(
             emptySet(),
-            cardsBeforeNP,
+            numberOfCardsBeforeNP,
             wave,
             turn
         ) {
             init {
-                require(cardsBeforeNP in 0..2) { "Only 0, 1 or 2 cards can be used before NP" }
+                require(numberOfCardsBeforeNP in 0..2) { "Only 0, 1 or 2 cards can be used before NP" }
             }
         }
 
         fun toNPUsage() =
-            NPUsage(nps, cardsBeforeNP)
+            NPUsage(nps, numberOfCardsBeforeNP)
 
 
     }
