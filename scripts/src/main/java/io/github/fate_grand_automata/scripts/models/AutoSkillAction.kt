@@ -1,7 +1,7 @@
 package io.github.fate_grand_automata.scripts.models
 
 sealed class AutoSkillAction {
-    data class Atk constructor(val nps: Set<CommandCard.NP>, val cardsBeforeNP: Int) : AutoSkillAction() {
+    data class Atk(val nps: Set<CommandCard.NP>, val cardsBeforeNP: Int) : AutoSkillAction() {
         init {
             require(cardsBeforeNP in 0..2) { "Only 0, 1 or 2 cards can be used before NP" }
         }
