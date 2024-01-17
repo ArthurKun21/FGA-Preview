@@ -299,8 +299,7 @@ private fun makeAtkAction(
             }
         }
         .toSet()
-
-    return AutoSkillAction.Atk(npSet, cardsBeforeNp, wave, turn)
+    return AutoSkillAction.Atk.construct(npSet, cardsBeforeNp, wave, turn)
 }
 
 @Composable

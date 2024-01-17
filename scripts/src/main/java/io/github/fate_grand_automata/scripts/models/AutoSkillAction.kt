@@ -13,7 +13,18 @@ sealed class AutoSkillAction(
         wave,
         turn
     ) {
-
+        companion object {
+            fun construct(
+                nps: Set<CommandCard.NP> = emptySet(),
+                numberOfCardsBeforeNP: Int = 0,
+                wave: Int = 0,
+                turn: Int = 0
+            ) = when {
+                nps.isNotEmpty() -> NP(nps, wave, turn)
+                numberOfCardsBeforeNP > 0 -> CardsBeforeNP(numberOfCardsBeforeNP, wave, turn)
+                else -> NoOp(wave, turn)
+            }
+        }
         operator fun plus(other: Atk): Atk {
             val nps = nps + other.nps
             val cardsBeforeNP = numberOfCardsBeforeNP + other.numberOfCardsBeforeNP
