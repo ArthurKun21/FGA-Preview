@@ -17,8 +17,10 @@ class SkillMakerModel(skillString: String) {
                 return acc.subList(0, acc.lastIndex) + separator(last.action) + add
             }
         }
-
-        return acc + separator(AutoSkillAction.Atk.noOp()) + add
+        val first = add.first()
+        val wave = first.wave - 1
+        val turn = first.turn - 1
+        return acc + separator(AutoSkillAction.Atk.noOp(wave, turn)) + add
     }
 
     val skillCommand = AutoSkillCommand.parse(skillString)

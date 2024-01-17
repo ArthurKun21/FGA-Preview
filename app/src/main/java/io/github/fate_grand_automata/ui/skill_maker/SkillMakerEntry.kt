@@ -4,8 +4,18 @@ import io.github.fate_grand_automata.scripts.models.AutoSkillAction
 import io.github.fate_grand_automata.scripts.models.ServantTarget
 import io.github.fate_grand_automata.scripts.models.Skill
 
-sealed class SkillMakerEntry {
-    class Action(val action: AutoSkillAction) : SkillMakerEntry() {
+sealed class SkillMakerEntry(
+    open val wave: Int,
+    open val turn: Int
+) {
+    class Action(
+        val action: AutoSkillAction,
+        override val wave: Int = action.wave,
+        override val turn: Int = action.turn
+    ) : SkillMakerEntry(
+        wave = wave,
+        turn = turn
+    ) {
         private fun toString(skill: Skill, target: ServantTarget?) = when (target) {
             null -> "${skill.autoSkillCode}"
             else -> "${skill.autoSkillCode}${target.autoSkillCode}"
@@ -40,21 +50,28 @@ sealed class SkillMakerEntry {
         }
     }
 
-    object Start : SkillMakerEntry() {
+    object Start : SkillMakerEntry(0, 0) {
         override fun toString() = ""
     }
 
-    sealed class Next(val action: AutoSkillAction.Atk) : SkillMakerEntry() {
+    sealed class Next(
+        val action: AutoSkillAction.Atk,
+        override val wave: Int,
+        override val turn: Int
+    ) : SkillMakerEntry(
+        wave = wave,
+        turn = turn
+    ) {
         protected fun AutoSkillAction.Atk.str() = when (action) {
             is AutoSkillAction.Atk.noOp -> ""
             else -> Action(this).toString()
         }
 
-        class Wave(action: AutoSkillAction.Atk) : Next(action) {
+        class Wave(action: AutoSkillAction.Atk) : Next(action, action.wave, action.turn) {
             override fun toString() = "${action.str()},#,"
         }
 
-        class Turn(action: AutoSkillAction.Atk) : Next(action) {
+        class Turn(action: AutoSkillAction.Atk) : Next(action, action.wave, action.turn) {
             override fun toString() = "${action.str()},"
         }
     }
