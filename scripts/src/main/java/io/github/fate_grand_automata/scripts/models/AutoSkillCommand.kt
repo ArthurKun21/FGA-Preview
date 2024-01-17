@@ -107,7 +107,18 @@ class AutoSkillCommand private constructor(
                 throw AutoBattle.BattleExitException(AutoBattle.ExitReason.SkillCommandParseError(e))
             }
         }
-
+        /**
+         * Parses the given command string into an `AutoSkillCommand`.
+         *
+         * The command string is expected to be a sequence of actions
+         * separated by commas, with each wave of actions separated by ",#,".
+         * Each action is parsed into an `AutoSkillAction` and added to a list of actions for each turn.
+         * Actions of type `AutoSkillAction.Atk` are merged with the previous action if it is also of the same type.
+         *
+         * @param command The command string to parse.
+         * @return An `AutoSkillCommand` containing the parsed actions for each turn of each wave.
+         * @see AutoSkillAction
+         */
         fun parse(command: String): AutoSkillCommand {
             val waves = command
                 .split(",#,")
