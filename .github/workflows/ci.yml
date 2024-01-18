@@ -106,9 +106,11 @@ jobs:
         run: |
           if [[ ${{ github.ref }} == refs/heads/development ]]; then
             echo "FGA_PATH=app/build/outputs/apk/preview/app-preview.apk" >>${GITHUB_ENV}
+            echo "FGA_MAPPING_PATH=app/build/outputs/mapping/preview/mapping.txt" >>${GITHUB_ENV}
           else
             mv app/build/outputs/apk/ci/app-ci.apk app/build/outputs/apk/ci/fga-pr-${{ github.event.pull_request.number }}-build-${{ github.run_number }}.apk
             echo "FGA_PATH=app/build/outputs/apk/ci/fga-pr-${{ github.event.pull_request.number }}-build-${{ github.run_number }}.apk" >>${GITHUB_ENV}
+            echo "FGA_MAPPING_PATH=app/build/outputs/mapping/ci/mapping.txt" >>${GITHUB_ENV}
           fi
 
       - name: Upload APK
@@ -120,8 +122,8 @@ jobs:
       - name: Upload De-obfuscation mapping file
         uses: actions/upload-artifact@v4
         with:
-          name: mapping-preview
-          path: app/build/outputs/mapping/preview/mapping.txt
+          name: mapping
+          path: ${{ env.FGA_MAPPING_PATH }}
 
   release:
     needs: build
