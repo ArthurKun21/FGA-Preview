@@ -40,8 +40,8 @@ in same wave"</string>
     <string name="skill_maker_main_master_skills">"Master
 Skills"</string>
     <string name="skill_maker_main_delete_selected">"Delete selected"</string>
-    <string name="skill_maker_main_undo">"Undo"</string>
-    <string name="skill_maker_main_clear">"Clear"</string>
+    <string name="undo">"Undo"</string>
+    <string name="clear">"Clear"</string>
     <string name="skill_maker_main_servant">"Servant %d"</string>
     <string name="skill_maker_main_attack">"Attack"</string>
     <string name="skill_maker_master_skills_header">"Master Skills"</string>
@@ -550,5 +550,9 @@ After pressing on the button, switch the app filter from \"Not optimized\" to \"
     <string name="fp_run_out_of_friend_points">Ran out of Friend Points.</string>
     <string name="should_redirect_to_sell_after_summon">Redirect to Sell after summon?</string>
     <string name="should_redirect_to_sell_after_summon_warning">Note: This is incompatible with Redirect to ce bomb</string>
+
+
+    <string name="enemy_formation_three">3</string>
+    <string name="enemy_formation_six">6</string>
 
 </resources>

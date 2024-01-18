@@ -80,5 +80,7 @@ enum class Images {
     Execute,
     AppendBanner,
     AppendLock,
-    FPSell
+    FPSell,
+    TargetDangerSix,
+    TargetServantSix,
 }
