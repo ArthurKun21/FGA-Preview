@@ -107,8 +107,8 @@ jobs:
           if [[ ${{ github.ref }} == refs/heads/development ]]; then
             echo "FGA_PATH=app/build/outputs/apk/preview/app-preview.apk" >>${GITHUB_ENV}
           else
-            mv app/build/outputs/apk/ci/app-ci.apk app/build/outputs/apk/ci/fga-pr-${{ github.event.pull_request.number }}-build-{{ github.run_number }}.apk
-            echo "FGA_PATH=app/build/outputs/apk/ci/fga-pr-${{ github.event.pull_request.number }}-build-{{ github.run_number }}.apk" >>${GITHUB_ENV}
+            mv app/build/outputs/apk/ci/app-ci.apk app/build/outputs/apk/ci/fga-pr-${{ github.event.pull_request.number }}-build-${{ github.run_number }}.apk
+            echo "FGA_PATH=app/build/outputs/apk/ci/fga-pr-${{ github.event.pull_request.number }}-build-${{ github.run_number }}.apk" >>${GITHUB_ENV}
           fi
 
       - name: Upload APK
