@@ -176,7 +176,7 @@ fun SkillMakerMain(
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.End,
                     modifier = Modifier
-                        .padding(start = 16.dp, top = 8.dp)
+                        .padding(start = 16.dp, top = 16.dp)
                         .width(IntrinsicSize.Max)
                         .fillMaxHeight()
                 ) {
