@@ -176,7 +176,10 @@ fun SkillMakerMain(
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-
+                    Spacer(
+                        modifier = Modifier
+                            .weight(1f)
+                    )
                     Skills(onSkill = onSkill)
                 }
 
@@ -242,7 +245,9 @@ fun ColumnScope.SkillButtons(
 }
 
 @Composable
-fun Skills(onSkill: (Skill.Servant) -> Unit) {
+fun Skills(
+    onSkill: (Skill.Servant) -> Unit
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom,
