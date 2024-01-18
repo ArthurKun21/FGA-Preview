@@ -36,7 +36,7 @@
 （同一波敌人）"</string>
     <string name="skill_maker_main_enemy">"敌人 %d"</string>
     <string name="skill_maker_main_master_skills">"御主技能"</string>
-    <string name="skill_maker_main_clear">"重设"</string>
+    <string name="clear">"重设"</string>
     <string name="skill_maker_main_servant">"从者 %d"</string>
     <string name="skill_maker_main_attack">"攻击"</string>
     <string name="skill_maker_master_skills_header">"御主技能"</string>
