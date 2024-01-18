@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -43,7 +44,9 @@ import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -306,8 +309,20 @@ fun SkillHistory(vm: SkillMakerViewModel) {
     val currentIndex by vm.currentIndex
     val skillCommand = vm.skillCommand
 
+    val state = rememberLazyListState()
+
+    LaunchedEffect(key1 = skillCommand.size) {
+        snapshotFlow { skillCommand.size }
+            .collect {
+                if (skillCommand.size > 0) {
+                    state.animateScrollToItem(skillCommand.lastIndex)
+                }
+            }
+    }
+
     LazyRow(
-        contentPadding = PaddingValues(16.dp)
+        contentPadding = PaddingValues(16.dp),
+        state = state,
     ) {
         items(skillCommand.size) { index ->
             val item = skillCommand.getOrNull(index)
@@ -392,7 +407,7 @@ fun EnemyTarget(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        (1..3).map {target ->
+        (1..3).map { target ->
             val isSelected = selected == target
             val onClick = { onSelectedChange(target) }
 
