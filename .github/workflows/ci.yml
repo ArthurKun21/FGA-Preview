@@ -45,10 +45,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      
+
       - name: Install Python Dependencies
         run: pip install httpx
-      
+
       - name: Determine development branch or pull request
         run: |
           if [[ ${{ github.ref }} == refs/heads/development ]]; then
@@ -71,10 +71,10 @@ jobs:
       - name: save the Github secrets
         run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >>${GITHUB_ENV}
-      
+
       - name: Run Python Create Release notes
         run: python .github/scripts/create_release_notes.py
-        
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -95,13 +95,27 @@ jobs:
           echo "FGA_VERSION_NAME=$VERSION_NAME" >>${GITHUB_ENV}
 
       - name: Build Android Package
-        run: ./gradlew assemblepreview --scan --parallel --no-daemon
+        run: |
+          if [[ ${{ github.ref }} == refs/heads/development ]]; then
+            ./gradlew assemblepreview --scan --parallel --no-daemon
+          else
+            ./gradlew assembleCi --scan --parallel --no-daemon
+          fi
+
+      - name: Rename APK
+        run: |
+          if [[ ${{ github.ref }} == refs/heads/development ]]; then
+            echo "FGA_PATH=app/build/outputs/apk/preview/app-preview.apk" >>${GITHUB_ENV}
+          else
+            mv app/build/outputs/apk/ci/app-ci.apk app/build/outputs/apk/ci/fga-pr-${{ github.event.pull_request.number }}-build-{{ github.run_number }}.apk
+            echo "FGA_PATH=app/build/outputs/apk/ci/fga-pr-${{ github.event.pull_request.number }}-build-{{ github.run_number }}.apk" >>${GITHUB_ENV}
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: app/build/outputs/apk/preview/app-preview.apk
+          path: {{$FGA_PATH}}
 
       - name: Upload De-obfuscation mapping file
         uses: actions/upload-artifact@v4
@@ -112,12 +126,12 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/development'  
+    if: github.ref == 'refs/heads/development'
     steps:
       - name: Tag Version
         run: |
           echo "VERSION_TAG=${{ github.run_number }}" >> $GITHUB_ENV
-      
+
       - name: Create Tag
         id: create_tag
         uses: actions/github-script@v6
@@ -136,10 +150,10 @@ jobs:
 
       - name: Rename apk
         run: mv app-preview.apk fga-preview-${{ env.VERSION_TAG }}.apk
-      
+
       - name: Zipped APK
         run: zip -r fga-preview-${{ env.VERSION_TAG }}.zip fga-preview-${{ env.VERSION_TAG }}.apk
-      
+
       - name: Create tagged Release
         uses: ncipollo/release-action@v1.13.0
         with:

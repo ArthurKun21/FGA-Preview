@@ -76,7 +76,7 @@ android {
         }
         create("ci") {
             initWith(getByName("release"))
-            applicationIdSuffix = ".debug"
+            applicationIdSuffix = ".canarydebug"
             signingConfig = signingConfigs.getByName("debug")
 
             ndk {
