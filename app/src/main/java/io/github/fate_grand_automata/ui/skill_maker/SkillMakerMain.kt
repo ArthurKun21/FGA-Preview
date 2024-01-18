@@ -51,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -135,7 +136,7 @@ fun SkillMakerMain(
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .fillMaxWidth()
-        ){
+        ) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -297,7 +298,6 @@ val SkillMakerEntry?.colorRes: Int
         }
     }
 
-// TODO: Scroll to latest item in History when new added?
 @Composable
 fun SkillHistory(vm: SkillMakerViewModel) {
     val currentIndex by vm.currentIndex
@@ -318,41 +318,72 @@ fun SkillHistory(vm: SkillMakerViewModel) {
         contentPadding = PaddingValues(16.dp),
         state = state,
     ) {
-        items(skillCommand.size) { index ->
+        (0..skillCommand.lastIndex).map { index ->
             val item = skillCommand.getOrNull(index)
             val isSelected = index == currentIndex
+            val shape = when (isSelected) {
+                true -> RoundedCornerShape(7.dp)
+                false -> RectangleShape
+            }
+            val text = if (item is SkillMakerEntry.Start) ">"
+            else item.toString()
 
-            val shape =
-                if (isSelected)
-                    RoundedCornerShape(7.dp)
-                else RectangleShape
-
-            Box(
-                modifier = Modifier
-                    .padding(end = 5.dp)
-                    .let {
-                        if (isSelected) {
-                            it.border(
-                                2.dp,
-                                color = colorResource(android.R.color.darker_gray),
-                                shape = shape
-                            )
-                        } else it
-                    }
-                    .background(colorResource(item.colorRes), shape)
-                    .clickable { vm.setCurrentIndex(index) }
-                    .padding(horizontal = 4.dp)
-            ) {
-                val text =
-                    if (item is SkillMakerEntry.Start) ">"
-                    else item.toString()
-
-                Text(
-                    text,
-                    color = Color.White
-                )
+            if (item is SkillMakerEntry.Start){
+                stickyHeader {
+                    HistoryItem(
+                        item = item,
+                        isSelected = isSelected,
+                        shape = shape,
+                        text = text,
+                        onClick = { vm.setCurrentIndex(index) }
+                    )
+                }
+            } else {
+                item {
+                    HistoryItem(
+                        item = item,
+                        isSelected = isSelected,
+                        shape = shape,
+                        text = text,
+                        onClick = { vm.setCurrentIndex(index) }
+                    )
+                }
             }
         }
+    }
+}
+
+@Composable
+fun HistoryItem(
+    item: SkillMakerEntry?,
+    isSelected: Boolean,
+    shape: Shape,
+    onClick: () -> Unit,
+    text: String,
+) {
+    Box(
+        modifier = Modifier
+            .padding(end = 5.dp)
+            .let {
+                if (isSelected) {
+                    it.border(
+                        2.dp,
+                        color = colorResource(android.R.color.darker_gray),
+                        shape = shape
+                    )
+                } else it
+            }
+            .background(colorResource(item.colorRes), shape)
+            .clickable(
+                onClick = onClick
+            )
+            .padding(horizontal = 4.dp)
+    ) {
+
+        Text(
+            text,
+            color = Color.White
+        )
     }
 }
 
