@@ -115,7 +115,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: {{$FGA_PATH}}
+          path: ${{ env.FGA_PATH }}
 
       - name: Upload De-obfuscation mapping file
         uses: actions/upload-artifact@v4
