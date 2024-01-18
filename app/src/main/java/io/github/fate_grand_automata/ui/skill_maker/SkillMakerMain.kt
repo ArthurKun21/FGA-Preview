@@ -146,7 +146,13 @@ fun SkillMakerMain(
                     modifier = Modifier.weight(1f),
                     enemyFormation = enemyFormation,
                     selected = enemyTarget,
-                    onSelectedChange = { vm.setEnemyTarget(it) }
+                    onSelectedChange = { target ->
+                        if (target == enemyTarget) {
+                            vm.deleteIfLastActionIsTarget(target)
+                        } else {
+                            vm.setEnemyTarget(target)
+                        }
+                    }
                 )
                 SkillHistory(vm)
 
@@ -328,7 +334,7 @@ fun SkillHistory(vm: SkillMakerViewModel) {
             val text = if (item is SkillMakerEntry.Start) ">"
             else item.toString()
 
-            if (item is SkillMakerEntry.Start){
+            if (item is SkillMakerEntry.Start) {
                 stickyHeader {
                     HistoryItem(
                         item = item,

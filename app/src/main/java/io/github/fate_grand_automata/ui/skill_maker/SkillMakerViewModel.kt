@@ -57,7 +57,7 @@ class SkillMakerViewModel @Inject constructor(
         }
     )
     private val _turn = mutableIntStateOf(
-        if (state.skillString != null){
+        if (state.skillString != null) {
             state.turn
         } else {
             model.skillCommand.count { it is SkillMakerEntry.Next } + 1
@@ -129,7 +129,7 @@ class SkillMakerViewModel @Inject constructor(
 
     val enemyFormation: State<EnemyFormation> = _enemyFormation
 
-    fun changeEnemyFormation(){
+    fun changeEnemyFormation() {
         _enemyFormation.value = when (_enemyFormation.value) {
             EnemyFormation.THREE -> EnemyFormation.SIX
             EnemyFormation.SIX -> EnemyFormation.THREE
@@ -169,6 +169,35 @@ class SkillMakerViewModel @Inject constructor(
             last = targetCmd
         } else {
             add(targetCmd)
+        }
+    }
+
+    fun deleteIfLastActionIsTarget(target: Int?) {
+        if (target == null) {
+            return
+        }
+        if (!isEmpty()) {
+            // Un-select target
+            when (val last = last) {
+                // Battle/Turn change
+                is SkillMakerEntry.Next -> {
+                    // Do nothing
+                }
+
+                is SkillMakerEntry.Action -> {
+                    if (
+                        last.action is AutoSkillAction.TargetEnemy &&
+                        last.action.enemy.autoSkillCode == target.toString().first()
+                    ) {
+                        deleteSelected()
+                        revertToPreviousEnemyTarget()
+                    }
+                }
+
+                is SkillMakerEntry.Start -> {
+                    // Do nothing
+                }
+            }
         }
     }
 
@@ -288,7 +317,18 @@ class SkillMakerViewModel @Inject constructor(
             '1' -> 1
             '2' -> 2
             '3' -> 3
+            '4' -> 4
+            '5' -> 5
+            '6' -> 6
+            '7' -> 7
+            '8' -> 8
+            '9' -> 9
             else -> return
+        }
+        if (previousTarget.enemy.autoSkillCode in EnemyTarget.sixEnemyFormationCharList) {
+            _enemyFormation.value = EnemyFormation.SIX
+        } else {
+            _enemyFormation.value = EnemyFormation.THREE
         }
 
         _enemyTarget.value = target
@@ -300,7 +340,7 @@ class SkillMakerViewModel @Inject constructor(
             prevStage()
             prevTurn()
         }
-        if (last is SkillMakerEntry.Next.Turn){
+        if (last is SkillMakerEntry.Next.Turn) {
             prevTurn()
         }
 
@@ -333,8 +373,9 @@ class SkillMakerViewModel @Inject constructor(
                         revertToPreviousEnemyTarget()
                     } else deleteSelected()
                 }
-                // Do nothing
+
                 is SkillMakerEntry.Start -> {
+                    // Do nothing
                 }
             }
         }

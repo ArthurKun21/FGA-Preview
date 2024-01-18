@@ -25,6 +25,13 @@ sealed class EnemyTarget(val autoSkillCode: Char) {
                 A6, B6, C6, D6, E6, F6
             )
         }
+
+        val sixEnemyFormationCharList by lazy {
+            listOf(
+                A6.autoSkillCode, B6.autoSkillCode, C6.autoSkillCode,
+                D6.autoSkillCode, E6.autoSkillCode, F6.autoSkillCode
+            )
+        }
     }
 }
 
