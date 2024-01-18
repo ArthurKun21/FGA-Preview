@@ -444,7 +444,7 @@ private fun ClearButton(
         windowSizeClass = windowSizeClass,
         enabled = selectedMaterials.isNotEmpty(),
         icon = Icons.Default.Clear,
-        text = stringResource(R.string.skill_maker_main_clear).uppercase(),
+        text = stringResource(R.string.clear).uppercase(),
         action = onClear
     )
 }
@@ -459,7 +459,7 @@ private fun UndoButton(
         windowSizeClass = windowSizeClass,
         enabled = materialListTracker.isNotEmpty(),
         icon = Icons.Default.Undo,
-        text = stringResource(R.string.skill_maker_main_undo).uppercase(),
+        text = stringResource(R.string.undo).uppercase(),
         action = onUndo
     )
 
