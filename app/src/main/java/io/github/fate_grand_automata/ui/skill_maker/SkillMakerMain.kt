@@ -1,5 +1,14 @@
 package io.github.fate_grand_automata.ui.skill_maker
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -7,6 +16,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,6 +36,10 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,11 +51,14 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import io.github.fate_grand_automata.R
 import io.github.fate_grand_automata.scripts.models.AutoSkillAction
+import io.github.fate_grand_automata.scripts.models.EnemyFormation
 import io.github.fate_grand_automata.scripts.models.Skill
 import io.github.fate_grand_automata.ui.icon
+import io.github.fate_grand_automata.util.stringRes
 
 @Composable
 fun SkillMakerMain(
@@ -52,116 +69,154 @@ fun SkillMakerMain(
     onClear: () -> Unit,
     onDone: () -> Unit
 ) {
-    Column(
+    Row(
         modifier = Modifier
-            .padding(vertical = 16.dp)
             .fillMaxSize()
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth()
-        ) {
-            val enemyTarget by vm.enemyTarget
+        val enemyFormation by vm.enemyFormation
 
-            EnemyTarget(
-                selected = enemyTarget,
-                onSelectedChange = { vm.setEnemyTarget(it) }
-            )
+        val currentIndex by vm.currentIndex
 
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val wave by vm.wave
-                Text(stringResource(R.string.skill_maker_main_wave, wave))
+        NavigationRail(
+            header = {
+                FloatingActionButton(
+                    onClick = onDone,
+                    shape = RoundedCornerShape(12),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Check"
+                    )
+                }
 
-                val turn by vm.turn
-                Text(stringResource(R.string.skill_maker_main_turn, turn))
+                Button(
+                    onClick = {
+                        vm.changeEnemyFormation()
+                    },
+                    shape = RoundedCornerShape(12),
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = enemyFormation.stringRes),
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                IconButton(
+                    onClick = onClear,
+                    enabled = vm.skillCommand.size > 1,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    Icon(
+                        icon(R.drawable.ic_clear).asPainter(),
+                        contentDescription = "Clear"
+                    )
+                }
+
+                IconButton(
+                    onClick = { vm.onDeleteSelected() },
+                    enabled = currentIndex > 0,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    Icon(
+                        icon(Icons.Default.Delete).asPainter(),
+                        contentDescription = "Delete"
+                    )
+                }
             }
+        ) {
+
         }
 
-        SkillHistory(vm)
-
-        Row(
+        Column(
             modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp)
+                .padding(vertical = 16.dp)
+                .fillMaxSize()
         ) {
-            Column(
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceBetween
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
             ) {
-                Row {
-                    val currentIndex by vm.currentIndex
+                val enemyTarget by vm.enemyTarget
 
-                    ButtonWithIcon(
-                        text = R.string.skill_maker_main_delete_selected,
-                        icon = icon(Icons.Default.Delete),
-                        onClick = { vm.onDeleteSelected() },
-                        enabled = currentIndex > 0,
-                        modifier = Modifier.padding(end = 5.dp)
-                    )
+                ChooseEnemyTarget(
+                    modifier = Modifier.weight(1f),
+                    enemyFormation = enemyFormation,
+                    selected = enemyTarget,
+                    onSelectedChange = { vm.setEnemyTarget(it) }
+                )
 
-                    ButtonWithIcon(
-                        text = R.string.skill_maker_main_clear,
-                        icon = icon(R.drawable.ic_clear),
-                        onClick = onClear,
-                        enabled = vm.skillCommand.size > 1,
-                        modifier = Modifier.padding(end = 5.dp)
-                    )
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val wave by vm.wave
+                    Text(stringResource(R.string.skill_maker_main_wave, wave))
 
-                    ButtonWithIcon(
-                        text = R.string.skill_maker_atk_done,
-                        icon = icon(Icons.Default.Check),
-                        onClick = onDone
-                    )
+                    val turn by vm.turn
+                    Text(stringResource(R.string.skill_maker_main_turn, turn))
                 }
-
-                Skills(onSkill = onSkill)
             }
 
-            Column(
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.End,
+            SkillHistory(vm)
+
+            Row(
                 modifier = Modifier
-                    .padding(start = 16.dp)
-                    .width(IntrinsicSize.Max)
-                    .fillMaxHeight()
+                    .weight(1f)
+                    .padding(horizontal = 16.dp)
             ) {
-                Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.colorMasterSkill)),
-                    onClick = onMasterSkills
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        stringResource(R.string.skill_maker_main_master_skills),
-                        textAlign = TextAlign.Center,
-                        color = Color.White
-                    )
+
+                    Skills(onSkill = onSkill)
                 }
 
-                Spacer(Modifier.height(16.dp))
-
-                Button(
-                    shape = CircleShape,
-                    onClick = onAtk,
-                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.colorAccent)),
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.End,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .aspectRatio(1f)
-
+                        .padding(start = 16.dp)
+                        .width(IntrinsicSize.Max)
+                        .fillMaxHeight()
                 ) {
-                    Text(
-                        stringResource(R.string.skill_maker_main_attack),
-                        color = Color.White
-                    )
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.colorMasterSkill)),
+                        onClick = onMasterSkills
+                    ) {
+                        Text(
+                            stringResource(R.string.skill_maker_main_master_skills),
+                            textAlign = TextAlign.Center,
+                            color = Color.White
+                        )
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Button(
+                        shape = CircleShape,
+                        onClick = onAtk,
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.colorAccent)),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .aspectRatio(1f)
+
+                    ) {
+                        Text(
+                            stringResource(R.string.skill_maker_main_attack),
+                            color = Color.White
+                        )
+                    }
                 }
             }
         }
     }
+
 }
 
 @Composable
@@ -293,17 +348,57 @@ fun SkillHistory(vm: SkillMakerViewModel) {
 }
 
 @Composable
+fun ChooseEnemyTarget(
+    modifier: Modifier = Modifier,
+    enemyFormation: EnemyFormation,
+    selected: Int?,
+    onSelectedChange: (Int) -> Unit
+) {
+    val slideIn = slideInHorizontally(initialOffsetX = { width -> width }) +
+            expandHorizontally(
+                expandFrom = Alignment.End,
+                initialWidth = { w -> w }
+            )
+    val slideOut = slideOutHorizontally(
+        targetOffsetX = { width -> -width }) +
+            shrinkHorizontally(
+                shrinkTowards = Alignment.Start,
+                animationSpec = spring(
+                    stiffness = Spring.StiffnessMediumLow,
+                    visibilityThreshold = IntSize.VisibilityThreshold
+                )
+            )
+    AnimatedContent(
+        targetState = enemyFormation,
+        label = "Enemy Formation Change",
+        transitionSpec = {
+            slideIn togetherWith (slideOut)
+        },
+        modifier = modifier
+    ) { formation ->
+        when (formation) {
+            EnemyFormation.THREE -> EnemyTarget(selected, onSelectedChange)
+            EnemyFormation.SIX -> SixEnemyTarget(selected, onSelectedChange)
+        }
+    }
+}
+
+@Composable
 fun EnemyTarget(
     selected: Int?,
     onSelectedChange: (Int) -> Unit
 ) {
-    Row {
-        (1..3).map {
-            val isSelected = selected == it
-            val onClick = { onSelectedChange(it) }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        (1..3).map {target ->
+            val isSelected = selected == target
+            val onClick = { onSelectedChange(target) }
 
             Row(
                 modifier = Modifier
+                    .weight(1f)
                     .padding(end = 10.dp)
                     .clickable(onClick = onClick),
                 verticalAlignment = Alignment.CenterVertically
@@ -314,7 +409,43 @@ fun EnemyTarget(
                 )
 
                 Text(
-                    stringResource(R.string.skill_maker_main_enemy, it),
+                    stringResource(R.string.skill_maker_main_enemy, target),
+                    modifier = Modifier
+                        .padding(start = 5.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SixEnemyTarget(
+    selected: Int?,
+    onSelectedChange: (Int) -> Unit
+) {
+    FlowRow(
+        maxItemsInEachRow = 3,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        (4..9).map { target ->
+            val isSelected = selected == target
+            val onClick = { onSelectedChange(target) }
+
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 10.dp)
+                    .clickable(onClick = onClick),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = isSelected,
+                    onClick = onClick
+                )
+
+                Text(
+                    stringResource(R.string.skill_maker_main_enemy, target - 3),
                     modifier = Modifier
                         .padding(start = 5.dp)
                 )

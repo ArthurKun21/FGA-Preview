@@ -551,4 +551,8 @@ After pressing on the button, switch the app filter from \"Not optimized\" to \"
     <string name="should_redirect_to_sell_after_summon">Redirect to Sell after summon?</string>
     <string name="should_redirect_to_sell_after_summon_warning">Note: This is incompatible with Redirect to ce bomb</string>
 
+
+    <string name="enemy_formation_three">3</string>
+    <string name="enemy_formation_six">6</string>
+
 </resources>

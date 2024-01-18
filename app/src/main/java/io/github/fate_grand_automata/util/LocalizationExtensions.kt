@@ -12,6 +12,7 @@ import io.github.fate_grand_automata.scripts.enums.ShuffleCardsEnum
 import io.github.fate_grand_automata.scripts.enums.SpamEnum
 import io.github.fate_grand_automata.scripts.enums.SupportClass
 import io.github.fate_grand_automata.scripts.enums.SupportSelectionModeEnum
+import io.github.fate_grand_automata.scripts.models.EnemyFormation
 
 val RefillResourceEnum.stringRes
     get() = when (this) {
@@ -212,4 +213,10 @@ val BattleConfigListSortEnum.stringRes
         BattleConfigListSortEnum.SORT_BY_USAGE_COUNT_DESC -> R.string.p_battle_config_sort_by_usage_count_desc
         BattleConfigListSortEnum.SORT_BY_LAST_USAGE_TIME_ASC -> R.string.p_battle_config_sort_by_last_usage_time_asc
         BattleConfigListSortEnum.SORT_BY_LAST_USAGE_TIME_DESC -> R.string.p_battle_config_sort_by_last_usage_time_desc
+    }
+
+val EnemyFormation.stringRes
+    get() = when (this) {
+        EnemyFormation.THREE -> R.string.enemy_formation_three
+        EnemyFormation.SIX -> R.string.enemy_formation_six
     }

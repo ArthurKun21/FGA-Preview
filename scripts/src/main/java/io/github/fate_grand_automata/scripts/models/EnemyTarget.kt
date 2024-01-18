@@ -27,3 +27,9 @@ sealed class EnemyTarget(val autoSkillCode: Char) {
         }
     }
 }
+
+enum class EnemyFormation {
+    THREE,
+    SIX,
+    // RAID
+}
