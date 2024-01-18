@@ -131,16 +131,13 @@ fun SkillMakerMain(
 
         }
 
-        Column(
+        Row(
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .fillMaxSize()
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth()
+                .fillMaxWidth()
+        ){
+            Column(
+                modifier = Modifier.weight(1f)
             ) {
                 val enemyTarget by vm.enemyTarget
 
@@ -150,10 +147,23 @@ fun SkillMakerMain(
                     selected = enemyTarget,
                     onSelectedChange = { vm.setEnemyTarget(it) }
                 )
+                SkillHistory(vm)
 
+                Spacer(
+                    modifier = Modifier
+                        .weight(1f)
+                )
+                Skills(onSkill = onSkill)
+
+            }
+
+            Column(
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
                 Column(
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     val wave by vm.wave
                     Text(stringResource(R.string.skill_maker_main_wave, wave))
@@ -161,33 +171,11 @@ fun SkillMakerMain(
                     val turn by vm.turn
                     Text(stringResource(R.string.skill_maker_main_turn, turn))
                 }
-            }
-
-            SkillHistory(vm)
-
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Spacer(
-                        modifier = Modifier
-                            .weight(1f)
-                    )
-                    Skills(onSkill = onSkill)
-                }
-
                 Column(
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.End,
                     modifier = Modifier
-                        .padding(start = 16.dp)
+                        .padding(start = 16.dp, top = 8.dp)
                         .width(IntrinsicSize.Max)
                         .fillMaxHeight()
                 ) {
@@ -220,6 +208,7 @@ fun SkillMakerMain(
                     }
                 }
             }
+
         }
     }
 
