@@ -485,7 +485,7 @@ fun SixEnemyTarget(
                 )
 
                 Text(
-                    stringResource(R.string.skill_maker_main_enemy, target - 3),
+                    stringResource(R.string.skill_maker_main_enemy, target),
                     modifier = Modifier
                         .padding(start = 5.dp)
                 )
