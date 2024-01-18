@@ -129,6 +129,8 @@ class ImageLoader @Inject constructor(
         Images.AppendBanner -> "append_banner.png"
         Images.AppendLock -> "append_lock.png"
         Images.FPSell -> "fp_sell.png"
+        Images.TargetDangerSix -> "target_danger_six.png"
+        Images.TargetServantSix -> "target_servant_six.png"
     }
 
     override operator fun get(img: Images, gameServer: GameServer?): Pattern = synchronized(regionCachedPatterns) {
