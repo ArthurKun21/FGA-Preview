@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.fate_grand_automata.R
-import io.github.fate_grand_automata.prefs.core.PrefsCore
+import io.github.fate_grand_automata.prefs.core.ServantEnhancementPrefsCore
 import io.github.fate_grand_automata.ui.Stepper
 import io.github.fate_grand_automata.ui.VerticalDivider
 import io.github.fate_grand_automata.ui.prefs.remember
@@ -32,21 +32,21 @@ import io.github.fate_grand_automata.ui.prefs.remember
 
 @Composable
 fun servantLevelLauncher(
-    prefsCore: PrefsCore,
+    servantEnhancement: ServantEnhancementPrefsCore,
     modifier: Modifier = Modifier
 ): ScriptLauncherResponseBuilder {
 
-    var shouldLimit by prefsCore.servantEnhancement.shouldLimit.remember()
+    var shouldLimit by servantEnhancement.shouldLimit.remember()
 
-    var limitCount by prefsCore.servantEnhancement.limitCount.remember()
+    var limitCount by servantEnhancement.limitCount.remember()
 
-    var shouldRedirectAscension by prefsCore.servantEnhancement.shouldRedirectAscension.remember()
+    var shouldRedirectAscension by servantEnhancement.shouldRedirectAscension.remember()
 
-    var shouldPerformAscension by prefsCore.servantEnhancement.shouldPerformAscension.remember()
+    var shouldPerformAscension by servantEnhancement.shouldPerformAscension.remember()
 
-    var shouldRedirectGrail by prefsCore.servantEnhancement.shouldRedirectGrail.remember()
+    var shouldRedirectGrail by servantEnhancement.shouldRedirectGrail.remember()
 
-    var muteNotifications by prefsCore.servantEnhancement.muteNotifications.remember()
+    var muteNotifications by servantEnhancement.muteNotifications.remember()
 
     LazyColumn(
         modifier = modifier

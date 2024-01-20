@@ -214,10 +214,10 @@ class AutoServantLevel @Inject constructor(
         run ascension@{
             repeat(retry) {
                 locations.enhancementClick.click()
-                confirmationVisible = listOf(
+                confirmationVisible = mapOf(
                     images[Images.Ok] to locations.servant.finalConfirmRegion,
                     images[Images.Execute] to locations.tempServantEnhancementRegion
-                ).existsAny(
+                ).exists(
                     timeout = 3.seconds
                 )
 
