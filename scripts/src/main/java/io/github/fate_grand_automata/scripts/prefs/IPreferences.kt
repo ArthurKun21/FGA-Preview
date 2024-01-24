@@ -78,6 +78,8 @@ interface IPreferences {
     var notifyErrorWarning: String
 
     var configListSort: BattleConfigListSortEnum
+
+    var emptyEnhance: Boolean
 }
 
 val IPreferences.wantsMediaProjectionToken get() = !useRootForScreenshots

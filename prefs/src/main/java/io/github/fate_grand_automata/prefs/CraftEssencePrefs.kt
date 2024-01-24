@@ -8,7 +8,6 @@ import io.github.fate_grand_automata.scripts.prefs.ICraftEssencePreferences
 internal class CraftEssencePrefs(
     val prefs: CraftEssencePrefsCore
 ) : ICraftEssencePreferences {
-    override var emptyEnhance: Boolean by prefs.emptyEnhance
 
     override var ceTargetRarity: Int by prefs.ceTargetRarity
 
