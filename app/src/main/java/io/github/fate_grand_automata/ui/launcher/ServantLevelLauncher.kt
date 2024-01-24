@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.fate_grand_automata.R
+import io.github.fate_grand_automata.prefs.core.PrefsCore
 import io.github.fate_grand_automata.prefs.core.ServantEnhancementPrefsCore
 import io.github.fate_grand_automata.ui.Stepper
 import io.github.fate_grand_automata.ui.VerticalDivider
@@ -33,8 +34,11 @@ import io.github.fate_grand_automata.ui.prefs.remember
 @Composable
 fun servantLevelLauncher(
     servantEnhancement: ServantEnhancementPrefsCore,
+    prefsCore: PrefsCore,
     modifier: Modifier = Modifier
 ): ScriptLauncherResponseBuilder {
+
+    val emptyServant by prefsCore.emptyEnhance.remember()
 
     var shouldLimit by servantEnhancement.shouldLimit.remember()
 
@@ -68,146 +72,163 @@ fun servantLevelLauncher(
                 Divider()
             }
         }
-        item {
-            Text(
-                text = stringResource(R.string.note),
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        item {
-            Text(
-                text = stringResource(id = R.string.servert_enhancement_warning_notice),
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Justify
-            )
-        }
-        item {
-            Divider()
-        }
 
-        item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { shouldLimit = !shouldLimit }
-            ) {
+        if (emptyServant) {
+            item {
                 Text(
-                    stringResource(R.string.servant_enhancement_limit),
+                    text = stringResource(id = R.string.empty_servant),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.secondary
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    textAlign = TextAlign.Center
                 )
-
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Switch(
-                        checked = shouldLimit,
-                        onCheckedChange = { shouldLimit = it }
-                    )
-                    Stepper(
-                        value = limitCount,
-                        onValueChange = { limitCount = it },
-                        valueRange = 1..999,
-                        enabled = shouldLimit
-                    )
-                }
             }
-        }
-
-        item {
-            Divider(
-                modifier = Modifier.padding(vertical = 5.dp)
-            )
-        }
-
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                RowTextCheckBox(
-                    modifier = Modifier
-                        .weight(1f),
-                    text = stringResource(R.string.servant_redirect_ascension_question),
-                    status = shouldRedirectAscension,
-                    onStatusChange = {
-                        shouldRedirectAscension = it
-                    }
+        } else {
+            item {
+                Text(
+                    text = stringResource(R.string.note),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
                 )
-                VerticalDivider()
-
-                RowTextCheckBox(
-                    modifier = Modifier
-                        .weight(1f),
-                    text = stringResource(R.string.servant_redirect_grail),
-                    status = shouldRedirectGrail,
-                    onStatusChange = {
-                        shouldRedirectGrail = it
-                    }
-                )
-
             }
-        }
-        item {
-            Divider(
-                modifier = Modifier.padding(vertical = 5.dp)
-            )
-        }
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(
+            item {
+                Text(
+                    text = stringResource(id = R.string.servert_enhancement_warning_notice),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Justify
+                )
+            }
+            item {
+                Divider()
+            }
+
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .weight(1f),
-                    verticalArrangement = Arrangement.Center,
+                        .fillMaxWidth()
+                        .clickable { shouldLimit = !shouldLimit }
                 ) {
-                    RowTextCheckBox(
-                        text = stringResource(R.string.servant_perform_ascension_question),
-                        status = shouldPerformAscension,
-                        onStatusChange = {
-                            shouldPerformAscension = it
-                        }
-                    )
                     Text(
-                        stringResource(R.string.servant_perform_ascension_warning),
+                        stringResource(R.string.servant_enhancement_limit),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.secondary
                     )
-                }
-                VerticalDivider()
-                Spacer(modifier = Modifier.weight(1f))
 
-            }
-        }
-        item {
-            Divider(
-                modifier = Modifier.padding(vertical = 5.dp)
-            )
-        }
-        item {
-            RowTextCheckBox(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = stringResource(R.string.mute_notifications),
-                status = muteNotifications,
-                onStatusChange = {
-                    muteNotifications = it
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Switch(
+                            checked = shouldLimit,
+                            onCheckedChange = { shouldLimit = it }
+                        )
+                        Stepper(
+                            value = limitCount,
+                            onValueChange = { limitCount = it },
+                            valueRange = 1..999,
+                            enabled = shouldLimit
+                        )
+                    }
                 }
-            )
+            }
+
+            item {
+                Divider(
+                    modifier = Modifier.padding(vertical = 5.dp)
+                )
+            }
+
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    RowTextCheckBox(
+                        modifier = Modifier
+                            .weight(1f),
+                        text = stringResource(R.string.servant_redirect_ascension_question),
+                        status = shouldRedirectAscension,
+                        onStatusChange = {
+                            shouldRedirectAscension = it
+                        }
+                    )
+                    VerticalDivider()
+
+                    RowTextCheckBox(
+                        modifier = Modifier
+                            .weight(1f),
+                        text = stringResource(R.string.servant_redirect_grail),
+                        status = shouldRedirectGrail,
+                        onStatusChange = {
+                            shouldRedirectGrail = it
+                        }
+                    )
+
+                }
+            }
+            item {
+                Divider(
+                    modifier = Modifier.padding(vertical = 5.dp)
+                )
+            }
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f),
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        RowTextCheckBox(
+                            text = stringResource(R.string.servant_perform_ascension_question),
+                            status = shouldPerformAscension,
+                            onStatusChange = {
+                                shouldPerformAscension = it
+                            }
+                        )
+                        Text(
+                            stringResource(R.string.servant_perform_ascension_warning),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
+                    VerticalDivider()
+                    Spacer(modifier = Modifier.weight(1f))
+
+                }
+            }
+            item {
+                Divider(
+                    modifier = Modifier.padding(vertical = 5.dp)
+                )
+            }
+            item {
+                RowTextCheckBox(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = stringResource(R.string.mute_notifications),
+                    status = muteNotifications,
+                    onStatusChange = {
+                        muteNotifications = it
+                    }
+                )
+            }
         }
     }
 
 
     return ScriptLauncherResponseBuilder(
-        canBuild = { true },
+        canBuild = {
+            !emptyServant
+        },
         build = {
             ScriptLauncherResponse.ServantEnhancement
         }
