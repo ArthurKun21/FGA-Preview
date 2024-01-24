@@ -198,6 +198,8 @@ class PreferencesImpl @Inject constructor(
 
     override var configListSort by prefs.configListSort
 
+    override var emptyEnhance by prefs.emptyEnhance
+
     override val support = object :
         ISupportPreferencesCommon {
         override val mlbSimilarity by prefs.mlbSimilarity.map { it / 100.0 }

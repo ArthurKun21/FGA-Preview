@@ -187,4 +187,10 @@ class PrefsCore @Inject constructor(
 
     val configListSort = maker.enum("config_list_sort", BattleConfigListSortEnum.DEFAULT_SORT)
 
+    /**
+     * Checks if the CE enhancement screen is empty.
+     * If it is not empty, then the script will show the Target CE as there is already target CE selected.
+     */
+    val emptyEnhance = maker.bool("ce_empty_enhance")
+
 }
