@@ -82,8 +82,8 @@ class ServantTracker @Inject constructor(
                         locations.battle.servantChangeCheckRegion(slot)
                             .getPattern("Servant $teamSlot")
                     ),
-                    skills = slot.skills().mapIndexed { index, it ->
-                        locations.battle.imageRegion(it)
+                    skills = slot.skills().mapIndexed { index, skills ->
+                        locations.battle.imageRegion(skills)
                             .getPattern("Servant $teamSlot S${index + 1}")
                     }
                 )
