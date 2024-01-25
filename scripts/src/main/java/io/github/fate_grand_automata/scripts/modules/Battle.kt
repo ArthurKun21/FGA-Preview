@@ -65,6 +65,21 @@ class Battle @Inject constructor(
         return card.readCommandCards()
     }
 
+    /**
+     * Perform a battle for the specific turn/wave
+     *
+     * For Skills actions
+     * @see AutoSkill.execute
+     *
+     * For Card reading
+     * @see shuffleCards
+     * @see clickAttack
+     * @see Card.readCommandCards
+     * @see CardParser.parse
+     *
+     * For Card and NP Clicking
+     * @see Card.clickCommandCards
+     */
     fun performBattle() {
         prefs.waitBeforeTurn.wait()
 
