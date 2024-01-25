@@ -19,7 +19,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -118,7 +118,7 @@ fun TopSection(onBackClick: () -> Unit = {}) {
             onClick = onBackClick,
             modifier = Modifier.align(Alignment.CenterStart)
         ) {
-            Icon(imageVector = Icons.Outlined.KeyboardArrowLeft, contentDescription = null)
+            Icon(imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft, contentDescription = null)
         }
     }
 }

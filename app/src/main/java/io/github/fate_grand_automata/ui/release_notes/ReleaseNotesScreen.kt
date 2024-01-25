@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,7 +49,7 @@ fun ReleaseNotesScreen(
                     IconButton(
                         onClick = onBack
                     ) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "navigation")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "navigation")
                     }
                 },
                 modifier = Modifier
