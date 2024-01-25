@@ -18,6 +18,7 @@ sealed class EnemyTarget(val autoSkillCode: Char) {
 
     data object F6 : EnemyTarget('9')
 
+
     companion object {
         val list by lazy {
             listOf(

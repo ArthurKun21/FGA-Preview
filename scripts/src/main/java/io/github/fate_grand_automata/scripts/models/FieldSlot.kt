@@ -14,23 +14,23 @@ sealed class FieldSlot(val position: Int) {
 
 fun FieldSlot.skill1() =
     when (this) {
-        FieldSlot.A -> Skill.Servant.A1
-        FieldSlot.B -> Skill.Servant.B1
-        FieldSlot.C -> Skill.Servant.C1
+        FieldSlot.A -> Skill.Servant.AS1
+        FieldSlot.B -> Skill.Servant.BS1
+        FieldSlot.C -> Skill.Servant.CS1
     }
 
 fun FieldSlot.skill2() =
     when (this) {
-        FieldSlot.A -> Skill.Servant.A2
-        FieldSlot.B -> Skill.Servant.B2
-        FieldSlot.C -> Skill.Servant.C2
+        FieldSlot.A -> Skill.Servant.AS2
+        FieldSlot.B -> Skill.Servant.BS2
+        FieldSlot.C -> Skill.Servant.CS2
     }
 
 fun FieldSlot.skill3() =
     when (this) {
-        FieldSlot.A -> Skill.Servant.A3
-        FieldSlot.B -> Skill.Servant.B3
-        FieldSlot.C -> Skill.Servant.C3
+        FieldSlot.A -> Skill.Servant.AS3
+        FieldSlot.B -> Skill.Servant.BS3
+        FieldSlot.C -> Skill.Servant.CS3
     }
 
 fun FieldSlot.skills() =

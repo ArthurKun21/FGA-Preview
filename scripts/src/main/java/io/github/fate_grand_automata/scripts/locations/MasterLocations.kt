@@ -35,9 +35,9 @@ class MasterLocations @Inject constructor(
     }
 
     fun locate(skill: Skill.Master) = when (skill) {
-        Skill.Master.A -> -740
-        Skill.Master.B -> -560
-        Skill.Master.C -> -400
+        Skill.Master.S1 -> -740
+        Skill.Master.S2 -> -560
+        Skill.Master.S3 -> -400
     }.let { x ->
         Location(x + 178, 620) + masterOffsetNewUI
     }

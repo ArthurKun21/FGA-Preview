@@ -112,7 +112,7 @@ class Battle @Inject constructor(
     private fun shuffleCards(): List<ParsedCard> {
         locations.attack.backClick.click()
 
-        caster.castMasterSkill(Skill.Master.C)
+        caster.castMasterSkill(Skill.Master.S3)
         state.shuffled = true
 
         return clickAttack()

@@ -4,25 +4,37 @@ import io.github.fate_grand_automata.scripts.models.AutoSkillAction
 import io.github.fate_grand_automata.scripts.models.ServantTarget
 import io.github.fate_grand_automata.scripts.models.Skill
 
-sealed class SkillMakerEntry {
-    class Action(val action: AutoSkillAction) : SkillMakerEntry() {
-        private fun toString(skill: Skill, target: ServantTarget?) =
-            if (target == null)
-                "${skill.autoSkillCode}"
-            else "${skill.autoSkillCode}${target.autoSkillCode}"
+sealed class SkillMakerEntry(
+    open val wave: Int,
+    open val turn: Int
+) {
+    class Action(
+        val action: AutoSkillAction,
+        override val wave: Int = action.wave,
+        override val turn: Int = action.turn
+    ) : SkillMakerEntry(
+        wave = wave,
+        turn = turn
+    ) {
+        private fun toString(skill: Skill, target: ServantTarget?) = when (target) {
+            null -> "${skill.autoSkillCode}"
+            else -> "${skill.autoSkillCode}${target.autoSkillCode}"
+        }
 
-        private fun toString(skill: Skill, targets: List<ServantTarget>) =
-            if (targets.isEmpty()) "${skill.autoSkillCode}"
-            else if (targets.size == 1) "${skill.autoSkillCode}${targets[0].autoSkillCode}"
-            else "${skill.autoSkillCode}(${targets.map(ServantTarget::autoSkillCode).joinToString("")})"
+
+        private fun toString(skill: Skill, targets: List<ServantTarget>) = when {
+            targets.isEmpty() -> "${skill.autoSkillCode}"
+            targets.size == 1 -> "${skill.autoSkillCode}${targets[0].autoSkillCode}"
+            else -> "${skill.autoSkillCode}(${targets.map(ServantTarget::autoSkillCode).joinToString("")})"
+        }
 
         override fun toString() = when (action) {
             is AutoSkillAction.Atk -> {
-                if (action == AutoSkillAction.Atk.noOp()) {
+                if (action == AutoSkillAction.Atk.NoOp(action.wave, action.turn)) {
                     "0"
                 } else {
-                    val cardsBeforeNP = if (action.cardsBeforeNP > 0) {
-                        "n${action.cardsBeforeNP}"
+                    val cardsBeforeNP = if (action.numberOfCardsBeforeNP > 0) {
+                        "n${action.numberOfCardsBeforeNP}"
                     } else ""
 
                     cardsBeforeNP + action.nps.joinToString("") {
@@ -38,19 +50,28 @@ sealed class SkillMakerEntry {
         }
     }
 
-    object Start : SkillMakerEntry() {
+    object Start : SkillMakerEntry(0, 0) {
         override fun toString() = ""
     }
 
-    sealed class Next(val action: AutoSkillAction.Atk) : SkillMakerEntry() {
-        protected fun AutoSkillAction.Atk.str() = if (action == AutoSkillAction.Atk.noOp()) ""
-        else Action(this).toString()
+    sealed class Next(
+        val action: AutoSkillAction.Atk,
+        override val wave: Int,
+        override val turn: Int
+    ) : SkillMakerEntry(
+        wave = wave,
+        turn = turn
+    ) {
+        protected fun AutoSkillAction.Atk.str() = when (action) {
+            is AutoSkillAction.Atk.NoOp -> ""
+            else -> Action(this).toString()
+        }
 
-        class Wave(action: AutoSkillAction.Atk) : Next(action) {
+        class Wave(action: AutoSkillAction.Atk) : Next(action, action.wave, action.turn) {
             override fun toString() = "${action.str()},#,"
         }
 
-        class Turn(action: AutoSkillAction.Atk) : Next(action) {
+        class Turn(action: AutoSkillAction.Atk) : Next(action, action.wave, action.turn) {
             override fun toString() = "${action.str()},"
         }
     }

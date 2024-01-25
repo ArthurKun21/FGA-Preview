@@ -262,7 +262,7 @@ fun SkillMakerAtk(
                 )
                 Row{
                     Button(
-                        onClick = { onNextTurn(makeAtkAction(npSequence, cardsBeforeNp)) },
+                        onClick = { onNextTurn(makeAtkAction(npSequence, cardsBeforeNp, wave, turn)) },
                         modifier = Modifier
                             .padding(end = 16.dp)
                     ) {
@@ -275,7 +275,7 @@ fun SkillMakerAtk(
                     ButtonWithIcon(
                         text = R.string.skill_maker_atk_next_wave,
                         icon = icon(Icons.Default.FastForward),
-                        onClick = { onNextWave(makeAtkAction(npSequence, cardsBeforeNp)) }
+                        onClick = { onNextWave(makeAtkAction(npSequence, cardsBeforeNp, wave, turn)) }
                     )
                 }
             }
@@ -283,7 +283,12 @@ fun SkillMakerAtk(
     }
 }
 
-private fun makeAtkAction(npSequence: String, cardsBeforeNp: Int): AutoSkillAction.Atk {
+private fun makeAtkAction(
+    npSequence: String,
+    cardsBeforeNp: Int,
+    wave: Int,
+    turn: Int
+): AutoSkillAction.Atk {
     val npSet = npSequence
         .mapNotNull {
             when (it) {
@@ -294,8 +299,7 @@ private fun makeAtkAction(npSequence: String, cardsBeforeNp: Int): AutoSkillActi
             }
         }
         .toSet()
-
-    return AutoSkillAction.Atk(npSet, cardsBeforeNp)
+    return AutoSkillAction.Atk.construct(npSet, cardsBeforeNp, wave, turn)
 }
 
 @Composable
