@@ -21,6 +21,10 @@ class AutoSkill @Inject constructor(
         is AutoSkillAction.OrderChange -> caster.orderChange(action)
     }
 
+    // // TODO: For Verification
+    fun shouldSpamSkills(stage: Int, turn: Int) =
+        skillCommand.isEmpty(stage = stage, turn = turn)
+
     fun execute(stage: Int, turn: Int): NPUsage {
         val commandList = skillCommand[stage, turn]
         var npUsage = NPUsage.none
