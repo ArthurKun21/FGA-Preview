@@ -95,11 +95,15 @@ class Battle @Inject constructor(
         servantTracker.beginTurn()
 
         val npUsage = autoSkill.execute(state.stage, state.turn)
+
+        // For Deprecation, going to spam skills once ran out of command list
         skillSpam.spamSkills()
 
         val cards = clickAttack()
             .takeUnless { shouldShuffle(it, npUsage) }
             ?: shuffleCards()
+
+        val nps = card.readNpCards(npUsage = npUsage)
 
         card.clickCommandCards(cards, npUsage)
 

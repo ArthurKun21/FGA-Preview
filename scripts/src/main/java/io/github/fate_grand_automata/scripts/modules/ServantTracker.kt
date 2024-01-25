@@ -58,7 +58,7 @@ class ServantTracker @Inject constructor(
 
     private val faceCardImages = mutableMapOf<TeamSlot, MutableList<Pattern>>()
 
-    private val npCardImages = mutableMapOf<TeamSlot, CardTypeEnum>()
+    private val npCardType = mutableMapOf<TeamSlot, CardTypeEnum>()
 
     override fun close() {
         checkImages.values.forEach { it.close() }
@@ -125,7 +125,7 @@ class ServantTracker @Inject constructor(
     }
 
     private fun checkNPCardType(teamSlot: TeamSlot) {
-        npCardImages[teamSlot] = when {
+        npCardType[teamSlot] = when {
             images[Images.NPArts] in locations.battle.servantNPTypeRegion -> CardTypeEnum.Arts
             images[Images.NPBuster] in locations.battle.servantNPTypeRegion -> CardTypeEnum.Buster
             images[Images.NPQuick] in locations.battle.servantNPTypeRegion -> CardTypeEnum.Quick
@@ -203,6 +203,48 @@ class ServantTracker @Inject constructor(
                 check(startingSlot)
             }
         }
+    }
+
+    fun npByServant(nps: Set<CommandCard.NP>): Map<TeamSlot, Collection<CommandCard.NP>> {
+        if (prefs.skipServantFaceCardCheck) {
+            return emptyMap()
+        }
+        val npsRemaining = nps.toMutableSet()
+        val result = mutableMapOf<TeamSlot, Set<CommandCard.NP>>()
+        supportSlot?.let { supportSlot ->
+            if (supportSlot in deployed.values) {
+                val matched = npsRemaining.filter { np ->
+                    images[Images.Support] in locations.attack.supportNPCheckRegion(np)
+                }.toSet()
+
+                npsRemaining -= matched
+                result[supportSlot] = matched
+            }
+        }
+        val ownedServants = faceCardImages
+            .filterKeys { it != supportSlot && it in deployed.values }
+
+        npsRemaining
+            .groupBy { np ->
+                ownedServants
+                    .mapValues { (_, images) ->
+                        images.maxOf { image ->
+                            locations.attack.servantNPMatchRegion(np).find(image, 0.5)?.score ?: 0.0
+                        }
+                    }
+                    .filterValues { it > 0.0 }
+                    .maxByOrNull { it.value }
+                    ?.key
+            }
+            .filterKeys { it != null }
+            .entries
+            .associateTo(result) { (key, value) -> key!! to value.toSet() }
+
+        return result
+    }
+
+    fun fetchNPCardType(teamSlot: TeamSlot): CardTypeEnum? {
+        return npCardType[teamSlot]
     }
 
     fun faceCardsGroupedByServant(): Map<TeamSlot, Collection<CommandCard.Face>> {
