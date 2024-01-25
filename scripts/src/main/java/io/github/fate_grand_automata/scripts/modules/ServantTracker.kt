@@ -3,6 +3,7 @@ package io.github.fate_grand_automata.scripts.modules
 import io.github.fate_grand_automata.scripts.IFgoAutomataApi
 import io.github.fate_grand_automata.scripts.Images
 import io.github.fate_grand_automata.scripts.ScriptLog
+import io.github.fate_grand_automata.scripts.enums.CardTypeEnum
 import io.github.fate_grand_automata.scripts.models.CommandCard
 import io.github.fate_grand_automata.scripts.models.FieldSlot
 import io.github.fate_grand_automata.scripts.models.OrderChangeMember
@@ -57,6 +58,8 @@ class ServantTracker @Inject constructor(
 
     private val faceCardImages = mutableMapOf<TeamSlot, MutableList<Pattern>>()
 
+    private val npCardImages = mutableMapOf<TeamSlot, CardTypeEnum>()
+
     override fun close() {
         checkImages.values.forEach { it.close() }
         faceCardImages.values.flatten().forEach { it.close() }
@@ -110,11 +113,24 @@ class ServantTracker @Inject constructor(
 
         val image = locations.battle.servantDetailsFaceCardRegion.getPattern("Face $teamSlot")
 
+        checkNPCardType(teamSlot)
+
         // Close dialog
         locations.battle.extraInfoWindowCloseClick.click()
 
         faceCardImages.getOrPut(teamSlot) { mutableListOf() }
             .add(image)
+
+        250.milliseconds.wait()
+    }
+
+    private fun checkNPCardType(teamSlot: TeamSlot) {
+        npCardImages[teamSlot] = when {
+            images[Images.NPArts] in locations.battle.servantNPTypeRegion -> CardTypeEnum.Arts
+            images[Images.NPBuster] in locations.battle.servantNPTypeRegion -> CardTypeEnum.Buster
+            images[Images.NPQuick] in locations.battle.servantNPTypeRegion -> CardTypeEnum.Quick
+            else -> CardTypeEnum.Unknown
+        }
 
         250.milliseconds.wait()
     }
