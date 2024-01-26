@@ -99,6 +99,10 @@ class ScriptMessages @Inject constructor(
                 val supportText = if (item.isSupport) "Support " else ""
                 Timber.d("${item.cards} belong to ${supportText}${item.servant}")
             }
+
+            is ScriptLog.DevLog -> {
+                Timber.d(item.message)
+            }
         }
 
     override fun notify(action: ScriptNotify) =

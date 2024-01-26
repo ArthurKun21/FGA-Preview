@@ -18,8 +18,9 @@ sealed class ScriptNotify {
 }
 
 sealed class ScriptLog {
-    object DefaultSupportBounds : ScriptLog()
-    object DefaultMasterOffset : ScriptLog()
+    class DevLog(val message: String) : ScriptLog()
+    data object DefaultSupportBounds : ScriptLog()
+    data object DefaultMasterOffset : ScriptLog()
     class CurrentParty(val party: Int?) : ScriptLog()
     class MaxSkills(
         val needMaxedSkills: List<Boolean>,
