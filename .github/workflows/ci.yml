@@ -67,7 +67,7 @@ jobs:
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >>${GITHUB_ENV}
 
       - name: Run Python Create Release notes
-        run: python3 .github/scripts/create_release_notes.py
+        run: python .github/scripts/create_release_notes.py
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
