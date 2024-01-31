@@ -37,7 +37,7 @@ env:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-14
     if: github.ref != 'refs/heads/development' || inputs.release-canary != 'false'
     steps:
       - uses: actions/checkout@v4
@@ -127,7 +127,7 @@ jobs:
 
   release:
     needs: build
-    runs-on: macos-latest
+    runs-on: macos-14
     if: github.ref == 'refs/heads/development'
     steps:
       - name: Tag Version
