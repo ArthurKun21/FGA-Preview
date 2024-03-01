@@ -159,7 +159,9 @@ class AutoBattle @Inject constructor(
     private fun makeExitState(): ExitState {
         return ExitState(
             timesRan = state.runs,
-            runLimit = if (prefs.selectedServerConfigPref.shouldLimitRuns) prefs.selectedServerConfigPref.limitRuns else null,
+            runLimit = if (prefs.selectedServerConfigPref.shouldLimitRuns) {
+                prefs.selectedServerConfigPref.limitRuns
+            } else null,
             timesRefilled = refill.timesRefilled,
             refillLimit = prefs.selectedServerConfigPref.currentAppleCount,
             ceDropCount = ceDropsTracker.count,
@@ -326,7 +328,6 @@ class AutoBattle @Inject constructor(
     private fun result() {
         isInBattle = false
 
-        isInBattle = false
         locations.resultClick.click(
             times = if (prefs.screenshotBond) 5 else 15
         )
@@ -367,6 +368,10 @@ class AutoBattle @Inject constructor(
         isQuestClose = true
         // Count the current run
         state.nextRun()
+    }
+
+    private fun isStartQuest(): Boolean {
+        return images[Images.Cancel] in locations.cancelQuestRegion
     }
 
     private fun findRepeatButton(): Match? {
@@ -552,13 +557,25 @@ class AutoBattle @Inject constructor(
         // delay so refill with copper is not disturbed
         2.5.seconds.wait()
 
-        if (isInOrdealCallOutOfPodsScreen()){
-            throw BattleExitException(ExitReason.LimitRuns(state.runs))
+        var closeScreen = false
+        var inventoryFull = false
+        var startQuest = false
+
+        useSameSnapIn {
+            closeScreen = isInOrdealCallOutOfPodsScreen()
+            inventoryFull = isInventoryFull()
+            startQuest = isStartQuest()
         }
 
-        if (isInventoryFull()) {
-            throw BattleExitException(ExitReason.InventoryFull)
+        when {
+            closeScreen -> throw BattleExitException(ExitReason.LimitRuns(state.runs))
+            inventoryFull -> throw BattleExitException(ExitReason.InventoryFull)
+            startQuest -> {
+                locations.startQuestRegion.click()
+                2.5.seconds.wait()
+            }
         }
+
 
         refill.refill()
     }

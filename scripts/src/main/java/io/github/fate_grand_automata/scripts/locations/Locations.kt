@@ -169,4 +169,8 @@ class Locations @Inject constructor(
     val tempServantEnhancementRegion = Region(252, 1096, 301, 57).xFromCenter()
 
     val tempServantEnhancementLocation = Location(402, 1124).xFromCenter()
+
+    val startQuestRegion = Region(302, 1093, 200, 57).xFromCenter()
+
+    val cancelQuestRegion = Region(-202, 1064, 67, 124).xFromCenter()
 }

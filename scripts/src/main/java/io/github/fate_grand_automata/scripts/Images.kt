@@ -83,4 +83,5 @@ enum class Images {
     FPSell,
     TargetDangerSix,
     TargetServantSix,
+    Cancel
 }
