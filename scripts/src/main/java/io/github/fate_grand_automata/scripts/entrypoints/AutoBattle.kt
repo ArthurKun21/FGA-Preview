@@ -58,23 +58,22 @@ class AutoBattle @Inject constructor(
     private val ceDropsTracker: CEDropsTracker
 ) : EntryPoint(exitManager), IFgoAutomataApi by api {
     sealed class ExitReason(val cause: Exception? = null) {
-        object Abort : ExitReason()
+        data object Abort : ExitReason()
         class Unexpected(cause: Exception) : ExitReason(cause)
-        object CEGet : ExitReason()
+        data object CEGet : ExitReason()
         class LimitCEs(val count: Int) : ExitReason()
-        object FirstClearRewards : ExitReason()
+        data object FirstClearRewards : ExitReason()
         class LimitMaterials(val count: Int) : ExitReason()
-        object WithdrawDisabled : ExitReason()
-        object APRanOut : ExitReason()
-        object StormPodRanOut : ExitReason()
-        object InventoryFull : ExitReason()
+        data object WithdrawDisabled : ExitReason()
+        data object APRanOut : ExitReason()
+        data object InventoryFull : ExitReason()
         class LimitRuns(val count: Int) : ExitReason()
-        object SupportSelectionManual : ExitReason()
-        object SupportSelectionPreferredNotSet : ExitReason()
+        data object SupportSelectionManual : ExitReason()
+        data object SupportSelectionPreferredNotSet : ExitReason()
         class SkillCommandParseError(cause: Exception) : ExitReason(cause)
         class CardPriorityParseError(val msg: String) : ExitReason()
-        object Paused : ExitReason()
-        object StopAfterThisRun : ExitReason()
+        data object Paused : ExitReason()
+        data object StopAfterThisRun : ExitReason()
     }
 
     internal class BattleExitException(val reason: ExitReason) : Exception(reason.cause)
@@ -93,6 +92,8 @@ class AutoBattle @Inject constructor(
     private var isIntroSkipped = false
 
     private var canScreenshotBondCE = false
+
+    private var isQuestClose = false
 
     override fun script(): Nothing {
         try {
@@ -236,6 +237,12 @@ class AutoBattle @Inject constructor(
 
         showRefillsAndRunsMessage()
 
+        if (isQuestClose){
+            // Ordeal Call
+            isQuestClose = false
+            throw BattleExitException(ExitReason.LimitRuns(state.runs))
+        }
+
         // Click uppermost quest
         locations.menuSelectQuestClick.click()
 
@@ -356,19 +363,10 @@ class AutoBattle @Inject constructor(
 
     private fun ordealCallOutOfPods() {
         locations.ordealCallOutOfPodsClick.click()
+
+        isQuestClose = true
         // Count the current run
         state.nextRun()
-
-        2.seconds.wait()
-        val isBlackScreen = locations.npStartedRegion.isBlack()
-        if (isBlackScreen) {
-            locations.menuScreenRegion.exists(
-                images[Images.Menu],
-                similarity = 0.7,
-                timeout = 15.seconds
-            )
-        }
-        throw BattleExitException(ExitReason.StormPodRanOut)
     }
 
     private fun findRepeatButton(): Match? {
