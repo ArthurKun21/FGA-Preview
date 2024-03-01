@@ -552,6 +552,10 @@ class AutoBattle @Inject constructor(
         // delay so refill with copper is not disturbed
         2.5.seconds.wait()
 
+        if (isInOrdealCallOutOfPodsScreen()){
+            throw BattleExitException(ExitReason.LimitRuns(state.runs))
+        }
+
         if (isInventoryFull()) {
             throw BattleExitException(ExitReason.InventoryFull)
         }
