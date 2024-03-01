@@ -28,7 +28,7 @@ class Locations @Inject constructor(
 
     val inventoryFullRegion = Region(-280, 860, 560, 190).xFromCenter()
 
-    val closeLowerMiddleScreenRegion = when(gameServer){
+    val closeLowerMiddleScreenRegion = when (gameServer) {
         is GameServer.En -> Region(-111, 1084, 219, 72).xFromCenter()
         // JP Option
         else -> Region(-112, 1088, 219, 72).xFromCenter()
@@ -43,7 +43,7 @@ class Locations @Inject constructor(
      * The following region are used for the various enhancement screen listed below:
      * Skill Upgrade, Ascension, Append Upgrade and Grail
      */
-    val enhancementBannerRegion = when(isWide) {
+    val enhancementBannerRegion = when (isWide) {
         true -> Region(-412, 282, 241, 37).xFromCenter()
         false -> Region(-413, 324, 241, 37).xFromCenter()
     }
@@ -169,4 +169,10 @@ class Locations @Inject constructor(
     val tempServantEnhancementRegion = Region(252, 1096, 301, 57).xFromCenter()
 
     val tempServantEnhancementLocation = Location(402, 1124).xFromCenter()
+
+    val startQuestRegion = Region(302, 1093, 200, 57).xFromCenter()
+
+    val cancelQuestRegion = Region(-202, 1064, 67, 124).xFromCenter()
+
+    val commandCodeRegion = Region(-144, 1212, 14, 18).xFromCenter()
 }
