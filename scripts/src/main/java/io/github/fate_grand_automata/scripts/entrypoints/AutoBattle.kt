@@ -240,13 +240,13 @@ class AutoBattle @Inject constructor(
 
         battle.resetState()
 
-        showRefillsAndRunsMessage()
-
         if (isQuestClose){
             // Ordeal Call
             isQuestClose = false
             throw BattleExitException(ExitReason.LimitRuns(state.runs))
         }
+
+        showRefillsAndRunsMessage()
 
         // Click uppermost quest
         locations.menuSelectQuestClick.click()
