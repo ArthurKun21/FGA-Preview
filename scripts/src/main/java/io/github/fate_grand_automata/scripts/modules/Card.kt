@@ -31,7 +31,7 @@ class Card @Inject constructor(
         parser.parse()
     }
 
-    fun readNpCards(npUsage: NPUsage): List<ParsedNP> = useSameSnapIn {
+    fun readNpCards(npUsage: NPUsage): List<ParsedNP?> = useSameSnapIn {
         parser.parseNp(npUsage = npUsage)
     }
 
@@ -48,6 +48,14 @@ class Card @Inject constructor(
                 }
                 .toSet()
 
+    /**
+     * Picks cards to click.
+     * @param cards Cards to pick from
+     * @param npUsage NP usage
+     * @return List of cards to click
+     *
+     * @see [io.github.fate_grand_automata.scripts.modules.ApplyBraveChains.pick]
+     */
     private fun pickCards(
         cards: List<ParsedCard>,
         npUsage: NPUsage

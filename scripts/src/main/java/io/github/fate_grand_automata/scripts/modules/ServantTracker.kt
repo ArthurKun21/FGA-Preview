@@ -205,6 +205,17 @@ class ServantTracker @Inject constructor(
         }
     }
 
+    /**
+     * This function maps Noble Phantasm (NP) cards to the servants who own them.
+     *
+     * @param nps A set of NP cards.
+     * @return A map where the keys are the servants and the values are the NP cards that belong to them.
+     *
+     * Checks for the support servant first
+     * Checks for the servant with the highest matching score using the servant's face card image
+     * @see faceCardImages
+     * @see initFaceCard
+     */
     fun npByServant(nps: Set<CommandCard.NP>): Map<TeamSlot, Collection<CommandCard.NP>> {
         if (prefs.skipServantFaceCardCheck) {
             return emptyMap()

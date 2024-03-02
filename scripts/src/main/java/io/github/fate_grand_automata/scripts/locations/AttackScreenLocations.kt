@@ -48,7 +48,7 @@ class AttackScreenLocations @Inject constructor(
     fun typeNPRegion(np: CommandCard.NP) = when (np) {
         CommandCard.NP.A -> -768
         CommandCard.NP.B -> -256
-        CommandCard.NP.C ->  256
+        CommandCard.NP.C -> 256
     }.let { x -> Region(x, 475, 512, 200) + faceCardDeltaY }.xFromCenter()
 
     fun servantMatchRegion(card: CommandCard.Face) = when (card) {
@@ -67,16 +67,19 @@ class AttackScreenLocations @Inject constructor(
 
     fun supportNPCheckRegion(np: CommandCard.NP) = when (np) {
         CommandCard.NP.A -> -470
-        CommandCard.NP.B ->  41
+        CommandCard.NP.B -> 41
         CommandCard.NP.C -> 554
-    }.let { x -> Region(x, 5, 250, 260) + faceCardDeltaY }.xFromCenter() + Location(-50, 100)
+    }.let { x ->
+        Region(x, 5, 250, 260) + faceCardDeltaY
+    }.xFromCenter() +
+            Location(-50, 100)
 
     fun supportCheckRegion(card: CommandCard.Face) =
         affinityRegion(card) + Location(-50, 100)
 
-    val backClick =
-        (if (isWide)
-            Location(-325, 1310)
-        else Location(-160, 1370))
-            .xFromRight()
+
+    val backClick = when (isWide) {
+        true -> Location(-325, 1310)
+        false -> Location(-160, 1370)
+    }.xFromRight()
 }

@@ -71,11 +71,17 @@ class CardParser @Inject constructor(
         return CardTypeEnum.Unknown
     }
 
-    fun parseNp(npUsage: NPUsage): List<ParsedNP> {
+    /**
+     * parseNP
+     * @param npUsage NPUsage
+     * @return List<ParsedNP>
+     */
+    fun parseNp(npUsage: NPUsage): List<ParsedNP?> {
         if (npUsage.nps.isEmpty()) {
-            return emptyList()
+            return listOf(null, null, null)
         }
         val npsByServants = servantTracker.npByServant(npUsage.nps)
+
         val npCards = npUsage.nps.map { np ->
             val stunned = np.isStunned()
 
