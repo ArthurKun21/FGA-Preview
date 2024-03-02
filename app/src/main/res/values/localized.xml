@@ -432,7 +432,6 @@ After pressing on the button, switch the app filter from \"Not optimized\" to \"
     <string name="ce_bomb_clicking">Clicking</string>
     <string name="ce_bomb_selection_method">Selection method</string>
 
-    <string name="script_msg_storm_pods_ran_out">"Ran out of Storm Pods"</string>
     <string name="reset_all">"Reset all"</string>
     <string name="reset">"Reset"</string>
     <string name="reset_to_default">"Reset to default"</string>

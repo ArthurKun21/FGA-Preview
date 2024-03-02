@@ -86,4 +86,6 @@ enum class Images {
     NPArts,
     NPBuster,
     NPQuick,
+    Cancel,
+    CommandCodeReward,
 }
