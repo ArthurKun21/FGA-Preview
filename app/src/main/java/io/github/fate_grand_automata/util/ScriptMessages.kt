@@ -139,7 +139,8 @@ class ScriptMessages @Inject constructor(
                 val msg = makeRefillAndRunsMessage(
                     timesRefilled = action.refills,
                     timesRan = action.runs,
-                    ceDropCount = action.ceDrops
+                    ceDropCount = action.ceDrops,
+                    teapotsCount = action.teapotsCount
                 )
 
                 toast(msg)
@@ -155,7 +156,8 @@ class ScriptMessages @Inject constructor(
     private fun makeRefillAndRunsMessage(
         timesRan: Int,
         timesRefilled: Int,
-        ceDropCount: Int
+        ceDropCount: Int,
+        teapotsCount: Int
     ) = buildString {
         val perServerConfigPref = prefs.selectedServerConfigPref
 
@@ -172,6 +174,12 @@ class ScriptMessages @Inject constructor(
         if (ceDropCount > 0) {
             appendLine(
                 context.getString(R.string.ces_dropped, ceDropCount)
+            )
+        }
+
+        if (perServerConfigPref.shouldUseTeapots && perServerConfigPref.teapotsCount > 0) {
+            appendLine(
+                context.getString(R.string.teapots_used, teapotsCount)
             )
         }
 

@@ -175,4 +175,13 @@ class Locations @Inject constructor(
     val cancelQuestRegion = Region(-202, 1064, 67, 124).xFromCenter()
 
     val commandCodeRegion = Region(-144, 1212, 14, 18).xFromCenter()
+
+    val teapotsPartyRegion = when(isWide){
+        true -> Region(350, 1284, 52, 32).xFromCenter()
+        false -> Region(460, 1344, 52, 32).xFromCenter()
+    }
+
+    val teapotsRepeatRegion = Region(65, 948, 52, 32).xFromCenter()
+
+
 }

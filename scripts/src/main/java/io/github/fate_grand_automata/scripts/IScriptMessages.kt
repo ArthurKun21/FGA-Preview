@@ -13,7 +13,7 @@ sealed class ScriptNotify {
     class FailedToDetermineCards(val cards: List<CommandCard.Face>,
                                  val unknownCardTypes: Boolean, val unknownServants: Boolean) : ScriptNotify()
     class SupportListUpdatingIn(val time: Duration) : ScriptNotify()
-    class BetweenRuns(val refills: Int, val runs: Int, val ceDrops: Int) : ScriptNotify()
+    class BetweenRuns(val refills: Int, val runs: Int, val ceDrops: Int, val teapotsCount: Int = 0) : ScriptNotify()
     data object BondLevelUp : ScriptNotify()
 }
 

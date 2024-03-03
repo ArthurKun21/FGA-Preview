@@ -35,15 +35,21 @@ class Battle @Inject constructor(
 
     var isReturningToMenu = false
 
+    var teapotsCount = 0
+
     fun resetState(repeatQuest: Boolean = false) {
+
+        val selectedServerConfigPref = prefs.selectedServerConfigPref
+
         // Don't increment no. of runs if we're just clicking on quest again and again
         // This can happen due to lags introduced during some events
         if (state.stage != -1 && !isReturningToMenu) {
             state.nextRun()
 
             servantTracker.nextRun()
+
+            manageTeapots()
         }
-        val selectedServerConfigPref = prefs.selectedServerConfigPref
 
         if (prefs.stopAfterThisRun) {
             if (repeatQuest && !isReturningToMenu && selectedServerConfigPref.returnToMenu) {
@@ -67,6 +73,41 @@ class Battle @Inject constructor(
         }
     }
 
+    private fun manageTeapots() {
+        val selectedServerConfigPref = prefs.selectedServerConfigPref
+
+        if (!selectedServerConfigPref.shouldUseTeapots) return
+
+        val isTeapotsPresent = mapOf(
+            images[Images.TeapotsOn] to locations.teapotsRepeatRegion,
+            images[Images.TeapotsOff] to locations.teapotsRepeatRegion
+        ).exists()
+
+        if (!isTeapotsPresent) return
+
+        0.25.seconds.wait()
+
+        val teapotsOn = images[Images.TeapotsOn] in locations.teapotsRepeatRegion
+
+        when {
+            // Teapots is turn off and we still have teapots to use
+            !teapotsOn && selectedServerConfigPref.teapotsCount > 0 -> {
+                locations.teapotsPartyRegion.click()
+            }
+            // Teapots is turn on and we still have teapots to use
+            teapotsOn && selectedServerConfigPref.teapotsCount > 0 -> {
+                teapotsCount++
+                selectedServerConfigPref.teapotsCount--
+            }
+            // Teapots is turn on and we don't have teapots to use
+            teapotsOn && selectedServerConfigPref.teapotsCount <= 0 -> {
+                locations.teapotsRepeatRegion.click()
+            }
+        }
+
+    }
+
+
     fun isIdle() = images[Images.BattleScreen] in locations.battle.screenCheckRegion
 
     fun clickAttack(): List<ParsedCard> {
@@ -83,7 +124,7 @@ class Battle @Inject constructor(
     fun performBattle() {
         prefs.waitBeforeTurn.wait()
 
-        if (battleConfig.addRaidTurnDelay){
+        if (battleConfig.addRaidTurnDelay) {
             battleConfig.raidTurnDelaySeconds.seconds.wait()
 
             // snap another screenshot for the raid

@@ -238,7 +238,7 @@ class AutoBattle @Inject constructor(
         // In case the repeat loop breaks and we end up in menu (like withdrawing from quests)
         isContinuing = false
 
-        if (isQuestClose){
+        if (isQuestClose) {
             // Ordeal Call
             isQuestClose = false
             throw BattleExitException(ExitReason.LimitRuns(state.runs))
@@ -282,7 +282,7 @@ class AutoBattle @Inject constructor(
 
         screenshotDrops.screenshotBond()
 
-        if (prefs.screenshotBond){
+        if (prefs.screenshotBond) {
             messages.notify(ScriptNotify.BondLevelUp)
             0.5.seconds.wait()
         }
@@ -304,8 +304,8 @@ class AutoBattle @Inject constructor(
     /**
      * It seems like we need to click on CE (center of screen) to accept them
      */
-    private fun bond10CEReward(){
-        if (prefs.screenshotBond && canScreenshotBondCE){
+    private fun bond10CEReward() {
+        if (prefs.screenshotBond && canScreenshotBondCE) {
             screenshotDrops.screenshotBond()
             0.5.seconds.wait()
             canScreenshotBondCE = false
@@ -323,7 +323,7 @@ class AutoBattle @Inject constructor(
             .count { it.exists(images[Images.ServantExist], similarity = 0.70) } in 1..2
 
     private fun ceRewardDetails() {
-        if (isCommandCodeReward){
+        if (isCommandCodeReward) {
             isCommandCodeReward = false
         } else {
             if (prefs.stopOnCEGet) {
@@ -547,6 +547,8 @@ class AutoBattle @Inject constructor(
      * 3. The story is skipped if [IPreferences.storySkip] is activated
      */
     private fun startQuest() {
+        useTeapots()
+
         partySelection.selectParty()
 
         locations.menuStartQuestClick.click()
@@ -555,6 +557,29 @@ class AutoBattle @Inject constructor(
 
         useBoostItem()
         storySkipPossible = true
+    }
+
+    private fun useTeapots() {
+        val shouldUseTeapots = prefs.selectedServerConfigPref.shouldUseTeapots
+        val teapotsCount = prefs.selectedServerConfigPref.teapotsCount
+
+        if (!shouldUseTeapots) return
+
+        val isTeapotsPresent = mapOf(
+            images[Images.TeapotsOn] to locations.teapotsPartyRegion,
+            images[Images.TeapotsOff] to locations.teapotsPartyRegion
+        ).exists()
+
+        if (!isTeapotsPresent) return
+
+        0.25.seconds.wait()
+        val teapotsOn = images[Images.TeapotsOn] in locations.teapotsPartyRegion
+
+        if(teapotsCount > 0 && !teapotsOn) {
+            locations.teapotsPartyRegion.click()
+            0.5.seconds.wait()
+        }
+
     }
 
     /**
@@ -566,7 +591,8 @@ class AutoBattle @Inject constructor(
             ScriptNotify.BetweenRuns(
                 refills = refill.timesRefilled,
                 runs = state.runs,
-                ceDrops = ceDropsTracker.count
+                ceDrops = ceDropsTracker.count,
+                teapotsCount = battle.teapotsCount
             )
         )
     }

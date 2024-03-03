@@ -84,5 +84,7 @@ enum class Images {
     TargetDangerSix,
     TargetServantSix,
     Cancel,
-    CommandCodeReward
+    CommandCodeReward,
+    TeapotsOn,
+    TeapotsOff,
 }

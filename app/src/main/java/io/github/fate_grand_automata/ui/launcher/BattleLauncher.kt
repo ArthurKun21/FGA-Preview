@@ -20,6 +20,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -205,6 +206,10 @@ fun battleLauncher(
     var limitMats by remember { mutableIntStateOf(perServerConfigPref.limitMats) }
     var shouldLimitCEs by remember { mutableStateOf(perServerConfigPref.shouldLimitCEs) }
     var limitCEs by remember { mutableIntStateOf(perServerConfigPref.limitCEs) }
+
+    var shouldUseTeaPots by remember { mutableStateOf(perServerConfigPref.shouldUseTeapots) }
+    var teapotsCount by remember { mutableIntStateOf(perServerConfigPref.teapotsCount) }
+
     var waitApRegen by remember { mutableStateOf(perServerConfigPref.waitForAPRegen) }
 
     var resetAllButton by remember { mutableStateOf(false) }
@@ -221,6 +226,10 @@ fun battleLauncher(
             perServerConfigPref.limitMats = limitMats
             perServerConfigPref.shouldLimitCEs = shouldLimitCEs
             perServerConfigPref.limitCEs = limitCEs
+
+            perServerConfigPref.shouldUseTeapots = shouldUseTeaPots
+            perServerConfigPref.teapotsCount = teapotsCount
+
             perServerConfigPref.copperApple = copperApple
             perServerConfigPref.blueApple = blueApple
             perServerConfigPref.silverApple = silverApple
@@ -496,7 +505,16 @@ fun battleLauncher(
                 )
             }
             item {
-                Divider()
+                LimitItem(
+                    shouldLimit = shouldUseTeaPots,
+                    onShouldLimitChange = { shouldUseTeaPots = it },
+                    text = stringResource(R.string.p_teapots),
+                    count = teapotsCount,
+                    onCountChange = { teapotsCount = it }
+                )
+            }
+            item {
+                HorizontalDivider()
             }
             item {
                 Row(
