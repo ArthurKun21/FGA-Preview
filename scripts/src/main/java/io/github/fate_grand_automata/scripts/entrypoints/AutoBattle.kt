@@ -407,7 +407,10 @@ class AutoBattle @Inject constructor(
         storySkipPossible = false
 
         // Pressing Continue option after completing a quest, resetting the state as would occur in "Menu" function
-        battle.resetState()
+        battle.resetState(repeatQuest = true)
+
+        // Battle Ended and need to return to menu
+        if (battle.isReturningToMenu) return
 
         val continueButtonRegion = findRepeatButton()?.region
             ?: return

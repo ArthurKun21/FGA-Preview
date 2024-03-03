@@ -51,4 +51,6 @@ class PerServerConfigPrefsCore(
     val isFriendListFull = maker.bool("is_friend_list_full")
 
     val configListSort = maker.enum("config_list_sort", BattleConfigListSortEnum.DEFAULT_SORT)
+
+    val returnToMenu = maker.bool("return_to_menu")
 }

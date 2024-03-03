@@ -211,6 +211,8 @@ fun battleLauncher(
 
     var autoAcceptFriendRequest by remember { mutableStateOf(perServerConfigPref.autoAcceptFriendRequest) }
 
+    var returnToMenu by remember { mutableStateOf(perServerConfigPref.returnToMenu) }
+
     DisposableEffect(Unit) {
         onDispose {
             perServerConfigPref.shouldLimitRuns = shouldLimitRuns
@@ -237,6 +239,7 @@ fun battleLauncher(
             perServerConfigPref.isFriendListFull = false
 
             perServerConfigPref.configListSort = configSort
+            perServerConfigPref.returnToMenu = returnToMenu
         }
     }
 
@@ -519,6 +522,35 @@ fun battleLauncher(
 
                         Text(
                             text = stringResource(R.string.p_auto_accept_friend_request),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .clickable {
+                                returnToMenu = !returnToMenu
+                            }
+                    ) {
+                        Checkbox(
+                            checked = returnToMenu,
+                            onCheckedChange = {
+                                returnToMenu = it
+                            },
+                            modifier = Modifier
+                        )
+
+                        Text(
+                            text = stringResource(R.string.p_return_to_main_screen_after_runs),
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
