@@ -33,22 +33,37 @@ class Battle @Inject constructor(
         resetState()
     }
 
-    fun resetState() {
+    var isReturningToMenu = false
+
+    fun resetState(repeatQuest: Boolean = false) {
         // Don't increment no. of runs if we're just clicking on quest again and again
         // This can happen due to lags introduced during some events
-        if (state.stage != -1) {
+        if (state.stage != -1 && !isReturningToMenu) {
             state.nextRun()
 
             servantTracker.nextRun()
         }
+        val selectedServerConfigPref = prefs.selectedServerConfigPref
 
         if (prefs.stopAfterThisRun) {
             prefs.stopAfterThisRun = false
-            throw AutoBattle.BattleExitException(AutoBattle.ExitReason.StopAfterThisRun)
+            if (repeatQuest && !isReturningToMenu && selectedServerConfigPref.returnToMenu) {
+                isReturningToMenu = true
+                locations.cancelQuestRegion.click()
+            } else {
+                isReturningToMenu = false
+                throw AutoBattle.BattleExitException(AutoBattle.ExitReason.StopAfterThisRun)
+            }
         }
 
-        if (prefs.selectedServerConfigPref.shouldLimitRuns && state.runs >= prefs.selectedServerConfigPref.limitRuns) {
-            throw AutoBattle.BattleExitException(AutoBattle.ExitReason.LimitRuns(state.runs))
+        if (selectedServerConfigPref.shouldLimitRuns && state.runs >= selectedServerConfigPref.limitRuns) {
+            if (repeatQuest && !isReturningToMenu && selectedServerConfigPref.returnToMenu) {
+                isReturningToMenu = true
+                locations.cancelQuestRegion.click()
+            } else {
+                isReturningToMenu = false
+                throw AutoBattle.BattleExitException(AutoBattle.ExitReason.LimitRuns(state.runs))
+            }
         }
     }
 

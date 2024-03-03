@@ -62,4 +62,6 @@ internal class PerServerConfigPrefs(
     override var isFriendListFull by prefs.isFriendListFull
 
     override var configListSort by prefs.configListSort
+
+    override var returnToMenu by prefs.returnToMenu
 }

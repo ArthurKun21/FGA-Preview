@@ -486,6 +486,7 @@ After pressing on the button, switch the app filter from \"Not optimized\" to \"
 
 
     <string name="p_auto_accept_friend_request">Send Friend Request?</string>
+    <string name="p_return_to_main_screen_after_runs">Return to Main screen after run/s?</string>
 
     <string name="state_on">On</string>
     <string name="state_off">Off</string>

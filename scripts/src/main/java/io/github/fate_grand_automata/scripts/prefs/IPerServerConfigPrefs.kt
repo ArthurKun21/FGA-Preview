@@ -36,4 +36,6 @@ interface IPerServerConfigPrefs {
     var isFriendListFull: Boolean
 
     var configListSort: BattleConfigListSortEnum
+
+    var returnToMenu: Boolean
 }
