@@ -30,5 +30,5 @@ class RefillPrefsCore(maker: PrefMaker) {
     val limitCEs = maker.stringAsInt("limit_ces", 1)
 
     val shouldUseTeapots = maker.bool("should_use_teapots")
-    val teapotsCount = maker.stringAsInt("teapots_count", 0)
+    val teapotsCount = maker.stringAsInt("teapots_count", 1)
 }
