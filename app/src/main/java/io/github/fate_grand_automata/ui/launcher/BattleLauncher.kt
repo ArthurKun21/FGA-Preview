@@ -390,7 +390,8 @@ fun battleLauncher(
                             toggle = {
                                 // TODO change back to refillResources.toggle()
 
-                                // if the tapped resource is the only one in the list, disable it. otherwise only select the tapped resource
+                                // if the tapped resource is the only one in the list, disable it.
+                                // otherwise only select the tapped resource
                                 refillResources = if (it in refillResources) emptySet() else setOf(it)
                             }
                         )
@@ -453,6 +454,8 @@ fun battleLauncher(
                                 limitCEs = 1
                                 shouldLimitMats = false
                                 limitMats = 1
+                                shouldUseTeaPots = false
+                                teapotsCount = 1
                             }
                         ) {
                             Box(
