@@ -46,11 +46,11 @@ class Battle @Inject constructor(
         val selectedServerConfigPref = prefs.selectedServerConfigPref
 
         if (prefs.stopAfterThisRun) {
-            prefs.stopAfterThisRun = false
             if (repeatQuest && !isReturningToMenu && selectedServerConfigPref.returnToMenu) {
                 isReturningToMenu = true
                 locations.cancelQuestRegion.click()
             } else {
+                prefs.stopAfterThisRun = false
                 isReturningToMenu = false
                 throw AutoBattle.BattleExitException(AutoBattle.ExitReason.StopAfterThisRun)
             }
