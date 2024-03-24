@@ -7,6 +7,7 @@ import io.github.fate_grand_automata.scripts.models.CommandCard
 import io.github.fate_grand_automata.scripts.models.FieldSlot
 import io.github.fate_grand_automata.scripts.models.NPUsage
 import io.github.fate_grand_automata.scripts.models.ParsedCard
+import io.github.fate_grand_automata.scripts.models.ParsedNP
 import io.github.fate_grand_automata.scripts.models.SpamConfigPerTeamSlot
 import io.github.fate_grand_automata.scripts.models.battle.BattleState
 import io.github.fate_grand_automata.scripts.prefs.IBattleConfig
@@ -30,6 +31,10 @@ class Card @Inject constructor(
         parser.parse()
     }
 
+    fun readNpCards(npUsage: NPUsage): List<ParsedNP?> = useSameSnapIn {
+        parser.parseNp(npUsage = npUsage)
+    }
+
     private val spamNps: Set<CommandCard.NP>
         get() =
             (FieldSlot.list.zip(CommandCard.NP.list))
@@ -43,6 +48,14 @@ class Card @Inject constructor(
                 }
                 .toSet()
 
+    /**
+     * Picks cards to click.
+     * @param cards Cards to pick from
+     * @param npUsage NP usage
+     * @return List of cards to click
+     *
+     * @see [io.github.fate_grand_automata.scripts.modules.ApplyBraveChains.pick]
+     */
     private fun pickCards(
         cards: List<ParsedCard>,
         npUsage: NPUsage

@@ -20,6 +20,18 @@ class AutoSkillCommand private constructor(
         return emptyList()
     }
 
+    /**
+     * Check if the remaining commands pass a certain stage and/or turn is empty.
+     */
+    fun isEmpty(stage: Int, turn: Int): Boolean {
+        // TODO: For Verification
+        return stages
+            .drop(stage)
+            .flatMap { it.drop(turn) }
+            .flatten()
+            .isEmpty()
+    }
+
     companion object {
         private fun getTarget(queue: Queue<Char>): ServantTarget? {
             val peekTarget = queue.peek()

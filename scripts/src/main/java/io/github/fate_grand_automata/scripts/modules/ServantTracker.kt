@@ -3,6 +3,7 @@ package io.github.fate_grand_automata.scripts.modules
 import io.github.fate_grand_automata.scripts.IFgoAutomataApi
 import io.github.fate_grand_automata.scripts.Images
 import io.github.fate_grand_automata.scripts.ScriptLog
+import io.github.fate_grand_automata.scripts.enums.CardTypeEnum
 import io.github.fate_grand_automata.scripts.models.CommandCard
 import io.github.fate_grand_automata.scripts.models.FieldSlot
 import io.github.fate_grand_automata.scripts.models.OrderChangeMember
@@ -57,6 +58,8 @@ class ServantTracker @Inject constructor(
 
     private val faceCardImages = mutableMapOf<TeamSlot, MutableList<Pattern>>()
 
+    private val npCardType = mutableMapOf<TeamSlot, CardTypeEnum>()
+
     override fun close() {
         checkImages.values.forEach { it.close() }
         faceCardImages.values.flatten().forEach { it.close() }
@@ -82,8 +85,8 @@ class ServantTracker @Inject constructor(
                         locations.battle.servantChangeCheckRegion(slot)
                             .getPattern("Servant $teamSlot")
                     ),
-                    skills = slot.skills().mapIndexed { index, it ->
-                        locations.battle.imageRegion(it)
+                    skills = slot.skills().mapIndexed { index, skills ->
+                        locations.battle.imageRegion(skills)
                             .getPattern("Servant $teamSlot S${index + 1}")
                     }
                 )
@@ -110,11 +113,24 @@ class ServantTracker @Inject constructor(
 
         val image = locations.battle.servantDetailsFaceCardRegion.getPattern("Face $teamSlot")
 
+        checkNPCardType(teamSlot)
+
         // Close dialog
         locations.battle.extraInfoWindowCloseClick.click()
 
         faceCardImages.getOrPut(teamSlot) { mutableListOf() }
             .add(image)
+
+        250.milliseconds.wait()
+    }
+
+    private fun checkNPCardType(teamSlot: TeamSlot) {
+        npCardType[teamSlot] = when {
+            images[Images.NPArts] in locations.battle.servantNPTypeRegion -> CardTypeEnum.Arts
+            images[Images.NPBuster] in locations.battle.servantNPTypeRegion -> CardTypeEnum.Buster
+            images[Images.NPQuick] in locations.battle.servantNPTypeRegion -> CardTypeEnum.Quick
+            else -> CardTypeEnum.Unknown
+        }
 
         250.milliseconds.wait()
     }
@@ -187,6 +203,59 @@ class ServantTracker @Inject constructor(
                 check(startingSlot)
             }
         }
+    }
+
+    /**
+     * This function maps Noble Phantasm (NP) cards to the servants who own them.
+     *
+     * @param nps A set of NP cards.
+     * @return A map where the keys are the servants and the values are the NP cards that belong to them.
+     *
+     * Checks for the support servant first
+     * Checks for the servant with the highest matching score using the servant's face card image
+     * @see faceCardImages
+     * @see initFaceCard
+     */
+    fun npByServant(nps: Set<CommandCard.NP>): Map<TeamSlot, Collection<CommandCard.NP>> {
+        if (prefs.skipServantFaceCardCheck) {
+            return emptyMap()
+        }
+        val npsRemaining = nps.toMutableSet()
+        val result = mutableMapOf<TeamSlot, Set<CommandCard.NP>>()
+        supportSlot?.let { supportSlot ->
+            if (supportSlot in deployed.values) {
+                val matched = npsRemaining.filter { np ->
+                    images[Images.Support] in locations.attack.supportNPCheckRegion(np)
+                }.toSet()
+
+                npsRemaining -= matched
+                result[supportSlot] = matched
+            }
+        }
+        val ownedServants = faceCardImages
+            .filterKeys { it != supportSlot && it in deployed.values }
+
+        npsRemaining
+            .groupBy { np ->
+                ownedServants
+                    .mapValues { (_, images) ->
+                        images.maxOf { image ->
+                            locations.attack.servantNPMatchRegion(np).find(image, 0.5)?.score ?: 0.0
+                        }
+                    }
+                    .filterValues { it > 0.0 }
+                    .maxByOrNull { it.value }
+                    ?.key
+            }
+            .filterKeys { it != null }
+            .entries
+            .associateTo(result) { (key, value) -> key!! to value.toSet() }
+
+        return result
+    }
+
+    fun fetchNPCardType(teamSlot: TeamSlot): CardTypeEnum? {
+        return npCardType[teamSlot]
     }
 
     fun faceCardsGroupedByServant(): Map<TeamSlot, Collection<CommandCard.Face>> {

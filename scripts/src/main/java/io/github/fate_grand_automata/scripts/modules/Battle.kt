@@ -80,6 +80,21 @@ class Battle @Inject constructor(
         return card.readCommandCards()
     }
 
+    /**
+     * Perform a battle for the specific turn/wave
+     *
+     * For Skills actions
+     * @see AutoSkill.execute
+     *
+     * For Card reading
+     * @see shuffleCards
+     * @see clickAttack
+     * @see Card.readCommandCards
+     * @see CardParser.parse
+     *
+     * For Card and NP Clicking
+     * @see Card.clickCommandCards
+     */
     fun performBattle() {
         prefs.waitBeforeTurn.wait()
 
@@ -95,11 +110,15 @@ class Battle @Inject constructor(
         servantTracker.beginTurn()
 
         val npUsage = autoSkill.execute(state.stage, state.turn)
+
+        // For Deprecation, going to spam skills once ran out of command list
         skillSpam.spamSkills()
 
         val cards = clickAttack()
             .takeUnless { shouldShuffle(it, npUsage) }
             ?: shuffleCards()
+
+        val nps = card.readNpCards(npUsage = npUsage)
 
         card.clickCommandCards(cards, npUsage)
 

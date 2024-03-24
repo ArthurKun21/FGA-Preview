@@ -6,7 +6,9 @@ import io.github.fate_grand_automata.scripts.ScriptNotify
 import io.github.fate_grand_automata.scripts.enums.CardAffinityEnum
 import io.github.fate_grand_automata.scripts.enums.CardTypeEnum
 import io.github.fate_grand_automata.scripts.models.CommandCard
+import io.github.fate_grand_automata.scripts.models.NPUsage
 import io.github.fate_grand_automata.scripts.models.ParsedCard
+import io.github.fate_grand_automata.scripts.models.ParsedNP
 import io.github.fate_grand_automata.scripts.models.TeamSlot
 import io.github.lib_automata.dagger.ScriptScope
 import javax.inject.Inject
@@ -41,6 +43,16 @@ class CardParser @Inject constructor(
         return listOf(images[Images.Stun], images[Images.Immobilized]) in stunRegion
     }
 
+    private fun CommandCard.NP.isStunned(): Boolean {
+        val stunRegion = locations.attack.typeNPRegion(this).copy(
+            y = 345,
+            width = 248,
+            height = 188
+        )
+
+        return listOf(images[Images.Stun], images[Images.Immobilized]) in stunRegion
+    }
+
     private fun CommandCard.Face.type(): CardTypeEnum {
         val region = locations.attack.typeRegion(this)
 
@@ -57,6 +69,44 @@ class CardParser @Inject constructor(
         }
 
         return CardTypeEnum.Unknown
+    }
+
+    /**
+     * parseNP
+     * @param npUsage NPUsage
+     * @return List<ParsedNP>
+     */
+    fun parseNp(npUsage: NPUsage): List<ParsedNP?> {
+        if (npUsage.nps.isEmpty()) {
+            return listOf(null, null, null)
+        }
+        val npsByServants = servantTracker.npByServant(npUsage.nps)
+
+        val npCards = npUsage.nps.map { np ->
+            val stunned = np.isStunned()
+
+            val servant = npsByServants
+                .filterValues { nps -> np in nps }
+                .keys
+                .firstOrNull()
+                ?: TeamSlot.Unknown
+
+            val fieldSlot = servantTracker.deployed
+                .entries
+                .firstOrNull { (_, teamSlot) -> teamSlot == servant }
+                ?.key
+
+            val type = servantTracker.fetchNPCardType(servant) ?: CardTypeEnum.Unknown
+
+            ParsedNP(
+                np = np,
+                isStunned = stunned,
+                type = type,
+                servant = servant,
+                fieldSlot = fieldSlot
+            )
+        }
+        return npCards
     }
 
     fun parse(): List<ParsedCard> {

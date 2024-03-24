@@ -83,6 +83,9 @@ enum class Images {
     FPSell,
     TargetDangerSix,
     TargetServantSix,
+    NPArts,
+    NPBuster,
+    NPQuick,
     Cancel,
-    CommandCodeReward
+    CommandCodeReward,
 }

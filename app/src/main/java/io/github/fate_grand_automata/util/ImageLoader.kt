@@ -131,6 +131,9 @@ class ImageLoader @Inject constructor(
         Images.FPSell -> "fp_sell.png"
         Images.TargetDangerSix -> "target_danger_six.png"
         Images.TargetServantSix -> "target_servant_six.png"
+        Images.NPArts -> "np_arts.png"
+        Images.NPBuster -> "np_buster.png"
+        Images.NPQuick -> "np_quick.png"
         Images.Cancel -> "cancel.png"
         Images.CommandCodeReward -> "command_code_reward.png"
     }
