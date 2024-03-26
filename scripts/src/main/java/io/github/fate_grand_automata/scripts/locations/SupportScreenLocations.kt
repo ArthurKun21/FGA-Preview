@@ -83,4 +83,9 @@ class SupportScreenLocations @Inject constructor(
         true -> Region(1305, 1400, 70, 35).xFromCenter()
         false -> Region(1195, 1400, 70, 35).xFromCenter()
     }
+
+    val refreshRegion = when(isWide){
+        true -> Region(380, 195, 175, 165).xFromCenter()
+        false -> Region(490, 195, 175, 165).xFromCenter()
+    }
 }

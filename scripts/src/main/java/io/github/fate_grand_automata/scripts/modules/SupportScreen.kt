@@ -15,6 +15,8 @@ interface SupportScreen {
     fun click(supportClass: SupportClass)
     fun delay(duration: Duration)
     fun refresh()
+
+    fun refreshAvailable(): Boolean
     fun isAnyDialogOpen(): Boolean
     fun noSupportsPresent(): Boolean
     fun someSupportsPresent(): Boolean
@@ -48,6 +50,10 @@ class RealSupportScreen @Inject constructor(
 
         locations.support.updateYesClick.click()
     }
+
+    override fun refreshAvailable() =
+        images[Images.SupportRefresh] in locations.support.refreshRegion
+
 
     override fun isAnyDialogOpen() =
         images[Images.SupportExtra] !in locations.support.extraRegion
