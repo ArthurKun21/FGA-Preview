@@ -252,6 +252,15 @@ class AutoBattle @Inject constructor(
         locations.menuSelectQuestClick.click()
 
         afterSelectingQuest(fromMenu = true)
+
+        val didMenuVanish = locations.menuScreenRegion.waitVanish(
+            images[Images.Menu],
+            timeout = 2.seconds,
+        )
+        if (didMenuVanish){
+            locations.menuStorySkipClick.click()
+            0.5.seconds.wait()
+        }
     }
 
     /**
