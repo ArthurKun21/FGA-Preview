@@ -173,7 +173,7 @@ class Locations @Inject constructor(
     val commandCodeRegion = Region(-144, 1212, 14, 18).xFromCenter()
 
 
-    val supportScrollbarRegion = when(isWide) {
+    val supportTopScrollbarRegion = when(isWide) {
         true -> Region(1305, 335, 70, 35).xFromCenter()
         false -> Region(1195, 335, 70, 35).xFromCenter()
     }
