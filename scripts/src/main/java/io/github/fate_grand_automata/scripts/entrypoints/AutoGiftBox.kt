@@ -23,7 +23,7 @@ class AutoGiftBox @Inject constructor(
 ) : EntryPoint(exitManager), IFgoAutomataApi by api {
     sealed class ExitReason {
 
-        class ReturnToLottery(val pickedStacks: Int, val pickedGoldEmbers: Int)  : ExitReason()
+        class ReturnToLottery(val pickedStacks: Int, val pickedGoldEmbers: Int) : ExitReason()
         data object NoEmbersFound : ExitReason()
         class CannotSelectAnyMore(val pickedStacks: Int, val pickedGoldEmbers: Int) : ExitReason()
     }
@@ -49,9 +49,14 @@ class AutoGiftBox @Inject constructor(
 
     override fun script(): Nothing {
         var totalSelected = IterationResult()
-        val xpOffsetX = (locations.scriptArea.find(images[Images.GoldXP]) ?: locations.scriptArea.find(images[Images.SilverXP]))
-            ?.region?.center?.x
-            ?: throw ExitException(ExitReason.NoEmbersFound)
+
+        val xpOffsetX = listOf(
+            images[Images.GoldXP],
+            images[Images.SilverXP],
+            images[Images.Gold5StarXP],
+        ).firstNotNullOfOrNull {
+            locations.scriptArea.find(it)?.region?.center?.x
+        } ?: throw ExitException(ExitReason.NoEmbersFound)
 
         val checkRegion = Region(xpOffsetX + 1320, 350, 140, 1500)
         val scrollEndRegion = Region(100 + checkRegion.x, 1320, 320, 60)
