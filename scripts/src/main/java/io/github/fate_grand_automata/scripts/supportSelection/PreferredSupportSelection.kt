@@ -42,17 +42,20 @@ class PreferredSupportSelection @Inject constructor(
                 SupportSelectionResult.Done
             } else {
                 var topScrollbar = false
+                var movedSrollBar = false
+                var bottomScrollbar = false
                 useSameSnapIn {
-                    topScrollbar = listOf(
-                        images[Images.SupportScrollBarTop],
-                        images[Images.SupportScrollBarNotTop]
-                    ) in locations.supportTopScrollbarRegion
+                    topScrollbar = images[Images.SupportScrollBarTop] in locations.supportTopScrollbarRegion
+                    if (!topScrollbar) {
+                        movedSrollBar = images[Images.SupportScrollBarMoved] in locations.supportTopScrollbarRegion
+                        bottomScrollbar = images[Images.SupportScrollBarBottom] in
+                                locations.supportBottomScrollbarRegion
+                    }
                 }
-                // nope, not found this time. keep scrolling
-                if (topScrollbar) {
-                    SupportSelectionResult.ScrollDown
-                } else {
-                    SupportSelectionResult.EarlyRefresh
+                when {
+                    topScrollbar -> SupportSelectionResult.ScrollDown
+                    movedSrollBar && !bottomScrollbar -> SupportSelectionResult.ScrollDown
+                    else -> SupportSelectionResult.EarlyRefresh
                 }
             }
         }
