@@ -496,6 +496,7 @@ class AutoBattle @Inject constructor(
     // Selections Support option
     private fun support() {
         isIntroSkipped = true
+        isQuestClose = false
 
         canScreenshotBondCE = false
 
