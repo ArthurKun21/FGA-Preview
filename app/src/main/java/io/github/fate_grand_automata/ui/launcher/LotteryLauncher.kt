@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -27,10 +27,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.fate_grand_automata.R
+import io.github.fate_grand_automata.prefs.core.PrefsCore
 import io.github.fate_grand_automata.scripts.prefs.IPreferences
+import io.github.fate_grand_automata.ui.Stepper
+import io.github.fate_grand_automata.ui.prefs.remember
 
 @Composable
 fun lotteryLauncher(
+    prefsCore: PrefsCore,
     prefs: IPreferences,
     modifier: Modifier = Modifier
 ): ScriptLauncherResponseBuilder {
@@ -38,6 +42,8 @@ fun lotteryLauncher(
     var returnToLotteryAfterPresentBox by remember { mutableStateOf(prefs.loopIntoLotteryAfterPresentBox) }
     var maxGoldEmberStackSize by remember { mutableIntStateOf(prefs.maxGoldEmberStackSize) }
     var maxGoldEmberTotalCount by remember { mutableIntStateOf(prefs.maxGoldEmberTotalCount) }
+
+    var lottoClick by prefsCore.lottoSpin.remember()
 
     Column(
         modifier = modifier
@@ -49,11 +55,33 @@ fun lotteryLauncher(
             style = MaterialTheme.typography.titleLarge
         )
 
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .padding(5.dp)
                 .padding(bottom = 16.dp)
         )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                stringResource(R.string.p_fine_tune_lotto_clicks),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Justify
+            )
+            Stepper(
+                value = lottoClick,
+                onValueChange = { lottoClick = it },
+                valueRange = 10..20,
+                textStyle = MaterialTheme.typography.bodyMedium,
+            )
+
+        }
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
