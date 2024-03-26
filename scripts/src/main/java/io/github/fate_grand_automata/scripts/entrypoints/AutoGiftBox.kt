@@ -180,9 +180,10 @@ class AutoGiftBox @Inject constructor(
 
             val gold = images[Images.GoldXP] in iconRegion
             val silver = !gold && images[Images.SilverXP] in iconRegion
+            val gold5Star = !gold && !silver && images[Images.Gold5StarXP] in iconRegion
 
-            if (gold || silver) {
-                if (gold) {
+            if (gold || silver || gold5Star) {
+                if (gold || gold5Star) {
                     val text = countRegion.detectText(true)
                         // replace common OCR mistakes
                         .replace("%", "x")
