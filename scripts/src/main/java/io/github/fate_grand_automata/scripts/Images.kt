@@ -52,6 +52,8 @@ enum class Images {
     SupportExtra,
     SupportNotFound,
     Support,
+    SupportScrollBarTop,
+    SupportScrollBarNotTop,
     ServantCheckSupport,
     BattleMenu,
     EmptyEnhance,

@@ -100,6 +100,8 @@ class ImageLoader @Inject constructor(
         Images.SupportExtra -> "support_extra.png"
         Images.SupportNotFound -> "support_not_found.png"
         Images.Support -> "support.png"
+        Images.SupportScrollBarTop -> "support_scrollbar_top.png"
+        Images.SupportScrollBarNotTop -> "support_scrollbar_not_top.png"
         Images.ServantCheckSupport -> "servant_check_support.png"
         Images.BattleMenu -> "battle_menu.png"
         Images.EmptyEnhance -> "empty_enhance.png"
