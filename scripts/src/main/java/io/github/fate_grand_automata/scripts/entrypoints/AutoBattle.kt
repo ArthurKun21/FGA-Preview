@@ -251,7 +251,7 @@ class AutoBattle @Inject constructor(
         // Click uppermost quest
         locations.menuSelectQuestClick.click()
 
-        afterSelectingQuest()
+        afterSelectingQuest(fromMenu = true)
     }
 
     /**
@@ -573,7 +573,7 @@ class AutoBattle @Inject constructor(
         )
     }
 
-    private fun afterSelectingQuest() {
+    private fun afterSelectingQuest(fromMenu: Boolean = false) {
         // delay so refill with copper is not disturbed
         2.5.seconds.wait()
 
@@ -582,9 +582,11 @@ class AutoBattle @Inject constructor(
         var startQuest = false
 
         useSameSnapIn {
-            closeScreen = isInOrdealCallOutOfPodsScreen()
             inventoryFull = isInventoryFull()
-            startQuest = isStartQuest()
+            if (fromMenu){
+                closeScreen = isInOrdealCallOutOfPodsScreen()
+                startQuest = isStartQuest()
+            }
         }
 
         when {
