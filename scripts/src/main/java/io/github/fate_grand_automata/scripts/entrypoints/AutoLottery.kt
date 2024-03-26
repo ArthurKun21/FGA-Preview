@@ -127,7 +127,9 @@ class AutoLottery @Inject constructor(
         similarity = 0.85
     )
 
-    private fun confirmIfLotteryDone(){
+    private fun isTransition() = images[Images.LotteryTransition] in locations.lottery.transitionRegion
+
+    private fun confirmIfLotteryDone() {
         spin()
 
         val exist = isLotteryDone()
@@ -154,7 +156,8 @@ class AutoLottery @Inject constructor(
             { isOutOfCurrency() } to { ranOutOfCurrency() },
             { connectionRetry.needsToRetry() } to { connectionRetry.retry() },
             { images[Images.PresentBoxFull] in locations.lottery.fullPresentBoxRegion } to { presentBoxFull() },
-            { isLotteryDone() } to { confirmIfLotteryDone() }
+            { isLotteryDone() } to { confirmIfLotteryDone() },
+            { isTransition() } to { locations.lottery.transitionRegion.click() }
         )
 
         while (true) {
