@@ -560,11 +560,18 @@ class AutoBattle @Inject constructor(
 
     /**
      * Starts the quest after the support has already been selected. The following features are done optionally:
-     * 1. The configured party is selected if it is set in the selected AutoSkill config
-     * 2. A boost item is selected if [IPreferences.boostItemSelectionMode] is set (needed in some events)
-     * 3. The story is skipped if [IPreferences.storySkip] is activated
+     * 1. There is a pop-up screen that gives hint and needed to be click to be closed.
+     * 2. The configured party is selected if it is set in the selected AutoSkill config
+     * 3. A boost item is selected if [IPreferences.boostItemSelectionMode] is set (needed in some events)
+     * 4. The story is skipped if [IPreferences.storySkip] is activated
      */
     private fun startQuest() {
+        val popupScreen = images[Images.Close] in locations.closeLowerMiddleScreenRegion
+        if (popupScreen){
+            locations.closeLowerMiddleScreenRegion.click()
+            1.seconds.wait()
+        }
+
         partySelection.selectParty()
 
         locations.menuStartQuestClick.click()
