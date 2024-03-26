@@ -251,7 +251,16 @@ class AutoBattle @Inject constructor(
         // Click uppermost quest
         locations.menuSelectQuestClick.click()
 
-        afterSelectingQuest()
+        afterSelectingQuest(fromMenu = true)
+
+        val didMenuVanish = locations.menuScreenRegion.waitVanish(
+            images[Images.Menu],
+            timeout = 2.seconds,
+        )
+        if (didMenuVanish){
+            locations.menuStorySkipClick.click()
+            0.5.seconds.wait()
+        }
     }
 
     /**
@@ -487,6 +496,7 @@ class AutoBattle @Inject constructor(
     // Selections Support option
     private fun support() {
         isIntroSkipped = true
+        isQuestClose = false
 
         canScreenshotBondCE = false
 
@@ -499,7 +509,16 @@ class AutoBattle @Inject constructor(
             // Wait timer till battle starts.
             // Uses less battery to wait than to search for images for a few seconds.
             // Adjust according to device.
-            5.seconds.wait()
+            // 5.seconds.wait()
+
+            val partyVanish = locations.selectedPartyRegion.waitVanish(
+                images[Images.SelectedParty],
+                timeout = 5.seconds
+            )
+            if (partyVanish){
+                1.seconds.wait()
+                locations.menuStorySkipClick.click()
+            }
         }
     }
 
@@ -542,11 +561,18 @@ class AutoBattle @Inject constructor(
 
     /**
      * Starts the quest after the support has already been selected. The following features are done optionally:
-     * 1. The configured party is selected if it is set in the selected AutoSkill config
-     * 2. A boost item is selected if [IPreferences.boostItemSelectionMode] is set (needed in some events)
-     * 3. The story is skipped if [IPreferences.storySkip] is activated
+     * 1. There is a pop-up screen that gives hint and needed to be click to be closed.
+     * 2. The configured party is selected if it is set in the selected AutoSkill config
+     * 3. A boost item is selected if [IPreferences.boostItemSelectionMode] is set (needed in some events)
+     * 4. The story is skipped if [IPreferences.storySkip] is activated
      */
     private fun startQuest() {
+        val popupScreen = images[Images.Close] in locations.closeLowerMiddleScreenRegion
+        if (popupScreen){
+            locations.closeLowerMiddleScreenRegion.click()
+            1.seconds.wait()
+        }
+
         partySelection.selectParty()
 
         locations.menuStartQuestClick.click()
@@ -562,6 +588,8 @@ class AutoBattle @Inject constructor(
      * Also shows CE drop count (if any have dropped).
      */
     private fun showRefillsAndRunsMessage() {
+        if (state.runs < 1) return
+
         messages.notify(
             ScriptNotify.BetweenRuns(
                 refills = refill.timesRefilled,
@@ -571,7 +599,7 @@ class AutoBattle @Inject constructor(
         )
     }
 
-    private fun afterSelectingQuest() {
+    private fun afterSelectingQuest(fromMenu: Boolean = false) {
         // delay so refill with copper is not disturbed
         2.5.seconds.wait()
 
@@ -580,9 +608,11 @@ class AutoBattle @Inject constructor(
         var startQuest = false
 
         useSameSnapIn {
-            closeScreen = isInOrdealCallOutOfPodsScreen()
             inventoryFull = isInventoryFull()
-            startQuest = isStartQuest()
+            if (fromMenu){
+                closeScreen = isInOrdealCallOutOfPodsScreen()
+                startQuest = isStartQuest()
+            }
         }
 
         when {
@@ -590,7 +620,13 @@ class AutoBattle @Inject constructor(
             inventoryFull -> throw BattleExitException(ExitReason.InventoryFull)
             startQuest -> {
                 locations.startQuestRegion.click()
-                2.5.seconds.wait()
+                1.5.seconds.wait()
+
+                val anotherStartQuest = isStartQuest()
+                if (anotherStartQuest){
+                    locations.startQuestRegion.click()
+                    1.5.seconds.wait()
+                }
             }
         }
 

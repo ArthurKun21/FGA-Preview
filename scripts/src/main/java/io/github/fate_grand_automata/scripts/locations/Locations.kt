@@ -28,16 +28,12 @@ class Locations @Inject constructor(
 
     val inventoryFullRegion = Region(-280, 860, 560, 190).xFromCenter()
 
-    val closeLowerMiddleScreenRegion = when (gameServer) {
-        is GameServer.En -> Region(-111, 1084, 219, 72).xFromCenter()
-        // JP Option
-        else -> Region(-112, 1088, 219, 72).xFromCenter()
-    }
+    val closeLowerMiddleScreenRegion = Region(-115, 1080, 230, 90).xFromCenter()
 
     val ordealCallOutOfPodsClick = Location(-2, 1124).xFromCenter()
 
     val interludeCloseClick = Location(-399, 1125).xFromCenter()
-    val interludeEndScreenClose = Region(-509, 1089, 219, 72).xFromCenter()
+    val interludeEndScreenClose = Region(-515, 1080, 230, 90).xFromCenter()
 
     /**
      * The following region are used for the various enhancement screen listed below:
