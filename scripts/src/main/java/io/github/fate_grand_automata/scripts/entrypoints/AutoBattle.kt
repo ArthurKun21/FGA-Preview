@@ -193,8 +193,6 @@ class AutoBattle @Inject constructor(
             { isInBondScreen() } to { handleBondScreen() },
             { isInResult() } to { result() },
             { isInDropsScreen() } to { dropScreen() },
-            { isInOrdealCallOutOfPodsScreen() } to { ordealCallOutOfPods() },
-            { isInInterludeEndScreen() } to { locations.interludeCloseClick.click() },
             { isInQuestRewardScreen() } to { questReward() },
             { isInSupport() } to { support() },
             { isRepeatScreen() } to { repeatQuest() },
@@ -208,6 +206,8 @@ class AutoBattle @Inject constructor(
             { isDeathAnimation() } to { locations.battle.battleSafeMiddleOfScreenClick.click() },
             { isRankUp() } to { locations.middleOfScreenClick.click() },
             { isBetweenWaves() } to { locations.battle.battleSafeMiddleOfScreenClick.click() },
+            { isInOrdealCallOutOfPodsScreen() } to { ordealCallOutOfPods() },
+            { isInInterludeEndScreen() } to { locations.interludeCloseClick.click() },
         )
 
         // Loop through SCREENS until a Validator returns true
