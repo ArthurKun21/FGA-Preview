@@ -37,7 +37,7 @@ class Locations @Inject constructor(
     val ordealCallOutOfPodsClick = Location(-2, 1124).xFromCenter()
 
     val interludeCloseClick = Location(-399, 1125).xFromCenter()
-    val interludeEndScreenClose = Region(-509, 1089, 219, 72).xFromCenter()
+    val interludeEndScreenClose = Region(-515, 1080, 230, 90).xFromCenter()
 
     /**
      * The following region are used for the various enhancement screen listed below:
