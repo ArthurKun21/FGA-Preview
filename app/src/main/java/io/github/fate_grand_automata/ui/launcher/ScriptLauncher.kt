@@ -36,7 +36,7 @@ fun ScriptLauncher(
                     battleLauncher(prefs, modifier)
 
                 ScriptModeEnum.FP -> fpLauncher(prefs, prefsCore, modifier)
-                ScriptModeEnum.Lottery -> lotteryLauncher(prefs, modifier)
+                ScriptModeEnum.Lottery -> lotteryLauncher(prefsCore, prefs, modifier)
                 ScriptModeEnum.PresentBox -> giftBoxLauncher(prefs, modifier)
                 ScriptModeEnum.CEBomb -> ceBombLauncher(prefsCore, prefs, modifier)
                 ScriptModeEnum.Skill -> skillLauncher(prefsCore = prefsCore, preferences = prefs, modifier = modifier)
