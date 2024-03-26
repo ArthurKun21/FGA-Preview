@@ -594,7 +594,13 @@ class AutoBattle @Inject constructor(
             inventoryFull -> throw BattleExitException(ExitReason.InventoryFull)
             startQuest -> {
                 locations.startQuestRegion.click()
-                2.5.seconds.wait()
+                1.5.seconds.wait()
+
+                val anotherStartQuest = isStartQuest()
+                if (anotherStartQuest){
+                    locations.startQuestRegion.click()
+                    1.5.seconds.wait()
+                }
             }
         }
 
