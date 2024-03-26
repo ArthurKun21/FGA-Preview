@@ -39,11 +39,13 @@ class AutoLottery @Inject constructor(
 
     class ExitException(val reason: ExitReason) : Exception()
 
+    var lottoClick = 20
+
     private fun spin() {
         // Don't increase this too much or you'll regret when you're not able to stop the script
         // And your phone won't let you press anything
         locations.lottery.spinClick.click(
-            prefs.lottoSpin
+            lottoClick
         )
     }
 
@@ -140,6 +142,7 @@ class AutoLottery @Inject constructor(
 
     override fun script(): Nothing {
         prefs.isPresentBoxFull = false
+        lottoClick = prefs.lottoSpin
 
         try {
             loop()
