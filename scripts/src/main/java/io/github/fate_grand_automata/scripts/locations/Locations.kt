@@ -171,15 +171,4 @@ class Locations @Inject constructor(
     val cancelQuestRegion = Region(-202, 1064, 67, 124).xFromCenter()
 
     val commandCodeRegion = Region(-144, 1212, 14, 18).xFromCenter()
-
-
-    val supportTopScrollbarRegion = when(isWide) {
-        true -> Region(1305, 335, 70, 35).xFromCenter()
-        false -> Region(1195, 335, 70, 35).xFromCenter()
-    }
-
-    val supportBottomScrollbarRegion = when(isWide) {
-        true -> Region(1305, 1400, 70, 35).xFromCenter()
-        false -> Region(1195, 1400, 70, 35).xFromCenter()
-    }
 }

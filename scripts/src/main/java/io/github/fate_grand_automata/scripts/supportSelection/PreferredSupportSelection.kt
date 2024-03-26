@@ -45,11 +45,11 @@ class PreferredSupportSelection @Inject constructor(
                 var movedSrollBar = false
                 var bottomScrollbar = false
                 useSameSnapIn {
-                    topScrollbar = images[Images.SupportScrollBarTop] in locations.supportTopScrollbarRegion
+                    topScrollbar = images[Images.SupportScrollBarTop] in locations.support.topScrollbarRegion
                     if (!topScrollbar) {
-                        movedSrollBar = images[Images.SupportScrollBarMoved] in locations.supportTopScrollbarRegion
+                        movedSrollBar = images[Images.SupportScrollBarMoved] in locations.support.topScrollbarRegion
                         bottomScrollbar = images[Images.SupportScrollBarBottom] in
-                                locations.supportBottomScrollbarRegion
+                                locations.support.bottomScrollbarRegion
                     }
                 }
                 when {
