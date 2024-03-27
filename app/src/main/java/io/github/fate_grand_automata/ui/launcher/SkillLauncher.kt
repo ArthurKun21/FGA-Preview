@@ -3,18 +3,14 @@ package io.github.fate_grand_automata.ui.launcher
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -33,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import io.github.fate_grand_automata.R
 import io.github.fate_grand_automata.prefs.core.PrefsCore
 import io.github.fate_grand_automata.scripts.prefs.IPreferences
-import io.github.fate_grand_automata.ui.Stepper
+import io.github.fate_grand_automata.ui.RangeButtons
 import io.github.fate_grand_automata.ui.prefs.remember
 
 
@@ -131,7 +128,7 @@ fun skillLauncher(
                     text = stringResource(id = R.string.skill_upgrade),
                     style = MaterialTheme.typography.headlineSmall
                 )
-                Divider()
+                HorizontalDivider()
             }
         }
         if (emptyServant) {
@@ -150,142 +147,113 @@ fun skillLauncher(
             item {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Start,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { shouldUpgradeAllSkills = !shouldUpgradeAllSkills }
-                ) {
-                    Text(
-                        stringResource(R.string.skill_upgrade_all_available_question),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Justify
-                    )
-                    Switch(
-                        checked = shouldUpgradeAllSkills,
-                        onCheckedChange = {
-                            shouldUpgradeAllSkills = it
-                        },
-                    )
-                }
-            }
-            item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                ) {
-                    PresetButton(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 4.dp, vertical = 2.dp),
-                        text = "4",
-                        enabled = shouldUpgradeAllSkills,
-                        onClick = {
-                            targetAllSkillLevel = 4
-                        }
-                    )
-                    PresetButton(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 4.dp, vertical = 2.dp),
-                        text = "7",
-                        enabled = shouldUpgradeAllSkills,
-                        onClick = {
-                            targetAllSkillLevel = 7
-                        }
-                    )
-                    PresetButton(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 4.dp, vertical = 2.dp),
-                        text = "9",
-                        enabled = shouldUpgradeAllSkills,
-                        onClick = {
-                            targetAllSkillLevel = 9
-                        }
-                    )
-                    PresetButton(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 4.dp, vertical = 2.dp),
-                        text = "10",
-                        enabled = shouldUpgradeAllSkills,
-                        onClick = {
-                            targetAllSkillLevel = 10
-                        }
-                    )
-                    Box(
-                        modifier = Modifier
-                            .weight(1.5f)
-                            .padding(horizontal = 4.dp, vertical = 2.dp),
-                        contentAlignment = Alignment.Center
+                ){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Stepper(
-                            value = targetAllSkillLevel,
-                            onValueChange = { targetAllSkillLevel = it },
-                            valueRange = lowestMinimumSkillLevel..10,
-                            enabled = shouldUpgradeAllSkills,
-                            textStyle = MaterialTheme.typography.bodyMedium,
-                            valueRepresentation = { "Lv. $it" }
+                        Checkbox(
+                            checked = shouldUpgradeAllSkills,
+                            onCheckedChange = {
+                                shouldUpgradeAllSkills = it
+                            },
                         )
+                        Text(
+                            text = stringResource(id = R.string.skill_upgrade_all),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = when (shouldUpgradeAllSkills) {
+                                true -> MaterialTheme.colorScheme.onBackground
+                                false -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                            },
+                            textDecoration = TextDecoration.Underline
+                        )
+                        if (lowestMinimumSkillLevel < 10){
+                            TextButton(
+                                onClick = { targetAllSkillLevel = lowestMinimumSkillLevel },
+                            ) {
+                                Text(text = stringResource(id = R.string.reset).uppercase())
+                            }
+                        }
                     }
+                    RangeButtons(
+                        value = targetAllSkillLevel,
+                        onValueChange = { targetAllSkillLevel = it },
+                        valueRange = lowestMinimumSkillLevel..10,
+                        enabled = shouldUpgradeAllSkills,
+                        textStyle = MaterialTheme.typography.bodySmall,
+                        shape = RectangleShape,
+                        valueRepresentation = { "Lv. $it" },
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
 
             item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    SkillUpgradeItem(
-                        name = stringResource(id = R.string.skill_number, 1),
-                        shouldUpgrade = shouldUpgradeSkillOne,
-                        onShouldUpgradeChange = {
-                            shouldUpgradeSkillOne = it
-                        },
-                        minimumUpgrade = minimumSkillOne,
-                        upgradeLevel = skillOneUpgradeValue,
-                        onUpgradeLevelChange = { skillOneUpgradeValue = it - minimumSkillOne },
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 2.dp),
-                    )
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+            item {
+                SkillUpgradeItem(
+                    name = stringResource(id = R.string.skill_number, 1),
+                    shouldUpgrade = shouldUpgradeSkillOne,
+                    onShouldUpgradeChange = {
+                        shouldUpgradeSkillOne = it
+                    },
+                    minimumUpgrade = minimumSkillOne,
+                    upgradeLevel = skillOneUpgradeValue,
+                    onUpgradeLevelChange = { skillOneUpgradeValue = it - minimumSkillOne },
+                    modifier = Modifier
+                        .padding(horizontal = 2.dp),
+                )
+            }
 
-                    SkillUpgradeItem(
-                        name = stringResource(id = R.string.skill_number, 2),
-                        shouldUpgrade = shouldUpgradeSkillTwo,
-                        onShouldUpgradeChange = {
-                            shouldUpgradeSkillTwo = it
-                        },
-                        minimumUpgrade = minimumSkillTwo,
-                        upgradeLevel = skillTwoUpgradeValue,
-                        onUpgradeLevelChange = { skillTwoUpgradeValue = it - minimumSkillTwo },
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 2.dp),
-                        available = isSkillTwoAvailable
-                    )
+            item {
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
 
-                    SkillUpgradeItem(
-                        name = stringResource(id = R.string.skill_number, 3),
-                        shouldUpgrade = shouldUpgradeSkillThree,
-                        onShouldUpgradeChange = {
-                            shouldUpgradeSkillThree = it
-                        },
-                        minimumUpgrade = minimumSkillThree,
-                        upgradeLevel = skillThreeUpgradeValue,
-                        onUpgradeLevelChange = { skillThreeUpgradeValue = it - minimumSkillThree },
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 2.dp),
-                        available = isSkillThreeAvailable
-                    )
-                }
+            item {
+                SkillUpgradeItem(
+                    name = stringResource(id = R.string.skill_number, 2),
+                    shouldUpgrade = shouldUpgradeSkillTwo,
+                    onShouldUpgradeChange = {
+                        shouldUpgradeSkillTwo = it
+                    },
+                    minimumUpgrade = minimumSkillTwo,
+                    upgradeLevel = skillTwoUpgradeValue,
+                    onUpgradeLevelChange = { skillTwoUpgradeValue = it - minimumSkillTwo },
+                    modifier = Modifier
+                        .padding(horizontal = 2.dp),
+                    available = isSkillTwoAvailable
+                )
+            }
+            item {
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+
+            item {
+                SkillUpgradeItem(
+                    name = stringResource(id = R.string.skill_number, 3),
+                    shouldUpgrade = shouldUpgradeSkillThree,
+                    onShouldUpgradeChange = {
+                        shouldUpgradeSkillThree = it
+                    },
+                    minimumUpgrade = minimumSkillThree,
+                    upgradeLevel = skillThreeUpgradeValue,
+                    onUpgradeLevelChange = { skillThreeUpgradeValue = it - minimumSkillThree },
+                    modifier = Modifier
+                        .padding(horizontal = 2.dp),
+                    available = isSkillThreeAvailable
+                )
             }
         }
     }
@@ -307,31 +275,6 @@ fun skillLauncher(
     )
 }
 
-@Composable
-private fun PresetButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    enabled: Boolean,
-    onClick: () -> Unit
-) {
-    SuggestionChip(
-        onClick = onClick,
-        modifier = modifier,
-        label = {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyMedium,
-                color = when (enabled) {
-                    true -> MaterialTheme.colorScheme.secondary
-                    false -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
-                },
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        enabled = enabled,
-    )
-}
 
 @Composable
 private fun SkillUpgradeItem(
@@ -344,55 +287,73 @@ private fun SkillUpgradeItem(
     onUpgradeLevelChange: (Int) -> Unit,
     available: Boolean = true
 ) {
-    Column(
+    Row(
         modifier = modifier
-            .fillMaxHeight()
+            .fillMaxWidth()
             .clickable(
                 enabled = minimumUpgrade < 10 && available,
                 onClick = {
                     onShouldUpgradeChange(!shouldUpgrade)
                 }
             ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
     ) {
         if (available) {
-            if (minimumUpgrade < 10) {
-                Checkbox(
-                    checked = shouldUpgrade,
-                    onCheckedChange = {
-                        onShouldUpgradeChange(!shouldUpgrade)
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (minimumUpgrade < 10) {
+                    Checkbox(
+                        checked = shouldUpgrade,
+                        onCheckedChange = {
+                            onShouldUpgradeChange(!shouldUpgrade)
+                        },
+                    )
+                }
+                Text(
+                    text = name.uppercase(),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = when (shouldUpgrade) {
+                        true -> MaterialTheme.colorScheme.onBackground
+                        false -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
                     },
+                    textDecoration = TextDecoration.Underline
                 )
+                if (minimumUpgrade < 10){
+                    TextButton(
+                        onClick = { onUpgradeLevelChange(minimumUpgrade) },
+                        enabled = shouldUpgrade && (upgradeLevel + minimumUpgrade) != minimumUpgrade,
+                    ) {
+                        Text(text = stringResource(id = R.string.reset).uppercase())
+                    }
+                }
             }
-            Text(
-                text = when (minimumUpgrade < 10) {
-                    true -> name.uppercase()
-                    false -> name.uppercase() + "\n" + stringResource(id = R.string.skill_max_level).uppercase()
-                },
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyMedium,
-                color = when (shouldUpgrade) {
-                    true -> MaterialTheme.colorScheme.onBackground
-                    false -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
-                },
-                textDecoration = TextDecoration.Underline
-            )
             if (minimumUpgrade < 10) {
-                Stepper(
+                RangeButtons(
                     value = (upgradeLevel + minimumUpgrade),
                     onValueChange = { onUpgradeLevelChange(it) },
                     valueRange = minimumUpgrade..10,
                     enabled = shouldUpgrade,
                     textStyle = MaterialTheme.typography.bodySmall,
-                    valueRepresentation = { "Lv. $it" }
+                    shape = RectangleShape,
+                    valueRepresentation = { "Lv. $it" },
+                    modifier = Modifier.weight(1f)
                 )
-                TextButton(
-                    onClick = { onUpgradeLevelChange(minimumUpgrade) },
-                    enabled = shouldUpgrade && (upgradeLevel + minimumUpgrade) != minimumUpgrade,
-                ) {
-                    Text(text = stringResource(id = R.string.reset).uppercase())
-                }
+            } else {
+                Text(
+                    text = stringResource(id = R.string.skill_max_level).uppercase(),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = when (shouldUpgrade) {
+                        true -> MaterialTheme.colorScheme.onBackground
+                        false -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                    },
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.weight(1f)
+                )
             }
         } else {
             Text(
@@ -406,7 +367,8 @@ private fun SkillUpgradeItem(
                 text = stringResource(id = R.string.skill_not_available).uppercase(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f),
+                modifier = Modifier.weight(1f)
             )
         }
     }

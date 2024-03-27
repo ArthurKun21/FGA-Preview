@@ -524,7 +524,7 @@ After pressing on the button, switch the app filter from \"Not optimized\" to \"
     <string name="skill_enhancement_level_up_by">"Level up by %d"</string>
 
     <string name="skill_upgrade">Skill Upgrade</string>
-    <string name="skill_upgrade_all_available_question">Upgrade all available skill?</string>
+    <string name="skill_upgrade_all">All Skills</string>
     <string name="skill_max_level">Max Level</string>
     <string name="skill_not_available">Not Available</string>
     <string name="skill_not_selected_for_enhancement">Not Selected for enhancement</string>
