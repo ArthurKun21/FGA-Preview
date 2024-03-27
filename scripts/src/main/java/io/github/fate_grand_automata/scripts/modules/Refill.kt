@@ -31,8 +31,12 @@ class Refill @Inject constructor(
                 .forEach { it.click() }
 
             1.seconds.wait()
+
+            val staminaMin = checkMinRefillAmount()
+            0.5.seconds.wait()
+
             locations.staminaOkClick.click()
-            ++timesRefilled
+            timesRefilled += staminaMin
 
             3.seconds.wait()
         } else if (perServerConfigPref.waitForAPRegen) {
@@ -42,6 +46,13 @@ class Refill @Inject constructor(
 
             60.seconds.wait()
         } else throw AutoBattle.BattleExitException(AutoBattle.ExitReason.APRanOut)
+    }
+
+    private fun checkMinRefillAmount(): Int {
+        val staminaMinText = locations.staminaMinRegion.detectNumberFontText()
+        val regex = Regex("""(\d+)""")
+        val staminaMin = regex.find(staminaMinText)?.groupValues?.getOrNull(1)?.toInt()
+        return staminaMin ?: 1
     }
 
     fun refill() {
