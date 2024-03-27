@@ -39,11 +39,13 @@ class AutoLottery @Inject constructor(
 
     class ExitException(val reason: ExitReason) : Exception()
 
+    var lottoClick = 20
+
     private fun spin() {
         // Don't increase this too much or you'll regret when you're not able to stop the script
         // And your phone won't let you press anything
         locations.lottery.spinClick.click(
-            prefs.lottoSpin
+            lottoClick
         )
     }
 
@@ -122,8 +124,25 @@ class AutoLottery @Inject constructor(
         locations.lottery.confirmNewLineupClick.click()
     }
 
+    private fun isLotteryDone() = locations.lottery.doneRegion.exists(
+        images[Images.LotteryBoxFinished],
+        similarity = 0.85
+    )
+
+    private fun isTransition() = images[Images.LotteryTransition] in locations.lottery.transitionRegion
+
+    private fun confirmIfLotteryDone() {
+        spin()
+
+        val exist = isLotteryDone()
+        if (exist) {
+            throw ExitException(ExitReason.RanOutOfCurrency)
+        }
+    }
+
     override fun script(): Nothing {
         prefs.isPresentBoxFull = false
+        lottoClick = prefs.lottoSpin
 
         try {
             loop()
@@ -139,7 +158,9 @@ class AutoLottery @Inject constructor(
             { isNewLineup() } to { confirmNewLineup() },
             { isOutOfCurrency() } to { ranOutOfCurrency() },
             { connectionRetry.needsToRetry() } to { connectionRetry.retry() },
-            { images[Images.PresentBoxFull] in locations.lottery.fullPresentBoxRegion } to { presentBoxFull() }
+            { images[Images.PresentBoxFull] in locations.lottery.fullPresentBoxRegion } to { presentBoxFull() },
+            { isLotteryDone() } to { confirmIfLotteryDone() },
+            { isTransition() } to { locations.lottery.transitionRegion.click() }
         )
 
         while (true) {
