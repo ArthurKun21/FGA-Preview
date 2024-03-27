@@ -50,6 +50,8 @@ class PrefsCore @Inject constructor(
     val screenshotBond = maker.bool("screenshot_bond")
     val hidePlayButtonForScreenshot = maker.bool("hide_play_button_for_screenshot")
 
+    val hideSQInAPResources = maker.bool("hide_sq_in_ap_resources")
+
     val debugMode = maker.bool("debug_mode")
     val autoStartService = maker.bool("auto_start_service")
 
