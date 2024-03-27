@@ -71,6 +71,7 @@ class Locations @Inject constructor(
     val staminaOkClick = Location(370, 1120).xFromCenter()
     val staminaCloseClick = Location(0, 1240).xFromCenter()
 
+    val staminaOverRechargeRegion = Region(401, 568, 67, 68).xFromCenter()
     val staminaMinRegion = Region(-776, 560, 100, 96).xFromCenter()
     val staminaMaxRegion = Region(668, 560, 117, 96).xFromCenter()
 

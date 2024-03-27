@@ -21,6 +21,8 @@ interface IPerServerConfigPrefs {
 
     var currentAppleCount: Int
 
+    var staminaOverRecharge: Boolean
+
     val resources: List<RefillResourceEnum>
     fun updateResources(resources: Set<RefillResourceEnum>)
     var shouldLimitRuns: Boolean
