@@ -3,18 +3,15 @@ package io.github.fate_grand_automata.ui.launcher
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,7 +31,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import io.github.fate_grand_automata.R
 import io.github.fate_grand_automata.prefs.core.PrefsCore
-import io.github.fate_grand_automata.ui.Stepper
+import io.github.fate_grand_automata.ui.RangeButtons
 import io.github.fate_grand_automata.ui.prefs.remember
 
 @Composable
@@ -132,118 +130,102 @@ fun appendLauncher(
             }
 
             item {
-                Divider()
+                HorizontalDivider()
             }
 
-            item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { shouldUpgradeAll = !shouldUpgradeAll }
-                        .padding(bottom = 8.dp)
-                ) {
-                    Text(
-                        stringResource(R.string.append_upgrade_all_question),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                    Switch(
-                        checked = shouldUpgradeAll,
-                        onCheckedChange = { shouldUpgradeAll = it },
-                        modifier = Modifier
-                    )
-                }
-            }
             item {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    PresetButton(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 4.dp, vertical = 2.dp),
-                        text = "3",
-                        enabled = shouldUpgradeAll,
-                        onClick = {
-                            upgradeAll = 3
-                        }
-                    )
-                    PresetButton(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 4.dp, vertical = 2.dp),
-                        text = "6",
-                        enabled = shouldUpgradeAll,
-                        onClick = {
-                            upgradeAll = 6
-                        }
-                    )
-                    PresetButton(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 4.dp, vertical = 2.dp),
-                        text = "9",
-                        enabled = shouldUpgradeAll,
-                        onClick = {
-                            upgradeAll = 9
-                        }
-                    )
-                    Box(
-                        modifier = Modifier
-                            .weight(1.5f)
-                            .padding(horizontal = 4.dp, vertical = 2.dp),
-                        contentAlignment = Alignment.Center
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Stepper(
-                            value = upgradeAll,
-                            onValueChange = { upgradeAll = it },
-                            valueRange = 0..9,
-                            enabled = shouldUpgradeAll,
+                        Checkbox(
+                            checked = shouldUpgradeAll,
+                            onCheckedChange = {
+                                shouldUpgradeAll = it
+                            },
                         )
+                        Text(
+                            text = stringResource(id = R.string.append_upgrade_all),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = when (shouldUpgradeAll) {
+                                true -> MaterialTheme.colorScheme.onBackground
+                                false -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                            },
+                            textDecoration = TextDecoration.Underline
+                        )
+                        TextButton(
+                            onClick = { upgradeAll = 0 },
+                        ) {
+                            Text(text = stringResource(id = R.string.reset).uppercase())
+                        }
                     }
+                    RangeButtons(
+                        value = upgradeAll,
+                        onValueChange = { upgradeAll = it },
+                        valueRange = 0..9,
+                        enabled = shouldUpgradeAll,
+                        textStyle = MaterialTheme.typography.bodySmall,
+                        shape = RectangleShape,
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
 
             item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    AppendItem(
-                        modifier = Modifier.weight(1f),
-                        name = stringResource(id = R.string.append_number, 1),
-                        isLocked = appendOneLocked,
-                        shouldUnlock = shouldUnlockAppend1,
-                        onShouldUnlockChange = { shouldUnlockAppend1 = it },
-                        upgradeLevel = upgradeAppend1,
-                        onUpgradeLevelChange = { upgradeAppend1 = it }
-                    )
-                    AppendItem(
-                        modifier = Modifier.weight(1f),
-                        name = stringResource(id = R.string.append_number, 2),
-                        isLocked = appendTwoLocked,
-                        shouldUnlock = shouldUnlockAppend2,
-                        onShouldUnlockChange = { shouldUnlockAppend2 = it },
-                        upgradeLevel = upgradeAppend2,
-                        onUpgradeLevelChange = { upgradeAppend2 = it }
-                    )
-                    AppendItem(
-                        modifier = Modifier.weight(1f),
-                        name = stringResource(id = R.string.append_number, 3),
-                        isLocked = appendThreeLocked,
-                        shouldUnlock = shouldUnlockAppend3,
-                        onShouldUnlockChange = { shouldUnlockAppend3 = it },
-                        upgradeLevel = upgradeAppend3,
-                        onUpgradeLevelChange = { upgradeAppend3 = it }
-                    )
-                }
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+
+            item {
+                AppendItem(
+                    name = stringResource(id = R.string.append_number, 1),
+                    isLocked = appendOneLocked,
+                    shouldUnlock = shouldUnlockAppend1,
+                    onShouldUnlockChange = { shouldUnlockAppend1 = it },
+                    upgradeLevel = upgradeAppend1,
+                    onUpgradeLevelChange = { upgradeAppend1 = it }
+                )
+            }
+
+            item {
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+
+            item {
+                AppendItem(
+                    name = stringResource(id = R.string.append_number, 2),
+                    isLocked = appendTwoLocked,
+                    shouldUnlock = shouldUnlockAppend2,
+                    onShouldUnlockChange = { shouldUnlockAppend2 = it },
+                    upgradeLevel = upgradeAppend2,
+                    onUpgradeLevelChange = { upgradeAppend2 = it }
+                )
+            }
+
+            item {
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+
+            item {
+                AppendItem(
+                    name = stringResource(id = R.string.append_number, 3),
+                    isLocked = appendThreeLocked,
+                    shouldUnlock = shouldUnlockAppend3,
+                    onShouldUnlockChange = { shouldUnlockAppend3 = it },
+                    upgradeLevel = upgradeAppend3,
+                    onUpgradeLevelChange = { upgradeAppend3 = it }
+                )
             }
         }
     }
@@ -267,32 +249,6 @@ fun appendLauncher(
 }
 
 @Composable
-private fun PresetButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    enabled: Boolean,
-    onClick: () -> Unit
-) {
-    SuggestionChip(
-        onClick = onClick,
-        modifier = modifier,
-        label = {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyMedium,
-                color = when (enabled) {
-                    true -> MaterialTheme.colorScheme.secondary
-                    false -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
-                },
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        enabled = enabled,
-    )
-}
-
-@Composable
 private fun AppendItem(
     modifier: Modifier = Modifier,
     name: String,
@@ -302,47 +258,53 @@ private fun AppendItem(
     upgradeLevel: Int,
     onUpgradeLevelChange: (Int) -> Unit,
 ) {
-    Column(
+    Row(
         modifier = modifier
-            .fillMaxHeight()
             .clickable(
                 enabled = isLocked,
                 onClick = {
                     onShouldUnlockChange(!shouldUnlock)
                 }
             ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
     ) {
-        Text(
-            text = name.uppercase(),
-            style = MaterialTheme.typography.bodyMedium,
-            textDecoration = TextDecoration.Underline,
-            textAlign = TextAlign.Center,
-        )
-        if (isLocked) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             Text(
-                text = stringResource(id = R.string.should_unlock_append),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(top = 8.dp)
+                text = name.uppercase(),
+                style = MaterialTheme.typography.bodyMedium,
+                textDecoration = TextDecoration.Underline,
+                textAlign = TextAlign.Center,
             )
-            Checkbox(
-                checked = shouldUnlock,
-                onCheckedChange = onShouldUnlockChange
-            )
+            if (isLocked) {
+                Text(
+                    text = stringResource(id = R.string.should_unlock_append),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                Checkbox(
+                    checked = shouldUnlock,
+                    onCheckedChange = onShouldUnlockChange
+                )
+            }
+            TextButton(
+                onClick = { onUpgradeLevelChange(0) },
+                enabled = (!isLocked || shouldUnlock) && upgradeLevel != 0,
+            ) {
+                Text(text = stringResource(id = R.string.reset).uppercase())
+            }
         }
-
-        Stepper(
+        RangeButtons(
             value = (upgradeLevel),
             onValueChange = { onUpgradeLevelChange(it) },
             valueRange = 0..9,
-            enabled = !isLocked || shouldUnlock
+            enabled = !isLocked || shouldUnlock,
+            shape = RectangleShape,
+            textStyle = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.weight(1f)
         )
-        TextButton(
-            onClick = { onUpgradeLevelChange(0) },
-            enabled = (!isLocked || shouldUnlock) && upgradeLevel != 0,
-        ) {
-            Text(text = stringResource(id = R.string.reset).uppercase())
-        }
     }
 }
