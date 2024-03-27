@@ -100,7 +100,7 @@ fun appendLauncher(
             }
         }
 
-        if (emptyServant){
+        if (emptyServant) {
             item {
                 Text(
                     text = stringResource(id = R.string.empty_servant),
@@ -136,7 +136,9 @@ fun appendLauncher(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { shouldUpgradeAll = !shouldUpgradeAll }
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
