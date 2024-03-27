@@ -40,8 +40,15 @@ class Refill @Inject constructor(
             val staminaRefill = when {
                 resource == RefillResourceEnum.Gold -> 1
                 perServerConfigPref.staminaOverRecharge -> {
-                    locations.staminaOverRechargeRegion.click()
-                    checkMaxRefillAmount()
+                    var refill = checkMaxRefillAmount()
+                    // If the refill amount is more than the current apple count,
+                    // refill the minimum amount only.
+                    if (refill + timesRefilled > perServerConfigPref.currentAppleCount) {
+                        refill = checkMinRefillAmount()
+                    } else {
+                        locations.staminaOverRechargeRegion.click()
+                    }
+                    refill
                 }
                 else -> checkMinRefillAmount()
             }
