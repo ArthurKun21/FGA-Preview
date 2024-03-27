@@ -75,11 +75,8 @@ fun skillLauncher(
     }
     val isSkillThreeAvailable by prefsCore.skill.isSkillThreeAvailable.remember()
 
-    var shouldUpgradeAllSkills by remember {
-        mutableStateOf(false)
-    }
     val lowestMinimumSkillLevel by remember {
-        mutableStateOf(
+        mutableIntStateOf(
             when {
                 isSkillThreeAvailable -> minOf(minimumSkillOne, minimumSkillTwo, minimumSkillThree)
                 isSkillTwoAvailable -> minOf(minimumSkillOne, minimumSkillTwo)
@@ -88,12 +85,18 @@ fun skillLauncher(
         )
     }
     var targetAllSkillLevel by remember {
-        mutableStateOf(
-            lowestMinimumSkillLevel
+        mutableIntStateOf(
+            -1
         )
     }
 
+
     LaunchedEffect(key1 = targetAllSkillLevel, block = {
+        if (targetAllSkillLevel >= lowestMinimumSkillLevel) {
+            shouldUpgradeSkillOne = true
+            shouldUpgradeSkillTwo = true
+            shouldUpgradeSkillThree = true
+        }
         if (minimumSkillOne <= targetAllSkillLevel && shouldUpgradeSkillOne) {
             skillOneUpgradeValue = targetAllSkillLevel - minimumSkillOne
         }
@@ -105,11 +108,16 @@ fun skillLauncher(
         }
     })
 
-    LaunchedEffect(key1 = shouldUpgradeAllSkills, block = {
-        shouldUpgradeSkillOne = shouldUpgradeAllSkills == true && minimumSkillOne < 10
-        shouldUpgradeSkillTwo = shouldUpgradeAllSkills == true && minimumSkillTwo < 10 && isSkillTwoAvailable
-        shouldUpgradeSkillThree = shouldUpgradeAllSkills == true && minimumSkillThree < 10 && isSkillThreeAvailable
-    })
+    LaunchedEffect(
+        key1 = skillOneUpgradeValue,
+        key2 = skillTwoUpgradeValue,
+        key3 = skillThreeUpgradeValue,
+    ) {
+        if (setOf(skillOneUpgradeValue, skillTwoUpgradeValue, skillThreeUpgradeValue).size > 1) {
+            targetAllSkillLevel = -1
+        }
+    }
+
 
     LazyColumn(
         modifier = modifier
@@ -150,29 +158,18 @@ fun skillLauncher(
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { shouldUpgradeAllSkills = !shouldUpgradeAllSkills }
-                ){
+                ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Checkbox(
-                            checked = shouldUpgradeAllSkills,
-                            onCheckedChange = {
-                                shouldUpgradeAllSkills = it
-                            },
-                        )
                         Text(
                             text = stringResource(id = R.string.skill_upgrade_all),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = when (shouldUpgradeAllSkills) {
-                                true -> MaterialTheme.colorScheme.onBackground
-                                false -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
-                            },
                             textDecoration = TextDecoration.Underline
                         )
-                        if (lowestMinimumSkillLevel < 10){
+                        if (lowestMinimumSkillLevel < 10) {
                             TextButton(
                                 onClick = { targetAllSkillLevel = lowestMinimumSkillLevel },
                             ) {
@@ -184,11 +181,11 @@ fun skillLauncher(
                         value = targetAllSkillLevel,
                         onValueChange = { targetAllSkillLevel = it },
                         valueRange = lowestMinimumSkillLevel..10,
-                        enabled = shouldUpgradeAllSkills,
                         textStyle = MaterialTheme.typography.bodySmall,
                         shape = RectangleShape,
                         valueRepresentation = { "Lv. $it" },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        triState = true
                     )
                 }
             }
@@ -322,7 +319,7 @@ private fun SkillUpgradeItem(
                     },
                     textDecoration = TextDecoration.Underline
                 )
-                if (minimumUpgrade < 10){
+                if (minimumUpgrade < 10) {
                     TextButton(
                         onClick = { onUpgradeLevelChange(minimumUpgrade) },
                         enabled = shouldUpgrade && (upgradeLevel + minimumUpgrade) != minimumUpgrade,

@@ -26,6 +26,7 @@ fun RangeButtons(
     modifier: Modifier = Modifier,
     value: Int,
     onValueChange: (Int) -> Unit,
+    triState: Boolean = false,
     valueRange: IntRange,
     enabled: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
@@ -41,8 +42,13 @@ fun RangeButtons(
         for (i in valueRange) {
             Button(
                 onClick = {
-                    currentValue = i.coerceIn(valueRange)
-                    onValueChange(i.coerceIn(valueRange))
+                    if (i == currentValue && triState) {
+                        currentValue = valueRange.first - 1
+                        onValueChange(valueRange.first - 1)
+                    } else {
+                        currentValue = i.coerceIn(valueRange)
+                        onValueChange(i.coerceIn(valueRange))
+                    }
                 },
                 enabled = enabled,
                 border = BorderStroke(
