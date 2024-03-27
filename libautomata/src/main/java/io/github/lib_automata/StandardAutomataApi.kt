@@ -101,6 +101,23 @@ class StandardAutomataApi @Inject constructor(
             }
     }
 
+    override fun Region.detectNumberFontText(outlinedText: Boolean): String {
+        screenshotManager.getScreenshot()
+            .crop(transform.toImage(this))
+            .threshold(0.9)
+            .let {
+                if (outlinedText) {
+                    it.use {
+                        it.fillText()
+                    }
+                } else it
+            }
+            .also { highlight(this, HighlightColor.Info) }
+            .use {
+                return ocrService.detectNumberFontText(it)
+            }
+    }
+
     override fun longPressAndSwipe(clicksArray: List<List<Location>>, chunked: Int) {
         longPressAndSwipeOrMultipleClicks(clicksArray, chunked)
     }

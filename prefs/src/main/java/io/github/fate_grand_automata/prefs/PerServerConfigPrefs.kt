@@ -25,6 +25,8 @@ internal class PerServerConfigPrefs(
     override var waitForAPRegen by prefs.waitAPRegen
 
     override var selectedApple by prefs.selectedApple
+
+    override var staminaOverRecharge by prefs.staminaOverRecharge
     override var currentAppleCount: Int
         get() {
             return when (selectedApple) {
