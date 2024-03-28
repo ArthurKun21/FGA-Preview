@@ -4,4 +4,6 @@ interface OcrService {
     fun detectText(pattern: Pattern): String
 
     fun detectNumberFontText(pattern: Pattern): String
+
+    fun detectNumVarBg(pattern: Pattern): String
 }

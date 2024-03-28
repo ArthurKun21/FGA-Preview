@@ -2,6 +2,7 @@ package io.github.fate_grand_automata.scripts.modules
 
 import io.github.fate_grand_automata.scripts.IFgoAutomataApi
 import io.github.fate_grand_automata.scripts.Images
+import io.github.fate_grand_automata.scripts.ScriptLog
 import io.github.fate_grand_automata.scripts.ScriptNotify
 import io.github.fate_grand_automata.scripts.enums.CardAffinityEnum
 import io.github.fate_grand_automata.scripts.enums.CardTypeEnum
@@ -29,6 +30,26 @@ class CardParser @Inject constructor(
         }
 
         return CardAffinityEnum.Normal
+    }
+
+    private fun CommandCard.Face.hasCriticalStar(): Boolean {
+        val starRegion = locations.attack.starRegion(this)
+
+        return images[Images.CriticalStarExist] in starRegion
+    }
+
+    private fun CommandCard.Face.readCriticalStarPercentage(): Int {
+        val starPercentageRegion = locations.attack.starPercentageRegion(this)
+
+        val percentage = starPercentageRegion.detectNumVarBg()
+        val regex = Regex("""(\d+)""")
+        val matchResult = regex.findAll(percentage)
+        val result = matchResult.joinToString("") { it.value }
+
+        return when(result) {
+            "0" -> 10
+            else -> result.toIntOrNull() ?: 0
+        }
     }
 
     private fun CommandCard.Face.isStunned(): Boolean {
@@ -71,6 +92,13 @@ class CardParser @Inject constructor(
                 val affinity = if (type == CardTypeEnum.Unknown)
                     CardAffinityEnum.Normal // Couldn't detect card type, so don't care about affinity
                 else it.affinity()
+
+                val starExist = it.hasCriticalStar()
+                val starPercentage = it.readCriticalStarPercentage()
+
+                messages.log(
+                    ScriptLog.DevLog("Card $it has star: $starExist Percentage $starPercentage")
+                )
 
                 val servant = cardsGroupedByServant
                     .filterValues { cards -> it in cards }
