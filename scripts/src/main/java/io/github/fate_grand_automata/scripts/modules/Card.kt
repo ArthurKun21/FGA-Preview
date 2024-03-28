@@ -23,10 +23,12 @@ class Card @Inject constructor(
     private val parser: CardParser,
     private val priority: FaceCardPriority,
     private val braveChains: ApplyBraveChains,
-    private val battleConfig: IBattleConfig
+    private val battleConfig: IBattleConfig,
+    private val screenshotDrops: ScreenshotDrops,
 ) : IFgoAutomataApi by api {
 
     fun readCommandCards(): List<ParsedCard> = useSameSnapIn {
+        screenshotDrops.screenshotDebug(logName = "attack_screen")
         parser.parse()
     }
 

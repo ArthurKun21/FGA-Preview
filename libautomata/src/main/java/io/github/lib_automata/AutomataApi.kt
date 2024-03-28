@@ -55,6 +55,8 @@ interface AutomataApi {
 
     fun Region.detectNumberFontText(outlinedText: Boolean = false): String
 
+    fun Region.detectNumVarBg(outlinedText: Boolean = false): String
+
     fun Location.longPress(duration: Int = 2000)
 
     fun Region.longPress(duration: Int = 2000)

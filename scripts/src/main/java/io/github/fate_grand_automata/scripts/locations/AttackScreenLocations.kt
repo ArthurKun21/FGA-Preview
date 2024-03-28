@@ -61,4 +61,26 @@ class AttackScreenLocations @Inject constructor(
             Location(-325, 1310)
         else Location(-160, 1370))
             .xFromRight()
+
+    fun starRegion(card: CommandCard.Face) = when (card) {
+        CommandCard.Face.A -> -1148
+        CommandCard.Face.B -> -636
+        CommandCard.Face.C -> -125
+        CommandCard.Face.D -> 390
+        CommandCard.Face.E -> 910
+    }.let { x ->
+        Region(x - 8, 777, 30, 50) + faceCardDeltaY
+    }.xFromCenter()
+
+
+
+    fun starPercentageRegion(card: CommandCard.Face) = when (card) {
+        CommandCard.Face.A -> -1117
+        CommandCard.Face.B -> -607
+        CommandCard.Face.C -> -103
+        CommandCard.Face.D -> 401
+        CommandCard.Face.E -> 905
+    }.let { x ->
+        Region(x, 724, 48, 68) + faceCardDeltaY
+    }.xFromCenter()
 }

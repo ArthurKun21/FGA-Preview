@@ -6,6 +6,9 @@ import io.github.fate_grand_automata.scripts.Images
 import io.github.lib_automata.Pattern
 import io.github.lib_automata.ScreenshotService
 import io.github.lib_automata.dagger.ScriptScope
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -40,8 +43,8 @@ class ScreenshotDrops @Inject constructor(
         storageProvider.dropScreenshot(drops)
     }
 
-    fun screenshotBond(){
-        if (!prefs.screenshotBond){
+    fun screenshotBond() {
+        if (!prefs.screenshotBond) {
             return
         }
         prefs.hidePlayButtonForScreenshot = true
@@ -55,5 +58,22 @@ class ScreenshotDrops @Inject constructor(
 
         prefs.hidePlayButtonForScreenshot = false
         1.seconds.wait()
+    }
+
+    fun screenshotDebug(logName: String = "debug") {
+        if (!prefs.platformPrefs.debugMode) {
+            return
+        }
+
+        useColor {
+            val pattern = screenshotService.takeScreenshot()
+            val sdf = SimpleDateFormat("yyyy-MM-dd-hh-mm-ss", Locale.getDefault())
+            val timeString = sdf.format(Date())
+            val screenRatio = if (locations.isWide) "wide" else "normal"
+
+            val name = "${prefs.gameServer}_${screenRatio}_${logName}_${timeString}.png"
+
+            storageProvider.dump(name, pattern)
+        }
     }
 }

@@ -50,6 +50,24 @@ class TesseractOcrService @Inject constructor(
         }
     }
 
+    override fun detectNumVarBg(pattern: Pattern): String {
+        synchronized(tessApi) {
+            (pattern as DroidCvPattern).asBitmap().use { bmp ->
+                tessApi.pageSegMode = TessBaseAPI.PageSegMode.PSM_SINGLE_WORD
+                tessApi.setVariable(
+                    TessBaseAPI.VAR_CHAR_BLACKLIST,
+                    "!@#\\$%^&*().,[]ABCDEFGHIJKLMNOPQRSTUVWXYZ{}abcdefghijklmnopqrstuvwxyz"
+                )
+                tessApi.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, "0123456789")
+                tessApi.setImage(bmp)
+                tessApi.getHOCRText(0)
+                val text = tessApi.utF8Text
+                tessApi.clear()
+                return text
+            }
+        }
+    }
+
     protected fun finalize() {
         tessApi.recycle()
     }

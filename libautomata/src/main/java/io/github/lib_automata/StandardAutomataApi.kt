@@ -118,6 +118,23 @@ class StandardAutomataApi @Inject constructor(
             }
     }
 
+    override fun Region.detectNumVarBg(outlinedText: Boolean): String {
+        screenshotManager.getScreenshot()
+            .crop(transform.toImage(this))
+            .threshold(0.5)
+            .let {
+                if (outlinedText) {
+                    it.use {
+                        it.fillText()
+                    }
+                } else it
+            }
+            .also { highlight(this, HighlightColor.Info) }
+            .use {
+                return ocrService.detectNumVarBg(it).trim()
+            }
+    }
+
     override fun longPressAndSwipe(clicksArray: List<List<Location>>, chunked: Int) {
         longPressAndSwipeOrMultipleClicks(clicksArray, chunked)
     }
